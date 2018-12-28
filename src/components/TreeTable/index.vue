@@ -1,6 +1,6 @@
 <template>
-  <el-table :data="formatData" :row-style="showRow" v-bind="$attrs">
-    <el-table-column v-if="columns.length===0" width="150">
+  <el-table v-loading="loading" :data="formatData" :row-style="showRow" v-bind="$attrs">
+    <el-table-column v-if="columns.length===0" width="150" align="center">
       <template slot-scope="scope">
         <span v-for="space in scope.row._level" :key="space" class="ms-tree-space"/>
         <span v-if="iconShow(0,scope.row)" class="tree-ctrl" @click="toggleExpanded(scope.$index)">
@@ -10,7 +10,7 @@
         {{ scope.$index }}
       </template>
     </el-table-column>
-    <el-table-column v-for="(column, index) in columns" v-else :key="column.value" :label="column.text" :width="column.width">
+    <el-table-column v-for="(column, index) in columns" v-else :key="column.value" :label="column.text" :width="column.width" align="center">
       <template slot-scope="scope">
         <!-- Todo -->
         <!-- eslint-disable-next-line vue/no-confusing-v-for-v-if -->
@@ -51,6 +51,11 @@ export default {
       default: false
     }
   },
+  data () {
+    return {
+      loading: true
+    }
+  },
   computed: {
     // 格式化数据源
     formatData: function() {
@@ -62,6 +67,7 @@ export default {
       }
       const func = this.evalFunc || treeToArray
       const args = this.evalArgs ? Array.concat([tmp, this.expandAll], this.evalArgs) : [tmp, this.expandAll]
+      this.loading = false
       return func.apply(null, args)
     }
   },

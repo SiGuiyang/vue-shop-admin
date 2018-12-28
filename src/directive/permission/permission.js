@@ -4,13 +4,14 @@ import store from '@/store'
 export default{
   inserted(el, binding, vnode) {
     const { value } = binding
-    const roles = store.getters && store.getters.roles
+    // 用户所有的权限集
+    const permission = store.getters && store.getters.permission
 
     if (value && value instanceof Array && value.length > 0) {
-      const permissionRoles = value
+      const permissions = value
 
-      const hasPermission = roles.some(role => {
-        return permissionRoles.includes(role)
+      const hasPermission = permission.some(perm => {
+        return permissions.includes(perm)
       })
 
       if (!hasPermission) {

@@ -18,10 +18,18 @@ export function modifySystemUser(data) {
   })
 }
 
-// 删除系统用户
-export function deleteSystemUser(data) {
+// 获取权限列表
+export function fetchMenuList() {
   return service({
-    url: '/admin/system/user/delete/' + data.id,
+    url: '/admin/system/menu/list',
+    method: 'post'
+  })
+}
+
+// 查看某个系统用户的权限列表
+export function fetchHadPermission(id) {
+  return service({
+    url: '/admin/system/menu/' + id,
     method: 'post'
   })
 }
@@ -44,14 +52,6 @@ export function modifySystemRole(data) {
   })
 }
 
-// 删除系统角色
-export function deleteSystemRole(data) {
-  return service({
-    url: '/admin/system]/role/delete/' + data.id,
-    method: 'post'
-  })
-}
-
 // 获取系统配置项
 export function fetchSystemConfig(data) {
   return service({
@@ -67,13 +67,5 @@ export function modifySystemConfig(data) {
     url: '/admin/system/config/modify',
     method: 'post',
     data
-  })
-}
-
-// 删除配置项
-export function deleteSystemConfig(data) {
-  return service({
-    url: '/admin/system/config/delete/' + data.id,
-    method: 'post'
   })
 }

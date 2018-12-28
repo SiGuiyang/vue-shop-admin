@@ -8,11 +8,12 @@ import Layout from '@/views/layout/Layout'
 
 /* Router Modules */
 import orderRouter from './modules/order'
-import chartsRouter from './modules/statistics'
+import statisticsRouter from './modules/statistics'
 import activityRouter from './modules/activity'
 import goodsRouter from './modules/goods'
 import systemRouter from './modules/system'
 import documentRouter from './modules/document'
+import financeRouter from './modules/finance'
 
 /** note: Submenu only appear when children.length>=1
  *  detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -30,20 +31,10 @@ import documentRouter from './modules/document'
     title: 'title'               the name show in submenu and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar,
     noCache: true                if true ,the page will no be cached(default is false)
+    permission: []               permission
   }
 **/
 export const constantRouterMap = [
-  {
-    path: '/redirect',
-    component: Layout,
-    hidden: true,
-    children: [
-      {
-        path: '/redirect/:path*',
-        component: () => import('@/views/redirect/index')
-      }
-    ]
-  },
   {
     path: '/login',
     component: () => import('@/views/login/index'),
@@ -70,7 +61,8 @@ export const constantRouterMap = [
         name: 'Dashboard',
         meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
       }
-    ]
+    ],
+    meta: { permission: ['admin'] }
   }
 ]
 
@@ -85,7 +77,8 @@ export const asyncRouterMap = [
   orderRouter,
   activityRouter,
   documentRouter,
-  chartsRouter,
+  statisticsRouter,
+  financeRouter,
   systemRouter,
 
   { path: '*', redirect: '/404', hidden: true }

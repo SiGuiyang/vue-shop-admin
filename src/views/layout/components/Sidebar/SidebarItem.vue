@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!item.hidden&&item.children" class="menu-wrapper">
+  <div v-permission="item.meta.permission" v-if="!item.hidden&&item.children" class="menu-wrapper">
 
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link :to="resolvePath(onlyOneChild.path)">
@@ -38,6 +38,7 @@
 import path from 'path'
 import { generateTitle } from '@/utils/i18n'
 import { isExternal } from '@/utils'
+import permission from '@/directive/permission'
 import Item from './Item'
 import AppLink from './Link'
 import FixiOSBug from './FixiOSBug'
@@ -45,6 +46,7 @@ import FixiOSBug from './FixiOSBug'
 export default {
   name: 'SidebarItem',
   components: { Item, AppLink },
+  directives: { permission },
   mixins: [FixiOSBug],
   props: {
     // route object

@@ -3,32 +3,33 @@
 import Layout from '@/views/layout/Layout'
 
 const statisticsRouter = {
-  path: '/charts',
+  path: '/statistics',
   component: Layout,
   redirect: 'noredirect',
   name: 'Charts',
   meta: {
     title: 'statistics',
-    icon: 'chart'
+    icon: 'chart',
+    permission: ['admin']
   },
   children: [
     {
-      path: 'keyboard',
-      component: () => import('@/views/charts/keyboard'),
-      name: 'KeyboardChart',
-      meta: { title: 'keyboardChart', noCache: true }
+      path: 'coupon',
+      component: () => import('@/views/statistics/coupon'),
+      name: 'CouponStatistics',
+      meta: { title: 'couponStatistics', noCache: true, permission: ['admin'] }
     },
     {
-      path: 'line',
-      component: () => import('@/views/charts/line'),
-      name: 'LineChart',
-      meta: { title: 'lineChart', noCache: true }
+      path: 'fightGroup',
+      component: () => import('@/views/statistics/fightGroup'),
+      name: 'fightGroupStatistics',
+      meta: { title: 'fightGroupStatistics', noCache: true, permission: ['admin'] }
     },
     {
-      path: 'mixchart',
-      component: () => import('@/views/charts/mixChart'),
-      name: 'MixChart',
-      meta: { title: 'mixChart', noCache: true }
+      path: 'integral',
+      component: () => import('@/views/statistics/integral'),
+      name: 'integralStatistics',
+      meta: { title: 'integralStatistics', noCache: true, permission: ['admin'] }
     }
   ]
 }

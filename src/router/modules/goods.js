@@ -5,60 +5,25 @@ import Layout from '@/views/layout/Layout'
 const goodsRouter = {
   path: '/goods',
   component: Layout,
-  redirect: '/nested/menu1/menu1-1',
-  name: 'Nested',
+  redirect: '/goods/manage/list',
+  name: 'GoodsManage',
   meta: {
     title: 'goods',
-    icon: 'nested'
+    icon: 'nested',
+    permission: ['admin']
   },
   children: [
     {
-      path: 'menu1',
-      component: () => import('@/views/nested/menu1/index'), // Parent router-view
-      name: 'Menu1',
-      meta: { title: 'menu1' },
-      redirect: '/nested/menu1/menu1-1',
-      children: [
-        {
-          path: 'menu1-1',
-          component: () => import('@/views/nested/menu1/menu1-1'),
-          name: 'Menu1-1',
-          meta: { title: 'menu1-1' }
-        },
-        {
-          path: 'menu1-2',
-          component: () => import('@/views/nested/menu1/menu1-2'),
-          name: 'Menu1-2',
-          redirect: '/nested/menu1/menu1-2/menu1-2-1',
-          meta: { title: 'menu1-2' },
-          children: [
-            {
-              path: 'menu1-2-1',
-              component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-              name: 'Menu1-2-1',
-              meta: { title: 'menu1-2-1' }
-            },
-            {
-              path: 'menu1-2-2',
-              component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-              name: 'Menu1-2-2',
-              meta: { title: 'menu1-2-2' }
-            }
-          ]
-        },
-        {
-          path: 'menu1-3',
-          component: () => import('@/views/nested/menu1/menu1-3'),
-          name: 'Menu1-3',
-          meta: { title: 'menu1-3' }
-        }
-      ]
+      path: 'manage/list',
+      component: () => import('@/views/goods/goodsManage'), // Parent router-view
+      name: 'GoodsManageList',
+      meta: { title: 'goodsManageList', permission: ['admin'] }
     },
     {
-      path: 'menu2',
-      name: 'Menu2',
-      component: () => import('@/views/nested/menu2/index'),
-      meta: { title: 'menu2' }
+      path: 'manage/classification',
+      name: 'Classification',
+      component: () => import('@/views/goods/classification'),
+      meta: { title: 'classification', permission: ['admin'] }
     }
   ]
 }

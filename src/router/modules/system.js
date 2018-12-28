@@ -8,7 +8,8 @@ const systemRouter = {
   name: 'system',
   meta: {
     title: 'system',
-    icon: 'component'
+    icon: 'component',
+    permission: ['admin']
   },
   children: [
     {
@@ -16,15 +17,26 @@ const systemRouter = {
       component: () => import('@/views/system/user'),
       name: 'UserManage',
       meta: {
-        title: 'systemUser'
+        title: 'systemUser',
+        permission: ['admin']
+      }
+    },
+    {
+      path: 'menu', // 角色管理
+      component: () => import('@/views/system/menu'),
+      name: 'MenuManage',
+      meta: {
+        title: 'systemMenu',
+        permission: ['admin']
       }
     },
     {
       path: 'role', // 角色管理
-      component: () => import('@/views/system/user'),
+      component: () => import('@/views/system/role'),
       name: 'RoleManage',
       meta: {
-        title: 'systemRole'
+        title: 'systemRole',
+        permission: ['admin']
       }
     },
     {
@@ -32,7 +44,8 @@ const systemRouter = {
       component: () => import('@/views/system/config'),
       name: 'ConfigManage',
       meta: {
-        title: 'systemConfig'
+        title: 'systemConfig',
+        permission: ['admin']
       }
     }
   ]

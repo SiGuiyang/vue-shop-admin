@@ -11,6 +11,7 @@ const user = {
     avatar: '',
     introduction: '',
     roles: [],
+    permission: [],
     setting: {
       articlePlatform: []
     }
@@ -40,6 +41,9 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_PERMISSION: (state, permission) => {
+      state.permission = permission
     }
   },
 
@@ -67,6 +71,7 @@ const user = {
             reject('error')
           }
           const data = response.data
+          commit('SET_PERMISSION', ['admin', 'editor'])
 
           if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
             commit('SET_ROLES', data.roles)

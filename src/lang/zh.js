@@ -23,7 +23,9 @@ export default {
     activity: '活动管理',
     couponTemplate: '优惠券模版管理',
     coupon: '优惠券管理',
+    userCoupon: '用户优惠券',
     bannerManage: 'Banner 管理',
+    stationLetter: '站内信管理',
     fightGroup: '拼团管理',
     fightGroupRule: '拼团规则',
     fightGroupGoods: '拼团商品',
@@ -53,6 +55,17 @@ export default {
       createTime: '创建时间',
       createUser: '创建人',
       status: '状态'
+    },
+    coupon: {
+      templateName: '模板名称',
+      couponName: '优惠券活动名称',
+      templateType: '模板类型',
+      orderAmount: '订单满减金额',
+      discountAmount: '优惠券金额',
+      deleteStatus: '是否禁用',
+      discountType: '优惠券类型',
+      description: '优惠券说明',
+      couponExcel: '文件Excel'
     }
   },
   goods: {
@@ -77,29 +90,23 @@ export default {
   },
   system: {
     user: { // 系统管理 用户管理
-      sysUser: '系统用户',
+      sysName: '系统用户',
       sysCode: '登陆账号',
       roleCode: '角色',
       password: '密码',
-      status: '状态',
-      createUser: '创建人',
-      createTime: '创建时间'
+      status: '状态'
     },
     role: {
       roleName: '角色名称',
       roleCode: '角色代码',
-      status: '状态',
-      createUser: '创建人',
-      createTime: '创建时间'
+      status: '状态'
     },
     config: {
       module: '模块',
       configName: '配置项名称',
       configValue: '配置项值',
       status: '状态',
-      description: '说明',
-      createUser: '创建人',
-      createTime: '创建时间'
+      description: '说明'
     },
     menu: {
       menuName: '菜单名称',
@@ -165,7 +172,9 @@ export default {
     delete: '删除',
     cancel: '取 消',
     confirm: '确 定',
-    operationUser: '操作人'
+    operationUser: '操作人',
+    reissueCoupon: '补发优惠券',
+    downloadTemplate: '下载模板'
   },
   errorLog: {
     tips: '请点击右上角bug小图标',
@@ -195,5 +204,9 @@ export default {
   time: {
     beginTime: '开始时间',
     endTime: '结束时间'
+  },
+  common: {
+    createTime: '创建时间',
+    createUser: '创建人'
   }
 }

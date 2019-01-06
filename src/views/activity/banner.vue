@@ -2,11 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input :placeholder="$t('activity.banner.title')" v-model="listQuery.title" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-select v-model="listQuery.module" :placeholder="$t('activity.banner.bannerType')" clearable style="width: 120px" class="filter-item">
+      <el-select v-model="listQuery.bannerType" :placeholder="$t('activity.banner.bannerType')" clearable style="width: 120px" class="filter-item">
         <el-option v-for="(item,index) in bannerTypeOptions" :key="index" :label="item.value" :value="item.key"/>
-      </el-select>
-      <el-select v-model="listQuery.module" :placeholder="$t('activity.banner.shareChannel')" clearable style="width: 120px" class="filter-item">
-        <el-option v-for="(item,index) in shareChannelOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
@@ -25,59 +22,65 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.title')" align="center">
+      <el-table-column :label="$t('activity.banner.title')" width="150" align="center">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.bannerUrl')" align="center">
+      <el-table-column :label="$t('activity.banner.bannerUrl')" width="200" align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.bannerUrl"></span>
+          <span><img :src="scope.row.bannerUrl" width="160px"></span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.bannerType')" class-name="status-col" align="center">
+      <el-table-column :label="$t('activity.banner.bannerType')" class-name="status-col" width="120" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.bannerType | statusFilter">{{ scope.row.deleteStatus }}</el-tag>
+          <span>{{ getBannerType(scope.row.bannerType) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareTitle')" align="center">
+      <el-table-column :label="$t('activity.banner.shareTitle')" width="140" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.shareTitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareSubtitle')" align="center">
+      <el-table-column :label="$t('activity.banner.shareSubtitle')" width="140" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.shareSubtitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareIcon')" align="center">
+      <el-table-column :label="$t('activity.banner.shareIcon')" width="200" align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.shareIcon"></span>
+          <span><img :src="scope.row.shareIcon" width="140px"></span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareChannel')" align="center">
+      <el-table-column :label="$t('activity.banner.shareChannel')" width="140" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.shareChannel }}</span>
+          <span>{{ getShareChannel(scope.row.shareChannel) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.createUser')" align="center">
+      <el-table-column :label="$t('activity.banner.status')" class-name="status-col" width="120" align="center">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
+        </template>
+      </el-table-column>
+
+      <el-table-column :label="$t('activity.banner.createUser')" width="140" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.createTime')" align="center">
+      <el-table-column :label="$t('activity.banner.createTime')" width="160" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" align="center">
+      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" width="100" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getBannerList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getBannerList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px">
@@ -89,7 +92,7 @@
             <Upload v-model="temp.bannerUrl" />
           </div>
         </el-form-item>
-        <el-form-item :label="$t('activity.banner.shareIcon')" prop="bannerUrl">
+        <el-form-item :label="$t('activity.banner.shareIcon')" prop="shareIcon">
           <div style="margin-bottom: 20px;">
             <Upload v-model="temp.shareIcon" />
           </div>
@@ -112,17 +115,17 @@
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('activity.banner.shareChannel')" prop="shareChannel">
-          <el-select v-model="temp.shareChannel" class="filter-item" placeholder="请选择">
+          <el-select v-model="temp.shareChannel" class="filter-item" placeholder="请选择" multiple width="30%">
             <el-option v-for="(item,index) in shareChannelOptions" :key="index" :label="item.value" :value="item.key"/>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('activity.banner.status')" prop="deleteStatus">
           <el-switch
             v-model="temp.deleteStatus"
-            active-text="启用"
-            inactive-text="关闭"
-            active-color="#13ce66"
-            inactive-color="#ff4949" />
+            active-text="关闭"
+            inactive-text="启用"
+            active-color="#ff4949"
+            inactive-color="#13ce66" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -144,6 +147,15 @@ export default {
   name: 'BannerManage',
   components: { Pagination, Upload },
   directives: { waves },
+  filters: {
+    statusFilter(status) {
+      const statusMap = {
+        false: 'success',
+        true: 'danger'
+      }
+      return statusMap[status]
+    }
+  },
   data() {
     return {
       tableKey: 0,
@@ -152,12 +164,19 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
-        configName: undefined,
-        module: undefined
+        pageSize: 20,
+        title: undefined,
+        bannerType: undefined
       },
-      bannerTypeOptions: [],
-      shareChannelOptions: [],
+      bannerTypeOptions: [
+        { key: 'home', value: '首页' },
+        { key: 'integralShop', value: '积分商城' }
+      ],
+      shareChannelOptions: [
+        { key: 'qq', value: 'QQ' },
+        { key: 'wechat', value: '微信' },
+        { key: 'wechatFriends', value: '朋友圈' }
+      ],
       textMap: {
         update: '编辑',
         create: '新建'
@@ -166,26 +185,27 @@ export default {
       dialogFormVisible: false,
       temp: {
         id: undefined,
-        title: '',
+        title: undefined,
         bannerUrl: '',
-        bannerClickUrl: '',
-        bannerType: '',
-        shareUrl: '',
-        shareTitle: '',
-        shareSubtitle: '',
+        bannerClickUrl: undefined,
+        bannerType: undefined,
+        shareUrl: undefined,
+        shareTitle: undefined,
+        shareSubtitle: undefined,
         shareIcon: '',
-        shareChannel: '',
-        createUser: '',
-        deleteStatus: ''
+        shareChannel: undefined,
+        createUser: undefined,
+        deleteStatus: false
       },
       rules: {
-        title: [{ required: true, message: '活动标题不能为空', trigger: 'change' }],
-        bannerUrl: [{ required: true, message: 'banner图片地址不能为空', trigger: 'change' }],
-        shareUrl: [{ required: true, message: '分享地址不能为空', trigger: 'change' }],
-        shareTitle: [{ required: true, message: '分享标题不能为空', trigger: 'change' }],
-        shareSubtitle: [{ required: true, message: '分享副标题不能为空', trigger: 'change' }],
-        shareIcon: [{ required: true, message: '分享图标不能为空', trigger: 'change' }],
-        shareChannel: [{ required: true, message: '分享渠道不能为空', trigger: 'change' }]
+        title: [{ required: true, message: '活动标题不能为空', trigger: 'blur' }],
+        bannerUrl: [{ required: true, message: 'banner图片地址不能为空', trigger: 'blur' }],
+        shareUrl: [{ required: true, message: '分享地址不能为空', trigger: 'blur' }],
+        shareTitle: [{ required: true, message: '分享标题不能为空', trigger: 'blur' }],
+        shareSubtitle: [{ required: true, message: '分享副标题不能为空', trigger: 'blur' }],
+        shareIcon: [{ required: true, message: '分享图标不能为空', trigger: 'blur' }],
+        bannerType: [{ required: true, message: 'Banner 类型不能为空', trigger: 'blur' }],
+        shareChannel: [{ required: true, message: '分享渠道不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -199,29 +219,62 @@ export default {
         this.list = response.data
         this.total = response.total
 
+        this.list.forEach(k => {
+          k.shareChannel = JSON.parse(k.shareChannel)
+        })
+
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
       })
+    },
+    getBannerType(bannerType) {
+      return this.bannerTypeOptions.filter(k => k.key === bannerType)[0].value
+    },
+    getShareChannel(channel) {
+      let content = ''
+      channel.forEach(k => {
+        this.shareChannelOptions.map(op => {
+          if (op.key === k) {
+            content = content + op.value + ' | '
+          }
+        })
+      })
+      return content
     },
     handleFilter() {
       this.listQuery.page = 1
       this.getBannerList()
     },
     handleCreate() {
+      this.restForm()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    restForm() {
+      this.temp.id = undefined
+      this.temp.title = undefined
+      this.temp.bannerUrl = ''
+      this.temp.bannerClickUrl = undefined
+      this.temp.bannerType = undefined
+      this.temp.shareUrl = undefined
+      this.temp.shareTitle = undefined
+      this.temp.shareSubtitle = undefined
+      this.temp.shareIcon = ''
+      this.temp.shareChannel = []
+      this.temp.createUser = undefined
+      this.temp.deleteStatus = false
+    },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.operationUser = 'vue-element-admin'
+          this.temp.event = 'add'
+          this.temp.createUser = this.$store.state.user.sysCode
+          console.log(this.$store.state.user.sysCode)
           modifyBanner(this.temp).then(() => {
-            this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -229,14 +282,13 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getBannerList()
           })
-          this.getBannerList()
         }
       })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -247,6 +299,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          tempData.event = 'modify'
           modifyBanner(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -255,8 +308,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getBannerList()
           })
-          this.getBannerList()
         }
       })
     }

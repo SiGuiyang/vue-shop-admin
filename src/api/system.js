@@ -21,7 +21,7 @@ export function modifySystemUser(data) {
 // 获取权限列表
 export function fetchMenuList() {
   return service({
-    url: '/admin/system/menu/list',
+    url: '/admin/system/menu',
     method: 'post'
   })
 }
@@ -49,6 +49,14 @@ export function modifySystemRole(data) {
     url: '/admin/system/role/modify',
     method: 'post',
     data
+  })
+}
+
+// 获取角色
+export function fetchRoleClassification() {
+  return service({
+    url: '/admin/system/role/classification',
+    method: 'post'
   })
 }
 

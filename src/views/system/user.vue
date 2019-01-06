@@ -1,9 +1,9 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('system.user.sysUser')" v-model="listQuery.sysUser" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="$t('system.user.sysName')" v-model="listQuery.sysUser" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-permission="'/admin/system/user/modify'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -19,9 +19,9 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.sysUser')" align="center">
+      <el-table-column :label="$t('system.user.sysName')" align="center">
         <template slot-scope="scope">
-          <span class="link-type">{{ scope.row.sysUser }}</span>
+          <span class="link-type">{{ scope.row.sysName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.user.sysCode')" align="center">
@@ -36,38 +36,38 @@
       </el-table-column>
       <el-table-column :label="$t('system.user.status')" class-name="status-col" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus }}</el-tag>
+          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.createUser')" align="center">
+      <el-table-column :label="$t('common.createUser')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.createTime')" align="center">
+      <el-table-column :label="$t('common.createTime')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.actions')" width="120" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-permission="'/admin/system/user/modify'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getUserList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getUserList" />
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" width="50%">
-        <el-form-item :label="$t('system.user.sysUser')" prop="sysUser">
-          <el-input v-model="temp.sysUser" placeholder="请设置"/>
+        <el-form-item :label="$t('system.user.sysName')" prop="sysName">
+          <el-input v-model="temp.sysName" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('system.user.sysCode')" prop="sysCode">
           <el-input v-model="temp.sysCode" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('system.user.password')" prop="password">
-          <el-input v-model="temp.password" placeholder="请设置"/>
+          <el-input v-model="temp.password" :disabled="passwordDisabled" type="password" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('system.user.roleCode')" prop="roleCode">
           <el-select v-model="temp.roleCode" class="filter-item" multiple placeholder="请选择">
@@ -93,20 +93,20 @@
 </template>
 
 <script>
-import { fetchSystemUser, modifySystemUser, fetchSystemRole } from '@/api/system'
+import { fetchSystemUser, modifySystemUser, fetchRoleClassification } from '@/api/system'
 import waves from '@/directive/waves' // Waves directive
+import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   name: 'UserManage',
   components: { Pagination },
-  directives: { waves },
+  directives: { waves, permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
+        false: 'success',
+        true: 'danger'
       }
       return statusMap[status]
     }
@@ -119,19 +119,20 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
-        sysUser: undefined
+        pageSize: 20,
+        sysName: undefined
       },
       statusOptions: ['published', 'draft', 'deleted'],
-      roleCodeOptions: [],
+      roleCodeOptions: null,
       temp: {
-        id: '',
-        sysUser: '',
-        sysCode: '',
-        password: '',
-        role: '',
+        id: undefined,
+        sysName: undefined,
+        sysCode: undefined,
+        password: undefined,
+        roleCode: undefined,
         deleteStatus: false
       },
+      passwordDisabled: false,
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
@@ -140,8 +141,8 @@ export default {
       },
       dialogPvVisible: false,
       rules: {
-        sysUser: [{ required: true, message: '用户名不能为空', trigger: 'change' }],
-        sysCode: [{ required: true, message: '系统登陆名不能为空', trigger: 'change' }],
+        sysName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
+        sysCode: [{ required: true, message: '系统登陆名不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
         roleCode: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
       }
@@ -149,14 +150,17 @@ export default {
   },
   created() {
     this.getUserList()
+    this.getRoleCodes()
   },
   methods: {
     getUserList() {
       this.listLoading = true
       fetchSystemUser(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-
+        this.list = response.data
+        this.total = response.total
+        this.list.forEach(k => {
+          k.roleCode = JSON.parse(k.roleCode)
+        })
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
@@ -164,9 +168,7 @@ export default {
       })
     },
     getRoleCodes() { // 获取角色列表
-      const params = {}
-      params.event = 'roleCodes'
-      fetchSystemRole(params).then(response => {
+      fetchRoleClassification().then(response => {
         this.roleCodeOptions = response.data
       })
     },
@@ -181,10 +183,19 @@ export default {
       })
       row.status = status
     },
+    restTemp() {
+      this.temp.id = undefined
+      this.temp.sysName = undefined
+      this.temp.sysCode = undefined
+      this.temp.password = undefined
+      this.temp.roleCode = []
+      this.temp.deleteStatus = false
+    },
     handleCreate() {
-      this.temp = {}
+      this.restTemp()
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
+      this.passwordDisabled = false
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
@@ -192,10 +203,8 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
+          this.temp.createUser = this.$store.state.user.sysCode
           modifySystemUser(this.temp).then(() => {
-            this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -204,14 +213,15 @@ export default {
               duration: 2000
             })
           })
+          this.getUserList()
         }
       })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
+      this.passwordDisabled = true
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
@@ -220,15 +230,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
           modifySystemUser(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -237,6 +239,7 @@ export default {
               duration: 2000
             })
           })
+          this.getUserList()
         }
       })
     }

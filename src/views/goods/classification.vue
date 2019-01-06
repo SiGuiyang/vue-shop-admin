@@ -28,12 +28,12 @@
           <span class="link-type">{{ scope.row.icon }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.createTime')" min-width="55" align="center">operationUser
+      <el-table-column :label="$t('goods.createTime')" min-width="55" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.operationUser')" min-width="55" align="center">operationUser
+      <el-table-column :label="$t('table.operationUser')" min-width="55" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.operationUser }}</span>
         </template>
@@ -45,7 +45,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getOrderList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getClassificationList" />
 
   </div>
 </template>
@@ -78,6 +78,7 @@ export default {
     }
   },
   created() {
+    this.getClassificationList()
   },
   methods: {
     getClassificationList() { // 商品分类列表
@@ -105,8 +106,10 @@ export default {
 
         return
       }
+
+      this.getClassificationList()
     },
-    handleQuery(orderId) { // 查看订单详情
+    handleQuery(gcsId) { // 查看分类中的商品
 
     }
   }

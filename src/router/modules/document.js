@@ -8,27 +8,27 @@ const documentRouter = {
   meta: {
     title: 'document',
     icon: 'documentation',
-    permission: ['admin']
+    permission: '/admin/document/list'
   },
   children: [
     {
       path: 'create',
       component: () => import('@/views/document/create'),
       name: 'CreateArticle',
-      meta: { title: 'createArticle', icon: 'edit', permission: ['admin'] }
+      meta: { title: 'createArticle', icon: 'edit', permission: '/admin/document/modify' }
     },
     {
       path: 'edit/:id(\\d+)',
       component: () => import('@/views/document/edit'),
       name: 'EditArticle',
-      meta: { title: 'editArticle', noCache: true, permission: ['admin'] },
+      meta: { title: 'editArticle', noCache: true, permission: '/admin/document/modify' },
       hidden: true
     },
     {
       path: 'list',
       component: () => import('@/views/document/list'),
       name: 'ArticleList',
-      meta: { title: 'articleList', icon: 'list', permission: ['admin'] }
+      meta: { title: 'articleList', icon: 'list', permission: '/admin/document/list' }
     }
   ]
 }

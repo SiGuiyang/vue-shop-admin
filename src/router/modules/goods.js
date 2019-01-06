@@ -10,20 +10,20 @@ const goodsRouter = {
   meta: {
     title: 'goods',
     icon: 'nested',
-    permission: ['admin']
+    permission: '/admin/goods/list'
   },
   children: [
     {
       path: 'manage/list',
       component: () => import('@/views/goods/goodsManage'), // Parent router-view
       name: 'GoodsManageList',
-      meta: { title: 'goodsManageList', permission: ['admin'] }
+      meta: { title: 'goodsManageList', permission: '/admin/goods/list' }
     },
     {
       path: 'manage/classification',
       name: 'Classification',
       component: () => import('@/views/goods/classification'),
-      meta: { title: 'classification', permission: ['admin'] }
+      meta: { title: 'classification', permission: '/admin/goods/classification' }
     }
   ]
 }

@@ -10,26 +10,26 @@ const orderRouter = {
   meta: {
     title: 'order',
     icon: 'component',
-    permission: ['admin']
+    permission: '/admin/order/user'
   },
   children: [
     {
       path: 'user',
       component: () => import('@/views/order/userOrder'),
       name: 'UserOrder',
-      meta: { title: 'userOrder', permission: ['admin'] }
+      meta: { title: 'userOrder', permission: '/admin/order/user' }
     },
     {
       path: '/afterSale',
       component: () => import('@/views/order/afterSaleOrder'),
       name: 'AfterSaleOrder',
-      meta: { title: 'afterSaleOrder', permission: ['admin'] }
+      meta: { title: 'afterSaleOrder', permission: '/admin/order/after/sale' }
     },
     {
       path: 'seller',
       component: () => import('@/views/order/sellerOrder'),
       name: 'SellerOrder',
-      meta: { title: 'sellerOrder', permission: ['admin'] }
+      meta: { title: 'sellerOrder', permission: '/admin/order/seller' }
     }
   ]
 }

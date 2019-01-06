@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input :placeholder="$t('system.role.roleName')" v-model="listQuery.roleName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-permission="'/admin/system/role/modify'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -27,22 +27,22 @@
       </el-table-column>
       <el-table-column :label="$t('system.role.roleCode')" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.author }}</span>
+          <span>{{ scope.row.roleCode }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.role.status')" class-name="status-col" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.role.createUser')" align="center">
+      <el-table-column :label="$t('common.createUser')" align="center">
         <template slot-scope="scope">
-          <svg-icon v-for="n in +scope.row.importance" :key="n" icon-class="star" class="meta-item__icon"/>
+          <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.role.createTime')" align="center">
+      <el-table-column :label="$t('common.createTime')" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" align="center">
@@ -53,16 +53,16 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getRoleList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getRoleList" />
 
     <!-- 新增编辑 -->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px" width="50%">
         <el-form-item :label="$t('system.role.roleName')" prop="roleName">
-          <el-input v-model="temp.sysUser" placeholder="请设置"/>
+          <el-input v-model="temp.roleName" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('system.role.roleCode')" prop="roleCode">
-          <el-input v-model="temp.sysCode" placeholder="请设置"/>
+          <el-input v-model="temp.roleCode" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('system.user.status')" prop="deleteStatus">
           <el-switch
@@ -98,19 +98,19 @@
 
 <script>
 import { fetchSystemRole, modifySystemRole, fetchMenuList, fetchHadPermission } from '@/api/system'
-import waves from '@/directive/waves' // Waves directive
+import waves from '@/directive/waves'
+import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
   name: 'ConfigManage',
   components: { Pagination },
-  directives: { waves },
+  directives: { waves, permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
+        false: 'success',
+        true: 'danger'
       }
       return statusMap[status]
     }
@@ -123,7 +123,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        limit: 20,
+        pageSize: 20,
         roleName: undefined
       },
       showReviewer: false,
@@ -136,14 +136,14 @@ export default {
         create: '新建'
       },
       temp: {
-        id: '',
-        roleName: '',
-        roleCode: '',
+        id: undefined,
+        roleName: undefined,
+        roleCode: undefined,
         deleteStatus: false
       },
       rules: {
-        roleName: [{ required: true, message: '角色名称不能为空', trigger: 'change' }],
-        roleCode: [{ required: true, message: '角色代码不能为空', trigger: 'change' }]
+        roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
+        roleCode: [{ required: true, message: '角色代码不能为空', trigger: 'blur' }]
       },
       permissions: [], // 系统所有权限
       hadPermission: [] // 系统用户所属的权限
@@ -156,8 +156,8 @@ export default {
     getRoleList() {
       this.listLoading = true
       fetchSystemRole(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+        this.list = response.data
+        this.total = response.total
 
         // Just to simulate the time of the request
         setTimeout(() => {
@@ -179,6 +179,7 @@ export default {
     handleCreate() {
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
+      this.temp = {}
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
@@ -186,10 +187,9 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
+          this.temp.createUser = this.$store.state.user.sysCode
+          this.temp.event = 'add'
           modifySystemRole(this.temp).then(() => {
-            this.list.unshift(this.temp)
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -198,12 +198,12 @@ export default {
               duration: 2000
             })
           })
+          this.getRoleList()
         }
       })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -214,15 +214,8 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          tempData.timestamp = +new Date(tempData.timestamp) // change Thu Nov 30 2017 16:41:05 GMT+0800 (CST) to 1512031311464
+          this.temp.event = 'modify'
           modifySystemRole(tempData).then(() => {
-            for (const v of this.list) {
-              if (v.id === this.temp.id) {
-                const index = this.list.indexOf(v)
-                this.list.splice(index, 1, this.temp)
-                break
-              }
-            }
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -231,6 +224,7 @@ export default {
               duration: 2000
             })
           })
+          this.getRoleList()
         }
       })
     },

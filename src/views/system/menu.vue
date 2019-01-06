@@ -13,112 +13,7 @@ export default {
   components: { treeTable },
   data() {
     return {
-      list: [
-        {
-          id: 0,
-          name: '事件1',
-          permission: 50,
-          type: '无',
-          createTime: '无',
-          operationUser: '无'
-        },
-        {
-          id: 1,
-          name: '事件1',
-          permission: 50,
-          type: '无',
-          createTime: '无',
-          operationUser: '无',
-          children: [
-            {
-              id: 2,
-              name: '事件1',
-              permission: 50,
-              type: '无',
-              createTime: '无',
-              operationUser: '无'
-            },
-            {
-              id: 3,
-              name: '事件1',
-              permission: 50,
-              type: '无',
-              createTime: '无',
-              operationUser: '无',
-              children: [
-                {
-                  id: 4,
-                  name: '事件1',
-                  permission: 50,
-                  type: '无',
-                  createTime: '无',
-                  operationUser: '无'
-                },
-                {
-                  id: 5,
-                  name: '事件1',
-                  permission: 50,
-                  type: '无',
-                  createTime: '无',
-                  operationUser: '无'
-                },
-                {
-                  id: 6,
-                  name: '事件1',
-                  permission: 50,
-                  type: '无',
-                  createTime: '无',
-                  operationUser: '无',
-                  children: [
-                    {
-                      id: 7,
-                      name: '事件1',
-                      permission: 50,
-                      type: '无',
-                      createTime: '无',
-                      operationUser: '无',
-                      children: [
-                        {
-                          id: 71,
-                          name: '事件1',
-                          permission: 50,
-                          type: '无',
-                          createTime: '无',
-                          operationUser: '无'
-                        },
-                        {
-                          id: 72,
-                          name: '事件1',
-                          permission: 50,
-                          type: '无',
-                          createTime: '无',
-                          operationUser: '无'
-                        },
-                        {
-                          id: 73,
-                          name: '事件1',
-                          permission: 50,
-                          type: '无',
-                          createTime: '无',
-                          operationUser: '无'
-                        }
-                      ]
-                    },
-                    {
-                      id: 8,
-                      name: '事件1',
-                      permission: 50,
-                      type: '无',
-                      createTime: '无',
-                      operationUser: '无'
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ],
+      list: [],
       total: 0,
       listLoading: true,
       listQuery: {
@@ -141,15 +36,15 @@ export default {
         },
         {
           text: '类型',
-          value: 'type'
+          value: 'permissionTypeName'
         },
         {
           text: '创建时间',
-          value: 'createTime'
+          value: 'createTimeName'
         },
         {
           text: '操作人',
-          value: 'operationUser'
+          value: 'createUser'
         }
       ]
     }
@@ -163,7 +58,6 @@ export default {
       fetchMenuList().then(response => {
         this.list = response.data
         this.total = response.total
-
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)

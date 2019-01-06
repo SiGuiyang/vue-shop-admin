@@ -6,52 +6,52 @@ const activityRouter = {
   path: '/activity',
   component: Layout,
   redirect: '/activity/coupon/template',
-  name: 'Table',
+  name: 'CouponManage',
   meta: {
     title: 'activity',
     icon: 'table',
-    permission: ['admin']
+    permission: '/admin/activity/banner/list'
   },
   children: [
     {
-      path: '/activity/coupon',
-      component: () => import('@/views/activity/coupon/couponTemplate'),
+      path: 'coupon',
+      component: () => import('@/views/activity/coupon/index'),
       name: 'Coupon',
       redirect: '/activity/coupon/template',
-      meta: { title: 'coupon', permission: ['admin'] },
+      meta: { title: 'coupon', permission: '/admin/activity/coupon/template' },
       children: [
         {
           path: 'template',
-          component: () => import('@/views/activity/coupon/couponTemplate'),
+          component: () => import('@/views/activity/coupon/template'),
           name: 'CouponTemplate',
-          meta: { title: 'couponTemplate', permission: ['admin'] }
+          meta: { title: 'couponTemplate', permission: '/admin/activity/coupon/template' }
         },
         {
-          path: 'list',
-          component: () => import('@/views/activity/coupon/coupons'),
-          name: 'Coupons',
-          meta: { title: 'coupon', permission: ['admin'] }
+          path: 'user',
+          component: () => import('@/views/activity/coupon/userCoupon'),
+          name: 'UserCoupon',
+          meta: { title: 'userCoupon', permission: '/admin/activity/coupon/list' }
         }
       ]
     },
     {
-      path: '/activity/fightGroup',
+      path: 'fightGroup',
       component: () => import('@/views/activity/fightGroup/rule'),
       redirect: '/activity/fightGroup/rule',
       name: 'FightGroup',
-      meta: { title: 'fightGroup', permission: ['admin'] },
+      meta: { title: 'fightGroup', permission: '/admin/activity/fightGroup/rule' },
       children: [
         {
           path: 'rule',
           component: () => import('@/views/activity/fightGroup/rule'),
           name: 'FightGroupRule',
-          meta: { title: 'fightGroupRule', permission: ['admin'] }
+          meta: { title: 'fightGroupRule', permission: '/admin/activity/fightGroup/rule' }
         },
         {
           path: 'goods',
           component: () => import('@/views/activity/fightGroup/goods'),
           name: 'FightGroupGoods',
-          meta: { title: 'fightGroupGoods', permission: ['admin'] }
+          meta: { title: 'fightGroupGoods', permission: '/admin/activity/fightGroup/goods' }
         }
       ]
     },
@@ -59,7 +59,13 @@ const activityRouter = {
       path: 'banner',
       component: () => import('@/views/activity/banner'),
       name: 'BannerManage',
-      meta: { title: 'bannerManage', permission: ['admin'] }
+      meta: { title: 'bannerManage', permission: '/admin/activity/banner/list' }
+    },
+    {
+      path: 'station',
+      component: () => import('@/views/activity/stationLetter'),
+      name: 'StationLetter',
+      meta: { title: 'stationLetter', permission: '/admin/activity/stationLetter' }
     }
   ]
 }

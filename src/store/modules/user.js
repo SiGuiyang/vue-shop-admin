@@ -6,8 +6,8 @@ const user = {
     user: '',
     status: '',
     code: '',
-    token: getToken(),
     name: '',
+    sysCode: getToken(),
     avatar: '',
     introduction: '',
     roles: [],
@@ -21,9 +21,6 @@ const user = {
     SET_CODE: (state, code) => {
       state.code = code
     },
-    SET_TOKEN: (state, token) => {
-      state.token = token
-    },
     SET_INTRODUCTION: (state, introduction) => {
       state.introduction = introduction
     },
@@ -32,6 +29,9 @@ const user = {
     },
     SET_STATUS: (state, status) => {
       state.status = status
+    },
+    SET_SYSCODE: (state, sysCode) => {
+      state.sysCode = sysCode
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -54,8 +54,8 @@ const user = {
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
-          commit('SET_TOKEN', data.token)
-          setToken(response.data.token)
+          commit('SET_SYSCODE', data.sysCode)
+          setToken(data.sysCode)
           resolve()
         }).catch(error => {
           reject(error)
@@ -66,17 +66,16 @@ const user = {
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {
-        getUserInfo(state.token).then(response => {
+        getUserInfo(state.sysCode).then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
             reject('error')
           }
           const data = response.data
-          commit('SET_PERMISSION', ['admin', 'editor'])
 
-          if (data.roles && data.roles.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_ROLES', data.roles)
+          if (data.permission && data.permission.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_PERMISSION', data.permission)
           } else {
-            reject('getInfo: roles must be a non-null array !')
+            reject('getInfo: permission must be a non-null array !')
           }
 
           commit('SET_NAME', data.name)

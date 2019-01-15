@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import qs from 'qs'
-import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 // create an axios instance
@@ -14,9 +13,17 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // Do something before request is sent
-    const requestData = config.data
-    requestData.sysCode = getToken() // 后台每个请求都追加sysCode参数
-    config.data = qs.stringify(requestData)
+    const requestMethod = config.method
+    if (requestMethod === 'post') { // post 方式
+      const requestData = config.data
+      requestData.sysCode = getToken() // 后台每个请求都追加sysCode参数
+      config.data = qs.stringify(requestData)
+    } else if (requestMethod === 'get') { // get 方式
+      const requestParams = config.params
+      requestParams.sysCode = getToken() // 后台每个请求都追加sysCode参数
+      config.params = requestParams
+    }
+
     return config
   },
   error => {
@@ -36,27 +43,15 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.code === 1000) {
+    if (res.code === 500) {
       Message({
-        message: res.msg,
+        message: '网络发生点小问题，请稍等',
         type: 'error',
         duration: 5 * 1000
       })
-      // 50008:非法的token; 50012:其他客户端登录了;  50014:Token 过期了;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
-        // 请自行在引入 MessageBox
-        // import { Message, MessageBox } from 'element-ui'
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          store.dispatch('FedLogOut').then(() => {
-            location.reload() // 为了重新实例化vue-router对象 避免bug
-          })
-        })
-      }
-      return Promise.reject('error')
+      return Promise.reject()
+    } else if (res.code === 1000 || res.code === 3000 || res.code === 5000) {
+      return Promise.reject(res.msg)
     } else {
       return response.data
     }

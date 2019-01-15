@@ -1,12 +1,14 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('activity.coupon.couponName')" v-model="listQuery.couponName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="$t('activity.coupon.couponName')" v-model="listQuery.couponName" style="width: 200px;" class="filter-item"/>
+      <el-input :placeholder="$t('activity.coupon.phone')" v-model="listQuery.phone" style="width: 200px;" class="filter-item"/>
       <el-select v-model="listQuery.discountType" :placeholder="$t('activity.coupon.discountType')" clearable style="width: 120px" class="filter-item">
         <el-option v-for="(item,index) in discountTypeOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
+      <el-date-picker v-model="listQuery.beginTime" :placeholder="$t('time.beginTime')" format="yyyy-MM-dd" class="filter-item" type="date"/>
+      <el-date-picker v-model="listQuery.endTime" :placeholder="$t('time.endTime')" format="yyyy-MM-dd" class="filter-item" type="date"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -22,49 +24,64 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.couponName')" align="center">
+      <el-table-column :label="$t('activity.coupon.couponName')" align="center" width="200">
         <template slot-scope="scope">
-          <span class="link-type">{{ scope.row.couponName }}</span>
+          <span>{{ scope.row.couponName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.templateName')" align="center">
+      <el-table-column :label="$t('activity.coupon.couponName')" align="center" width="200">
         <template slot-scope="scope">
-          <span class="link-type">{{ scope.row.templateName }}</span>
+          <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountType')" align="center">
+      <el-table-column :label="$t('activity.coupon.phone')" align="center" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.discountType }}</span>
+          <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center">
+      <el-table-column :label="$t('activity.coupon.templateName')" align="center" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.deleteStatus }}</span>
+          <span>{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.orderAmount')" align="center">
+      <el-table-column :label="$t('activity.coupon.discountType')" align="center" width="100">
+        <template slot-scope="scope">
+          <span>{{ getDiscountType(scope.row.discountType) }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center" width="100">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('activity.coupon.orderAmount')" align="center" width="140">
         <template slot-scope="scope">
           <span>{{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountAmount')" align="center">
+      <el-table-column :label="$t('activity.coupon.couponAmount')" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.discountAmount }}</span>
+          <span>{{ scope.row.couponAmount != null ? scope.row.couponAmount : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createUser')" align="center">
+      <el-table-column :label="$t('activity.coupon.discountStrength')" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createTime')" align="center">
+      <el-table-column :label="$t('time.beginTime')" align="center" width="140">
+        <template slot-scope="scope">
+          <span>{{ scope.row.beginTime | parseTime('{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('time.endTime')" align="center" width="140">
+        <template slot-scope="scope">
+          <span>{{ scope.row.endTime | parseTime('{y}-{m}-{d}') }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('common.createTime')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" align="center">
-        <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -85,8 +102,8 @@ export default {
   filters: {
     statusFilter(status) {
       const statusMap = {
-        draft: 'info',
-        deleted: 'danger'
+        false: 'success',
+        true: 'danger'
       }
       return statusMap[status]
     }
@@ -99,13 +116,16 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         couponName: undefined,
-        discountType: undefined
+        phone: undefined,
+        discountType: undefined,
+        beginTime: undefined,
+        endTime: undefined
       },
       discountTypeOptions: [
-        { key: '1', value: '优惠券' },
-        { key: '2', value: '折扣券' }
+        { key: 1, value: '优惠券' },
+        { key: 2, value: '折扣券' }
       ]
     }
   },
@@ -122,7 +142,13 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      }).catch(error => {
+        this.$message.error(error)
+        this.listLoading = false
       })
+    },
+    getDiscountType(type) {
+      return this.discountTypeOptions.filter(v => v.key === type)[0].value
     },
     handleFilter() {
       this.listQuery.page = 1

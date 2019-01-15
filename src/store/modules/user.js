@@ -4,31 +4,17 @@ import { getToken, setToken, removeToken } from '@/utils/auth'
 const user = {
   state: {
     user: '',
-    status: '',
     code: '',
     name: '',
     sysCode: getToken(),
     avatar: '',
     introduction: '',
-    roles: [],
-    permission: [],
-    setting: {
-      articlePlatform: []
-    }
+    permission: []
   },
 
   mutations: {
     SET_CODE: (state, code) => {
       state.code = code
-    },
-    SET_INTRODUCTION: (state, introduction) => {
-      state.introduction = introduction
-    },
-    SET_SETTING: (state, setting) => {
-      state.setting = setting
-    },
-    SET_STATUS: (state, status) => {
-      state.status = status
     },
     SET_SYSCODE: (state, sysCode) => {
       state.sysCode = sysCode
@@ -39,9 +25,6 @@ const user = {
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
     },
-    SET_ROLES: (state, roles) => {
-      state.roles = roles
-    },
     SET_PERMISSION: (state, permission) => {
       state.permission = permission
     }
@@ -51,6 +34,7 @@ const user = {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      console.log(userInfo)
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
           const data = response.data
@@ -78,9 +62,8 @@ const user = {
             reject('getInfo: permission must be a non-null array !')
           }
 
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', data.sysName)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -90,9 +73,9 @@ const user = {
     // 登出
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('SET_TOKEN', '')
-          commit('SET_ROLES', [])
+        logout({}).then(() => {
+          commit('SET_SYSCODE', '')
+          commit('SET_PERMISSION', [])
           removeToken()
           resolve()
         }).catch(error => {
@@ -104,7 +87,7 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', '')
+        commit('SET_SYSCODE', '')
         removeToken()
         resolve()
       })
@@ -113,14 +96,10 @@ const user = {
     // 动态修改权限
     ChangeRoles({ commit, dispatch }, role) {
       return new Promise(resolve => {
-        commit('SET_TOKEN', role)
-        setToken(role)
         getUserInfo(role).then(response => {
           const data = response.data
-          commit('SET_ROLES', data.roles)
-          commit('SET_NAME', data.name)
+          commit('SET_NAME', data.sysName)
           commit('SET_AVATAR', data.avatar)
-          commit('SET_INTRODUCTION', data.introduction)
           dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
           resolve()
         })

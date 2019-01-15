@@ -68,3 +68,12 @@ export function publishCoupon(data) {
     data
   })
 }
+
+// 站内信列表
+export function fetchStationList(data) {
+  return service({
+    url: '/admin/activity/station/list',
+    method: 'post',
+    data
+  })
+}

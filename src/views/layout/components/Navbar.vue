@@ -25,6 +25,9 @@
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
             <el-dropdown-item>
+              {{ name }}
+            </el-dropdown-item>
+            <el-dropdown-item divided>
               {{ $t('navbar.dashboard') }}
             </el-dropdown-item>
           </router-link>

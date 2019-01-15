@@ -61,30 +61,52 @@ export default {
       couponName: '优惠券活动名称',
       templateType: '模板类型',
       orderAmount: '订单满减金额',
-      discountAmount: '优惠券金额',
+      couponAmount: '优惠券金额',
       deleteStatus: '是否禁用',
       discountType: '优惠券类型',
       description: '优惠券说明',
-      couponExcel: '文件Excel'
+      discountStrength: '折扣力度',
+      phone: '手机号',
+      username: '用户名'
+    },
+    station: {
+      content: '内容'
     }
   },
   goods: {
     goodsName: '商品名称',
     goodsCode: '商品编码',
-    goodsImg: '图片',
+    goodsType: '商品类型',
+    description: '商品简介',
     goodsStatus: '状态',
     goodsAmount: '商品价格',
     goodsDiscountAmount: '折扣价格',
+    integral: '商品积分',
     goodsInventory: '库存',
     createTime: '创建时间',
-    classificationName: '分类名称'
+    classificationName: '分类名称',
+    placeOrigin: '产地',
+    storage: '储存',
+    goodsImg: '商品LOGO',
+    bannerFirst: '商品banner第一页',
+    bannerSecond: '商品banner第二页',
+    bannerThird: '商品banner第三页',
+    detailsImgFirst: '商品详情图片 一',
+    detailsImgSecond: '商品详情图片 二',
+    detailsImgThird: '商品详情图片 三',
+    detailsImgFourth: '商品详情图片 四',
+    detailsImgFifth: '商品详情图片 五'
   },
   order: {
     orderCode: '订单号',
     orderStatus: '订单状态',
-    phone: '用户名',
+    phone: '手机号码',
     username: '用户名',
-    amount: '订单金额',
+    orderAmount: '订单金额',
+    integral: '积分',
+    orderType: '订单类型',
+    integralAmount: '积分减免金额',
+    discountAmount: '优惠券减免金额',
     address: '送货地址',
     createTime: '下单时间'
   },
@@ -94,7 +116,8 @@ export default {
       sysCode: '登陆账号',
       roleCode: '角色',
       password: '密码',
-      status: '状态'
+      status: '状态',
+      avatar: '用户头像'
     },
     role: {
       roleName: '角色名称',
@@ -172,6 +195,8 @@ export default {
     delete: '删除',
     cancel: '取 消',
     confirm: '确 定',
+    close: '关 闭',
+    query: '查 看',
     operationUser: '操作人',
     reissueCoupon: '补发优惠券',
     downloadTemplate: '下载模板'

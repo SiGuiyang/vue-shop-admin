@@ -19,38 +19,48 @@
       highlight-current-row
       style="width: 100%;"
       @selection-change="handleSelectionChange">
-      <el-table-column width="65" align="center" type="selection" />
-      <el-table-column :label="$t('activity.coupon.templateName')" align="center">
+      <el-table-column align="center" type="selection" width="65"/>
+      <el-table-column :label="$t('activity.coupon.templateName')" align="center" width="200">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.templateType')" align="center">
+      <el-table-column :label="$t('activity.coupon.templateType')" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ getTemplateType(scope.row.templateType) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center">
+      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center" width="80">
         <template slot-scope="scope">
           <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.orderAmount')" align="center">
+      <el-table-column :label="$t('activity.coupon.orderAmount')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountAmount')" align="center">
+      <el-table-column :label="$t('activity.coupon.couponAmount')" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.discountAmount }}</span>
+          <span>{{ scope.row.couponAmount != null ? scope.row.couponAmount: '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createUser')" align="center">
+      <el-table-column :label="$t('activity.coupon.discountStrength')" align="center" width="100">
+        <template slot-scope="scope">
+          <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('activity.coupon.description')" align="center" width="260">
+        <template slot-scope="scope">
+          <span>{{ scope.row.description }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('common.createUser')" align="center" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createTime')" align="center">
+      <el-table-column :label="$t('common.createTime')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
@@ -70,15 +80,21 @@
           <el-input v-model="temp.templateName" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('activity.coupon.templateType')" prop="templateType">
-          <el-select v-model="temp.templateType" class="filter-item" placeholder="请选择">
+          <el-select v-model="temp.templateType" class="filter-item" placeholder="请选择" @change="handleChangeType">
             <el-option v-for="(item,index) in templateTypeOptions" :key="index" :label="item.value" :value="item.key"/>
           </el-select>
         </el-form-item>
         <el-form-item :label="$t('activity.coupon.orderAmount')" prop="orderAmount">
           <el-input v-model.number="temp.orderAmount" placeholder="请设置"/>
         </el-form-item>
-        <el-form-item :label="$t('activity.coupon.discountAmount')" prop="discountAmount">
-          <el-input v-model.number="temp.discountAmount" placeholder="请设置"/>
+        <el-form-item v-if="!discountVisible" :label="$t('activity.coupon.couponAmount')" prop="couponAmount">
+          <el-input v-model.number="temp.couponAmount" placeholder="请设置"/>
+        </el-form-item>
+        <el-form-item
+          v-if="discountVisible"
+          :label="$t('activity.coupon.discountStrength')"
+          prop="discountStrength">
+          <el-input v-model.number="temp.discountStrength" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('activity.coupon.description')" prop="description">
           <el-input :autosize="{ minRows: 4, maxRows: 8}" v-model="temp.description" type="textarea" placeholder="请添加说明"/>
@@ -94,14 +110,14 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+        <el-button v-permission="'/admin/activity/coupon/template/modify'" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
       </div>
     </el-dialog>
 
     <el-dialog :visible.sync="reissueFormVisible" title="补发优惠券" width="50%">
 
       <el-upload
-        :on-change="handleUploadChange"
+        :on-success="handleUploadSuccess"
         :file-list="uploadFile"
         :action="actionURL"
         accept=".xlsx"
@@ -113,7 +129,7 @@
       <div slot="footer" class="dialog-footer">
         <el-button v-waves :loading="downloadLoading" class="filter-item" type="warning" icon="el-icon-download" @click="handleDownload">{{ $t('table.downloadTemplate') }}</el-button>
         <el-button @click="reissueFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="handleReissueCoupon">{{ $t('table.confirm') }}</el-button>
+        <el-button v-permission="'/admin/publish/coupon'" type="primary" @click="handleReissueCoupon">{{ $t('table.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -162,18 +178,27 @@ export default {
       dialogFormVisible: false,
       reissueDisabled: true,
       reissueFormVisible: false,
-      selectedTemplateId: undefined,
+      downloadLoading: false,
+      discountVisible: false,
       uploadFile: [],
+      downloadContent: {
+        downloadFile: 'http://pk6b0a7n8.bkt.clouddn.com/coupon_send_template.xlsx',
+        downloadFilename: 'coupon_send_template'
+      },
+      publishCoupon: {
+        file: undefined,
+        templateId: undefined
+      },
       temp: {
         id: undefined,
         templateName: undefined,
         templateType: '',
         orderAmount: undefined,
-        discountAmount: undefined,
+        couponAmount: null,
+        discountStrength: null,
         description: undefined,
         deleteStatus: false
       },
-      downloadLoading: false,
       rules: {
         templateName: [{ required: true, message: '优惠券模板不能为空', trigger: 'blur' }],
         templateType: [{ required: true, message: '模版类型不能为空', trigger: 'blur' }],
@@ -188,7 +213,7 @@ export default {
           }, trigger: 'change'
           }
         ],
-        discountAmount: [{ type: 'number', required: true, message: '满减金额只能是整数', trigger: 'blur' },
+        couponAmount: [{ type: 'number', required: true, message: '满减金额只能是整数', trigger: 'blur' },
           { validator: (rule, value, callback) => {
             if (/^[1-9]\d*$/.test(value)) {
               callback()
@@ -196,6 +221,17 @@ export default {
               callback(new Error('满减金额只能是整数'))
             }
           }, trigger: 'change'
+          }
+        ],
+        discountStrength: [{ type: 'number', required: true, message: '折扣力度不能为空', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (/^[1-9]\d*$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('折扣力度只能是整数'))
+              }
+            }, trigger: 'change'
           }
         ]
       },
@@ -235,6 +271,9 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      }).catch(error => {
+        this.$message.error(error)
+        this.listLoading = false
       })
     },
     getTemplateType(type) {
@@ -247,7 +286,7 @@ export default {
     handleSelectionChange(row) { // 复选框变化出发事件
       if (row.length === 1) {
         this.reissueDisabled = false
-        this.selectedTemplateId = row[0].id
+        this.publishCoupon.templateId = row[0].id
       } else {
         this.reissueDisabled = true
       }
@@ -268,6 +307,9 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
+    handleChangeType(val) {
+      this.discountVisible = val === 2
+    },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -282,13 +324,25 @@ export default {
               duration: 2000
             })
             this.getCouponTemplateList()
+          }).catch(error => {
+            this.$notify({
+              title: '成功',
+              message: error,
+              type: 'success',
+              duration: 2000
+            })
           })
         }
       })
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.event = 'modify'
+      if (this.temp.templateType === 2) {
+        this.discountVisible = true
+        this.temp.discountStrength = this.temp.discountStrength * 100
+      } else {
+        this.discountVisible = false
+      }
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -299,6 +353,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          tempData.event = 'modify'
           modifyCouponTemplate(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -308,18 +363,29 @@ export default {
               duration: 2000
             })
             this.getCouponTemplateList()
+          }).catch(error => {
+            this.$message.error(error)
           })
         }
       })
     },
-    handleUploadChange(respnse) {
+    handleUploadSuccess(respnse) {
+      this.publishCoupon.file = respnse.data.url
     },
     handleDownload() {
-      console.log('dddd')
+      window.location.href = process.env.BASE_API + '/admin/download?downloadFile=' + this.downloadContent.downloadFile + '&downloadFilename=' + this.downloadContent.downloadFilename
     },
     handleReissueCoupon() {
-      publishCoupon().then(response => {
-
+      publishCoupon(this.publishCoupon).then(response => {
+        this.reissueFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: '发送优惠券成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(error => {
+        this.$message.error(error)
       })
     }
   }

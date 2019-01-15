@@ -67,10 +67,10 @@
         <el-form-item :label="$t('system.user.status')" prop="deleteStatus">
           <el-switch
             v-model="temp.deleteStatus"
-            active-text="启用"
-            inactive-text="关闭"
-            active-color="#13ce66"
-            inactive-color="#ff4949" />
+            active-text="关闭"
+            inactive-text="启用"
+            active-color="#ff4949"
+            inactive-color="#13ce66" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -85,6 +85,8 @@
         ref="tree"
         :data="permissions"
         :default-expanded-keys="hadPermission"
+        :default-checked-keys="hadPermission"
+        :props="defaultProps"
         show-checkbox
         node-key="id"
         highlight-current />
@@ -97,7 +99,7 @@
 </template>
 
 <script>
-import { fetchSystemRole, modifySystemRole, fetchMenuList, fetchHadPermission } from '@/api/system'
+import { fetchSystemRole, modifySystemRole, fetchMenuList, fetchRolePermission, permissionAuthorization } from '@/api/system'
 import waves from '@/directive/waves'
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -141,12 +143,17 @@ export default {
         roleCode: undefined,
         deleteStatus: false
       },
+      selectedRoleId: undefined,
       rules: {
         roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
         roleCode: [{ required: true, message: '角色代码不能为空', trigger: 'blur' }]
       },
       permissions: [], // 系统所有权限
-      hadPermission: [] // 系统用户所属的权限
+      hadPermission: [], // 系统用户所属的权限
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      }
     }
   },
   created() {
@@ -197,8 +204,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getRoleList()
           })
-          this.getRoleList()
         }
       })
     },
@@ -214,7 +221,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          this.temp.event = 'modify'
+          tempData.event = 'modify'
           modifySystemRole(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -223,23 +230,39 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getRoleList()
           })
-          this.getRoleList()
         }
       })
     },
     handlePermissionList(row) {
       this.permissionVisible = true
-      fetchMenuList().then(response => { // 权限列表
-        this.permission = response.data
+      this.selectedRoleId = row.id
+      const params = {}
+      fetchMenuList(params).then(response => { // 权限列表
+        this.permissions = response.data
       })
-
-      fetchHadPermission().then(response => { // 所属权限
+      const roleParams = {}
+      roleParams.roleId = row.id
+      fetchRolePermission(roleParams).then(response => { // 所属权限
         this.hadPermission = response.data
       })
     },
     handlePermission() {
       this.permissionVisible = false
+      const data = []
+      const checked = this.$refs.tree.getCheckedKeys() // 获取全选择中的节点
+      const halfChecked = this.$refs.tree.getHalfCheckedKeys() // 获取半选中的节点
+      checked.forEach(ck => data.push(ck))
+      halfChecked.forEach(hc => data.push(hc))
+      const params = {}
+      params.permissions = JSON.stringify(data) // 将最终获取的权限节点入参进行授权
+      params.roleId = this.selectedRoleId
+      permissionAuthorization(params).then(response => {
+
+      }).catch(error => {
+        this.$message.error(error)
+      })
     }
 
   }

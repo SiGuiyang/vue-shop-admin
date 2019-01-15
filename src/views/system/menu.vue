@@ -55,7 +55,7 @@ export default {
   methods: {
     getMenuList() {
       this.listLoading = true
-      fetchMenuList().then(response => {
+      fetchMenuList({}).then(response => {
         this.list = response.data
         this.total = response.total
         setTimeout(() => {

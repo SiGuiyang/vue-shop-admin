@@ -65,7 +65,7 @@ const activityRouter = {
       path: 'station',
       component: () => import('@/views/activity/stationLetter'),
       name: 'StationLetter',
-      meta: { title: 'stationLetter', permission: '/admin/activity/stationLetter' }
+      meta: { title: 'stationLetter', permission: '/admin/activity/station/list' }
     }
   ]
 }

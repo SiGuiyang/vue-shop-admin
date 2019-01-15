@@ -19,18 +19,29 @@ export function modifySystemUser(data) {
 }
 
 // 获取权限列表
-export function fetchMenuList() {
+export function fetchMenuList(data) {
   return service({
     url: '/admin/system/menu',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 
-// 查看某个系统用户的权限列表
-export function fetchHadPermission(id) {
+// 查看某个系统角色所具有的权限
+export function fetchRolePermission(data) {
   return service({
-    url: '/admin/system/menu/' + id,
-    method: 'post'
+    url: '/admin/system/menu/role',
+    method: 'post',
+    data
+  })
+}
+
+// 角色授权
+export function permissionAuthorization(data) {
+  return service({
+    url: '/admin/system/permission',
+    method: 'post',
+    data
   })
 }
 
@@ -53,10 +64,11 @@ export function modifySystemRole(data) {
 }
 
 // 获取角色
-export function fetchRoleClassification() {
+export function fetchRoleClassification(data) {
   return service({
     url: '/admin/system/role/classification',
-    method: 'post'
+    method: 'post',
+    data
   })
 }
 

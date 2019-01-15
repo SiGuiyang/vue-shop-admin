@@ -6,7 +6,7 @@
         <el-option v-for="(item,index) in bannerTypeOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-permission="'/admin/activity/banner/modify'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -130,7 +130,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+        <el-button v-permission="'/admin/activity/banner/modify'" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
       </div>
     </el-dialog>
 
@@ -140,13 +140,14 @@
 <script>
 import { fetchBannerList, modifyBanner } from '@/api/activity'
 import waves from '@/directive/waves' // Waves directive
+import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
   name: 'BannerManage',
   components: { Pagination, Upload },
-  directives: { waves },
+  directives: { waves, permission },
   filters: {
     statusFilter(status) {
       const statusMap = {
@@ -226,6 +227,9 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      }).catch(error => {
+        this.$message.error(error)
+        this.listLoading = false
       })
     },
     getBannerType(bannerType) {
@@ -273,7 +277,6 @@ export default {
         if (valid) {
           this.temp.event = 'add'
           this.temp.createUser = this.$store.state.user.sysCode
-          console.log(this.$store.state.user.sysCode)
           modifyBanner(this.temp).then(() => {
             this.dialogFormVisible = false
             this.$notify({

@@ -21,17 +21,17 @@
       </el-table-column>
       <el-table-column :label="$t('system.user.sysName')" align="center">
         <template slot-scope="scope">
-          <span class="link-type">{{ scope.row.sysName }}</span>
+          <span>{{ scope.row.sysName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.user.sysCode')" align="center">
         <template slot-scope="scope">
-          <span class="link-type">{{ scope.row.sysCode }}</span>
+          <span>{{ scope.row.sysCode }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.user.roleCode')" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.roleCode }}</span>
+          <span>{{ getRoleIds(scope.row.roleIds) }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.user.status')" class-name="status-col" width="100" align="center">
@@ -69,18 +69,23 @@
         <el-form-item :label="$t('system.user.password')" prop="password">
           <el-input v-model="temp.password" :disabled="passwordDisabled" type="password" placeholder="请设置"/>
         </el-form-item>
-        <el-form-item :label="$t('system.user.roleCode')" prop="roleCode">
-          <el-select v-model="temp.roleCode" class="filter-item" multiple placeholder="请选择">
-            <el-option v-for="(item,index) in roleCodeOptions" :key="index" :label="item.roleName" :value="item.roleCode"/>
+        <el-form-item :label="$t('system.user.roleCode')" prop="roleIds">
+          <el-select v-model="temp.roleIds" class="filter-item" multiple placeholder="请选择">
+            <el-option v-for="(item,index) in roleCodeOptions" :key="index" :label="item.roleName" :value="item.id"/>
           </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('system.user.avatar')" prop="avatar">
+          <div style="margin-bottom: 20px;">
+            <Upload v-model="temp.avatar" />
+          </div>
         </el-form-item>
         <el-form-item :label="$t('system.user.status')" prop="deleteStatus">
           <el-switch
             v-model="temp.deleteStatus"
-            active-text="启用"
-            inactive-text="关闭"
-            active-color="#13ce66"
-            inactive-color="#ff4949" />
+            active-text="关闭"
+            inactive-text="启用"
+            active-color="#ff4949"
+            inactive-color="#13ce66" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -97,10 +102,11 @@ import { fetchSystemUser, modifySystemUser, fetchRoleClassification } from '@/ap
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Upload from '@/components/Upload/singleImage3'
 
 export default {
   name: 'UserManage',
-  components: { Pagination },
+  components: { Pagination, Upload },
   directives: { waves, permission },
   filters: {
     statusFilter(status) {
@@ -128,8 +134,10 @@ export default {
         id: undefined,
         sysName: undefined,
         sysCode: undefined,
+        loginCode: undefined,
         password: undefined,
-        roleCode: undefined,
+        avatar: '',
+        roleIds: [],
         deleteStatus: false
       },
       passwordDisabled: false,
@@ -144,13 +152,14 @@ export default {
         sysName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
         sysCode: [{ required: true, message: '系统登陆名不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-        roleCode: [{ required: true, message: '角色不能为空', trigger: 'blur' }]
+        roleIds: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
+        avatar: [{ required: true, message: '用户头像不能为空', trigger: 'blur' }]
       }
     }
   },
   created() {
+    this.initRoleCodes()
     this.getUserList()
-    this.getRoleCodes()
   },
   methods: {
     getUserList() {
@@ -159,18 +168,34 @@ export default {
         this.list = response.data
         this.total = response.total
         this.list.forEach(k => {
-          k.roleCode = JSON.parse(k.roleCode)
+          k.roleIds = JSON.parse(k.roleIds)
         })
         // Just to simulate the time of the request
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      }).catch(error => {
+        this.$message.error(error)
       })
     },
-    getRoleCodes() { // 获取角色列表
-      fetchRoleClassification().then(response => {
+    initRoleCodes() { // 获取角色列表
+      fetchRoleClassification({}).then(response => {
         this.roleCodeOptions = response.data
       })
+    },
+    getRoleIds(roleIds) {
+      if (roleIds === '' || roleIds === undefined || roleIds === undefined) {
+        return '——'
+      }
+      let content = ''
+      this.roleCodeOptions.forEach(rco => {
+        for (let i = 0; i < roleIds.length; i++) {
+          if (rco.id === roleIds[i]) {
+            content = content + rco.roleName + '|'
+          }
+        }
+      })
+      return content
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -188,7 +213,7 @@ export default {
       this.temp.sysName = undefined
       this.temp.sysCode = undefined
       this.temp.password = undefined
-      this.temp.roleCode = []
+      this.temp.roleIds = []
       this.temp.deleteStatus = false
     },
     handleCreate() {
@@ -204,6 +229,8 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.createUser = this.$store.state.user.sysCode
+          this.temp.loginCode = this.temp.sysCode
+          this.temp.event = 'add'
           modifySystemUser(this.temp).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -212,8 +239,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getUserList()
           })
-          this.getUserList()
         }
       })
     },
@@ -230,6 +257,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
+          tempData.event = 'modify'
           modifySystemUser(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -238,8 +266,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getUserList()
           })
-          this.getUserList()
         }
       })
     }

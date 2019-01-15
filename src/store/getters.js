@@ -14,6 +14,10 @@ const getters = {
   sysCode: state => state.user.sysCode,
   permission_routers: state => state.permission.routers,
   addRouters: state => state.permission.addRouters,
-  errorLogs: state => state.errorLog.logs
+  errorLogs: state => state.errorLog.logs,
+  orderStatusOptions: state => state.serviceConst.orderStatusOptions,
+  orderTypeOptions: state => state.serviceConst.orderTypeOptions,
+  goodsTypeOptions: state => state.serviceConst.goodsTypeOptions,
+  couponTypeOptions: state => state.serviceConst.couponTypeOptions
 }
 export default getters

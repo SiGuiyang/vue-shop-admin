@@ -13,67 +13,85 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" prop="id" align="center" min-width="25">
+      <el-table-column :label="$t('table.id')" prop="id" align="center" width="65">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.classificationName')" min-width="55" align="center">
+      <el-table-column :label="$t('goods.classificationName')" width="160" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.goodsName }}</span>
+          <span>{{ scope.row.className }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.goodsImg')" min-width="80" align="center">
+      <el-table-column :label="$t('goods.goodsImg')" width="240" align="center">
         <template slot-scope="scope">
-          <span class="link-type">{{ scope.row.icon }}</span>
+          <span><img :src="scope.row.icon"></span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.createTime')" min-width="55" align="center">
+      <el-table-column :label="$t('goods.createTime')" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.operationUser')" min-width="55" align="center">
+      <el-table-column :label="$t('table.operationUser')" width="200" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.operationUser }}</span>
+          <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" min-width="50" class-name="small-padding fixed-width" fixed="right" align="center">
+      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleQuery(scope.row.id)">{{ $t('table.edit') }}</el-button>
+          <el-button type="primary" size="mini" @click="handleQuery(scope.row)">{{ $t('table.edit') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getClassificationList" />
-
+    <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="60%">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="100px">
+        <el-form-item :label="$t('goods.classificationName')" prop="className">
+          <el-input v-model="temp.className" placeholder="请设置"/>
+        </el-form-item>
+        <el-form-item :label="$t('goods.goodsImg')" prop="icon">
+          <div style="margin-bottom: 20px;">
+            <Upload v-model="temp.icon" />
+          </div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
+        <el-button type="primary" @click="updateData()">{{ $t('table.confirm') }}</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { fetchClassificationList } from '@/api/goods'
+import { fetchClassificationList, modifyClassification } from '@/api/goods'
 import waves from '@/directive/waves' // Waves directive
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Upload from '@/components/Upload/singleImage3'
 
 export default {
   name: 'Classification',
-  components: { Pagination },
+  components: { Upload },
   directives: { waves },
   data() {
     return {
       tableKey: 0,
       list: null,
-      total: 0,
       listLoading: false,
       listQuery: {
-        page: 1,
-        pageSize: 20,
-        classificationName: undefined
+        className: undefined
+      },
+      dialogFormVisible: false,
+      dialogFormTitle: '编辑',
+      temp: {
+        id: undefined,
+        className: undefined,
+        icon: undefined,
+        createUser: undefined
       },
       rules: {
-        type: [{ required: true, message: 'type is required', trigger: 'change' }],
-        timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-        title: [{ required: true, message: 'title is required', trigger: 'blur' }]
+        className: [{ required: true, message: '分类名称不能为空', trigger: 'blur' }],
+        icon: [{ required: true, message: '图片不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -85,32 +103,42 @@ export default {
       this.listLoading = true
       fetchClassificationList(this.listQuery).then(response => {
         this.list = response.data
-        this.total = response.total
 
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
-      }).catch(() => {
+      }).catch((error) => {
         this.listLoading = false
+        this.$message.error(error)
       })
     },
     handleFilter() { // 搜索
       this.listQuery.page = 1
-      if (this.listQuery.beginTime !== undefined &&
-        this.listQuery.endTime !== undefined &&
-        this.listQuery.beginTime.getTime() > this.listQuery.endTime.getTime()) {
-        this.$message({
-          message: '开始时间不能大于结束时间',
-          type: 'warning'
-        })
-
-        return
-      }
 
       this.getClassificationList()
     },
-    handleQuery(gcsId) { // 查看分类中的商品
-
+    handleQuery(row) { // 查看分类中的商品
+      this.temp = Object.assign({}, row) // copy obj
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    updateData() {
+      const tempData = Object.assign({}, this.temp)
+      tempData.createUser = this.$store.state.user.sysCode
+      modifyClassification(tempData).then(() => {
+        this.dialogFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getClassificationList()
+      }).catch(error => {
+        this.$message.error(error)
+      })
     }
   }
 }

@@ -1,20 +1,32 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole"/>
+    <h1>{{ msg }}</h1>
   </div>
 </template>
 
 <script>
-import adminDashboard from './admin'
-import editorDashboard from './editor'
 
 export default {
   name: 'Dashboard',
-  components: { adminDashboard, editorDashboard },
   data() {
     return {
-      currentRole: 'adminDashboard'
+      msg: 'Welcome 进入 Pager 分布式电商系统'
     }
   }
 }
 </script>
+
+<style scoped>
+  .dashboard-container{
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 84px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  h1 {
+    color: green;
+  }
+</style>
+

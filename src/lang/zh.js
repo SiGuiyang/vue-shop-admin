@@ -18,6 +18,7 @@ export default {
     integralStatistics: '积分统计',
     document: '文章管理',
     goods: '商品管理',
+    goodsEdit: '商品编辑',
     goodsManageList: '商品管理',
     classification: '商品分类',
     activity: '活动管理',
@@ -27,8 +28,10 @@ export default {
     bannerManage: 'Banner 管理',
     stationLetter: '站内信管理',
     fightGroup: '拼团管理',
+    fightGroupActivity: '拼团活动',
     fightGroupRule: '拼团规则',
     fightGroupGoods: '拼团商品',
+    fightGroupRecord: '成团记录',
     createArticle: '创建文章',
     editArticle: '编辑文章',
     articleList: '文章列表',
@@ -69,6 +72,19 @@ export default {
       phone: '手机号',
       username: '用户名'
     },
+    fightGroup: {
+      activityName: '活动名称',
+      activityImg: '活动图片',
+      activityTime: '活动周期',
+      rule: '规则',
+      goods: '商品',
+      record: '记录',
+      purchaseLimit: '限购数量',
+      fightCount: '成团人数',
+      description: '说明',
+      time: '开团时间',
+      master: '团长'
+    },
     station: {
       content: '内容'
     }
@@ -85,6 +101,7 @@ export default {
     goodsInventory: '库存',
     createTime: '创建时间',
     classificationName: '分类名称',
+    classificationImg: '分类图片',
     placeOrigin: '产地',
     storage: '储存',
     goodsImg: '商品LOGO',
@@ -197,6 +214,7 @@ export default {
     confirm: '确 定',
     close: '关 闭',
     query: '查 看',
+    detail: '详情',
     operationUser: '操作人',
     reissueCoupon: '补发优惠券',
     downloadTemplate: '下载模板'

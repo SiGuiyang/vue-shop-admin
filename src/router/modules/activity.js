@@ -36,24 +36,23 @@ const activityRouter = {
     },
     {
       path: 'fightGroup',
-      component: () => import('@/views/activity/fightGroup/rule'),
-      redirect: '/activity/fightGroup/rule',
+      component: () => import('@/views/activity/fightGroup/activity'),
       name: 'FightGroup',
-      meta: { title: 'fightGroup', permission: '/admin/activity/fightGroup/rule' },
-      children: [
-        {
-          path: 'rule',
-          component: () => import('@/views/activity/fightGroup/rule'),
-          name: 'FightGroupRule',
-          meta: { title: 'fightGroupRule', permission: '/admin/activity/fightGroup/rule' }
-        },
-        {
-          path: 'goods',
-          component: () => import('@/views/activity/fightGroup/goods'),
-          name: 'FightGroupGoods',
-          meta: { title: 'fightGroupGoods', permission: '/admin/activity/fightGroup/goods' }
-        }
-      ]
+      meta: { title: 'fightGroup', permission: '/admin/activity/fightGroup/list' }
+    },
+    {
+      path: 'fightGroup/rule/:id(\\d+)',
+      component: () => import('@/views/activity/fightGroup/rule'),
+      name: 'FightGroupRule',
+      hidden: true,
+      meta: { title: 'fightGroupRule', noCache: true, permission: '/admin/activity/fightGroup/rule' }
+    },
+    {
+      path: 'fightGroup/record/:id(\\d+)',
+      component: () => import('@/views/activity/fightGroup/record'),
+      name: 'FightGroupRecord',
+      hidden: true,
+      meta: { title: 'fightGroupRecord', noCache: true, permission: '/admin/activity/fightGroup/record' }
     },
     {
       path: 'banner',

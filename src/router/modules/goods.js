@@ -20,6 +20,13 @@ const goodsRouter = {
       meta: { title: 'goodsManageList', permission: '/admin/goods/list' }
     },
     {
+      path: 'manage/goodsEdit',
+      component: () => import('@/views/common/goodsEdit'), // Parent router-view
+      name: 'GoodsEdit',
+      hidden: true,
+      meta: { title: 'goodsEdit', noCache: true, permission: '/admin/goods/modify' }
+    },
+    {
       path: 'manage/classification',
       name: 'Classification',
       component: () => import('@/views/goods/classification'),

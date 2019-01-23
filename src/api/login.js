@@ -25,7 +25,7 @@ export function getUserInfo(sysCode) {
     sysCode
   }
   return request({
-    url: '/admin/system/userInfo',
+    url: '/admin/system/adminInfo',
     method: 'post',
     data
   })

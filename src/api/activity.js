@@ -77,3 +77,57 @@ export function fetchStationList(data) {
     data
   })
 }
+
+// 拼团活动列表
+export function fetchFightGroup(data) {
+  return service({
+    url: '/admin/activity/fightGroup/list',
+    method: 'post',
+    data
+  })
+}
+
+// 修改拼团活动
+export function modifyFightGroup(data) {
+  return service({
+    url: '/admin/activity/fightGroup/modify',
+    method: 'post',
+    data
+  })
+}
+
+// 活动规则详情
+export function fightGroupRuleInfo(data) {
+  return service({
+    url: '/admin/activity/fightGroup/rule/info',
+    method: 'post',
+    data
+  })
+}
+
+// 活动规则修改
+export function modifyFightGroupRule(data) {
+  return service({
+    url: '/admin/activity/fightGroup/rule/modify',
+    method: 'post',
+    data
+  })
+}
+
+// 成团记录
+export function fetchFightGroupRecord(data) {
+  return service({
+    url: '/admin/activity/fightGroup/record',
+    method: 'post',
+    data
+  })
+}
+
+// 开团成员
+export function fetchFightGroupMembers(data) {
+  return service({
+    url: '/admin/activity/fightGroup/members',
+    method: 'post',
+    data
+  })
+}

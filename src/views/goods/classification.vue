@@ -23,7 +23,7 @@
           <span>{{ scope.row.className }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.goodsImg')" width="240" align="center">
+      <el-table-column :label="$t('goods.classificationImg')" width="240" align="center">
         <template slot-scope="scope">
           <span><img :src="scope.row.icon"></span>
         </template>

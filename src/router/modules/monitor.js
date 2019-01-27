@@ -102,7 +102,7 @@ const monitorRouter = {
           path: 'user',
           component: () => import('@/views/monitor/database/user'),
           name: 'UserDatabase',
-          meta: { title: 'userDatabase', permission: '/admin/serviceUrl' }
+          meta: { title: 'userDatabase', permission: '/admin/monitor/serviceUrl' }
         }
       ]
     }

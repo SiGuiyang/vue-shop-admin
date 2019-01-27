@@ -150,8 +150,7 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
-      }).catch(error => {
-        this.$message.error(error)
+      }).catch(() => {
         this.listLoading = false
       })
     },
@@ -209,8 +208,6 @@ export default {
               duration: 2000
             })
             this.getFightGroup()
-          }).catch(error => {
-            this.$message.error(error)
           })
         }
       })
@@ -229,8 +226,6 @@ export default {
               duration: 2000
             })
             this.getFightGroup()
-          }).catch(error => {
-            this.$message.error(error)
           })
         }
       })

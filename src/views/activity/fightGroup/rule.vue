@@ -62,8 +62,6 @@ export default {
       params.id = this.$route.params.id
       fightGroupRuleInfo(params).then(response => {
         this.activityRule = response.data
-      }).catch(error => {
-        this.$message.error(error)
       })
     },
     goBack() {
@@ -74,7 +72,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.createUser = this.$store.state.user.sysCode
-          modifyFightGroupRule(this.activityRule).then(response => {
+          modifyFightGroupRule(this.activityRule).then(() => {
             this.$notify({
               title: '成功',
               message: '操作成功',
@@ -82,8 +80,6 @@ export default {
               duration: 2000
             })
             this.goBack()
-          }).catch(error => {
-            this.$message.error(error)
           })
         }
       })

@@ -271,8 +271,7 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
-      }).catch(error => {
-        this.$message.error(error)
+      }).catch(() => {
         this.listLoading = false
       })
     },
@@ -324,13 +323,6 @@ export default {
               duration: 2000
             })
             this.getCouponTemplateList()
-          }).catch(error => {
-            this.$notify({
-              title: '成功',
-              message: error,
-              type: 'success',
-              duration: 2000
-            })
           })
         }
       })
@@ -363,8 +355,6 @@ export default {
               duration: 2000
             })
             this.getCouponTemplateList()
-          }).catch(error => {
-            this.$message.error(error)
           })
         }
       })
@@ -384,8 +374,6 @@ export default {
           type: 'success',
           duration: 2000
         })
-      }).catch(error => {
-        this.$message.error(error)
       })
     }
   }

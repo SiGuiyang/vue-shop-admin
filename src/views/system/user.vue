@@ -174,8 +174,8 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
-      }).catch(error => {
-        this.$message.error(error)
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     initRoleCodes() { // 获取角色列表

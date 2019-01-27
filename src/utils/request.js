@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Message } from 'element-ui'
 import qs from 'qs'
 import { getToken } from '@/utils/auth'
+import router from '@/router'
 
 // create an axios instance
 const service = axios.create({
@@ -50,7 +51,15 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
       return Promise.reject()
-    } else if (res.code === 1000 || res.code === 3000 || res.code === 5000) {
+    } else if (res.code === 1000 || res.code === 300) {
+      Message({
+        message: res.msg,
+        type: 'error',
+        duration: 5 * 1000
+      })
+      return Promise.reject(res.msg)
+    } else if (res.code === 5000) {
+      router.push('/401')
       return Promise.reject(res.msg)
     } else {
       return response.data

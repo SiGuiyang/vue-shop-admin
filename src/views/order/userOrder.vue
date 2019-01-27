@@ -265,8 +265,7 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
-      }).catch((error) => {
-        this.$message.error(error)
+      }).catch(() => {
         this.listLoading = false
       })
     },
@@ -297,9 +296,8 @@ export default {
         this.orderDetail.buyerGoods.forEach(g => {
           this.orderDetail.totalAmount += g.settlementAmount
         })
-      }).catch(error => {
+      }).catch(() => {
         this.dialogFormVisible = false
-        this.$message.error(error)
       })
     },
     handleChange(val) {

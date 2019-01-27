@@ -14,6 +14,7 @@ import goodsRouter from './modules/goods'
 import systemRouter from './modules/system'
 import documentRouter from './modules/document'
 import financeRouter from './modules/finance'
+import monitorRouter from './modules/monitor'
 
 /** note: Submenu only appear when children.length>=1
  *  detail see  https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -79,6 +80,6 @@ export const asyncRouterMap = [
   statisticsRouter,
   financeRouter,
   systemRouter,
-
+  monitorRouter,
   { path: '*', redirect: '/404', hidden: true }
 ]

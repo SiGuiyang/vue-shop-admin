@@ -132,16 +132,13 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
-      }).catch((error) => {
-        this.$message.error(error)
+      }).catch(() => {
         this.listLoading = false
       })
     },
     getClassification() {
       fetchClassificationList({}).then(response => {
         this.classifications = response.data
-      }).catch(error => {
-        this.$message.error(error)
       })
     },
     getGoodsType(goodsType) {

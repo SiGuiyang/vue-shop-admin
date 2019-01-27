@@ -170,6 +170,8 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -260,8 +262,6 @@ export default {
       params.roleId = this.selectedRoleId
       permissionAuthorization(params).then(response => {
 
-      }).catch(error => {
-        this.$message.error(error)
       })
     }
 

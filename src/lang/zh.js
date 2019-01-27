@@ -42,7 +42,23 @@ export default {
     systemUser: '用户管理',
     systemMenu: '菜单管理',
     systemRole: '角色管理',
-    systemConfig: '配置管理'
+    systemConfig: '配置管理',
+    monitor: '监控服务',
+    hystrix: 'Hystrix 监控',
+    interfaceService: '接口Swagger',
+    activityInterface: '活动中心模块',
+    adminInterface: '系统平台模块',
+    goodsInterface: '商品中心模块',
+    orderInterface: '订单中心模块',
+    settlementInterface: '结算中心模块',
+    userInterface: '用户中心模块',
+    databaseService: '数据库监控',
+    adminDatabase: '管理数据中心',
+    activityDatabase: '活动数据中心',
+    goodsDatabase: '商品数据中心',
+    orderDatabase: '订单数据中心',
+    settlementDatabase: '结算数据中心',
+    userDatabase: '用户中心'
   },
   activity: {
     banner: {

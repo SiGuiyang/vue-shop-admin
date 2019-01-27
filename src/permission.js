@@ -9,6 +9,9 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 
 // permission judge function
 function hasPermission(roles, permissionRoles) {
+  if (permissionRoles === null || permissionRoles === undefined || permissionRoles === '') {
+    return true
+  }
   return roles.some(role => permissionRoles.indexOf(role) >= 0)
 }
 

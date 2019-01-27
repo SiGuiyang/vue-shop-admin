@@ -185,8 +185,6 @@ export default {
           this.temp = Object.assign({}, response.data.goods) // 拷贝
           this.temp = Object.assign(this.temp, response.data.goodsDetail) // 拷贝
           this.temp.goodsDetailId = response.data.goodsDetail.id
-        }).catch(error => {
-          this.$message.error(error)
         })
       } else {
         this.dialogStatus = true
@@ -196,8 +194,6 @@ export default {
     getClassification() {
       fetchClassificationList({}).then(response => {
         this.classifications = response.data
-      }).catch(error => {
-        this.$message.error(error)
       })
     },
     goBack() {
@@ -239,8 +235,6 @@ export default {
           duration: 2000
         })
         this.goBack()
-      }).catch(error => {
-        this.$message.error(error)
       })
     },
     updateData() { // 修改商品
@@ -256,8 +250,6 @@ export default {
               duration: 2000
             })
             this.goBack()
-          }).catch(error => {
-            this.$message.error(error)
           })
         }
       })

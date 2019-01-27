@@ -176,6 +176,8 @@ export default {
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
+      }).catch(() => {
+        this.listLoading = false
       })
     },
     handleFilter() {
@@ -214,8 +216,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getConfigList()
           })
-          this.getConfigList()
         }
       })
     },
@@ -241,8 +243,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.getConfigList()
           })
-          this.getConfigList()
         }
       })
     }

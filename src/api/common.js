@@ -21,7 +21,7 @@ export function fetchCommonEnumInfo(data) {
 // 获取swagger模块地址
 export function getServiceUrl(data) {
   return service({
-    url: '/admin/serviceUrl',
+    url: '/admin/monitor/serviceUrl',
     method: 'post',
     data
   })

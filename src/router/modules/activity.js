@@ -35,6 +35,12 @@ const activityRouter = {
       ]
     },
     {
+      path: 'fullExchange',
+      component: () => import('@/views/activity/exchange/activity'),
+      name: 'FullExchange',
+      meta: { title: 'fullExchange', permission: '/admin/activity/fightGroup/list' }
+    },
+    {
       path: 'fightGroup',
       component: () => import('@/views/activity/fightGroup/activity'),
       name: 'FightGroup',
@@ -68,4 +74,5 @@ const activityRouter = {
     }
   ]
 }
+
 export default activityRouter

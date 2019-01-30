@@ -51,7 +51,7 @@ service.interceptors.response.use(
         duration: 5 * 1000
       })
       return Promise.reject()
-    } else if (res.code === 1000 || res.code === 300) {
+    } else if (res.code === 1000 || res.code === 3000) {
       Message({
         message: res.msg,
         type: 'error',

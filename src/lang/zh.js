@@ -32,12 +32,16 @@ export default {
     fightGroupRule: '拼团规则',
     fightGroupGoods: '拼团商品',
     fightGroupRecord: '成团记录',
+    fullExchange: '满赠换购管理',
     createArticle: '创建文章',
     editArticle: '编辑文章',
     articleList: '文章列表',
     finance: '财务管理',
     fundManage: '资金管理',
     tradeManage: '交易流水',
+    riskManage: '风控管理',
+    riskRule: '规则配置',
+    riskBlackList: '黑名单管理',
     system: '系统管理',
     systemUser: '用户管理',
     systemMenu: '菜单管理',
@@ -87,6 +91,9 @@ export default {
       discountStrength: '折扣力度',
       phone: '手机号',
       username: '用户名'
+    },
+    exchange: {
+      title: '  活动标题'
     },
     fightGroup: {
       activityName: '活动名称',

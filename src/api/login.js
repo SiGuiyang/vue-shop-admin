@@ -14,7 +14,7 @@ export function loginByUsername(username, password) {
 
 export function logout(data) {
   return request({
-    url: '/login/logout',
+    url: '/admin/logout',
     method: 'post',
     data
   })

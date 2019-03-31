@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input :placeholder="$t('system.user.sysName')" v-model="listQuery.sysName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-permission="'/admin/system/user/modify'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-permission="'ROLE_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -24,14 +24,14 @@
           <span>{{ scope.row.sysName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.sysCode')" align="center">
+      <el-table-column :label="$t('system.user.username')" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.sysCode }}</span>
+          <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.user.roleCode')" align="center">
         <template slot-scope="scope">
-          <span>{{ getRoleIds(scope.row.roleIds) }}</span>
+          <span>{{ getRoleIds(scope.row.roleNameLists) }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('system.user.status')" class-name="status-col" width="100" align="center">
@@ -51,7 +51,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" width="120" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'/admin/system/user/modify'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -63,8 +63,8 @@
         <el-form-item :label="$t('system.user.sysName')" prop="sysName">
           <el-input v-model="temp.sysName" placeholder="请设置"/>
         </el-form-item>
-        <el-form-item :label="$t('system.user.sysCode')" prop="sysCode">
-          <el-input v-model="temp.sysCode" placeholder="请设置"/>
+        <el-form-item :label="$t('system.user.username')" prop="username">
+          <el-input v-model="temp.username" placeholder="请设置"/>
         </el-form-item>
         <el-form-item :label="$t('system.user.password')" prop="password">
           <el-input v-model="temp.password" :disabled="passwordDisabled" type="password" placeholder="请设置"/>
@@ -133,7 +133,7 @@ export default {
       temp: {
         id: undefined,
         sysName: undefined,
-        sysCode: undefined,
+        username: undefined,
         loginCode: undefined,
         password: undefined,
         avatar: '',
@@ -150,7 +150,7 @@ export default {
       dialogPvVisible: false,
       rules: {
         sysName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-        sysCode: [{ required: true, message: '系统登陆名不能为空', trigger: 'blur' }],
+        username: [{ required: true, message: '系统登陆名不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
         roleIds: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
         avatar: [{ required: true, message: '用户头像不能为空', trigger: 'blur' }]
@@ -183,18 +183,11 @@ export default {
         this.roleCodeOptions = response.data
       })
     },
-    getRoleIds(roleIds) {
-      if (roleIds === '' || roleIds === undefined || roleIds === undefined) {
-        return '——'
-      }
+    getRoleIds(roleNameLists) {
       let content = ''
-      this.roleCodeOptions.forEach(rco => {
-        for (let i = 0; i < roleIds.length; i++) {
-          if (rco.id === roleIds[i]) {
-            content = content + rco.roleName + '|'
-          }
-        }
-      })
+      for (let i = 0; i < roleNameLists.length; i++) {
+        content += roleNameLists[i] + '|'
+      }
       return content
     },
     handleFilter() {
@@ -211,7 +204,7 @@ export default {
     restTemp() {
       this.temp.id = undefined
       this.temp.sysName = undefined
-      this.temp.sysCode = undefined
+      this.temp.username = undefined
       this.temp.password = undefined
       this.temp.roleIds = []
       this.temp.deleteStatus = false
@@ -228,8 +221,8 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.createUser = this.$store.state.user.sysCode
-          this.temp.loginCode = this.temp.sysCode
+          this.temp.createUser = this.$store.state.user.username
+          this.temp.loginCode = this.temp.username
           this.temp.event = 'add'
           modifySystemUser(this.temp).then(() => {
             this.dialogFormVisible = false

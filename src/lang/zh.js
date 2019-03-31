@@ -153,7 +153,7 @@ export default {
   system: {
     user: { // 系统管理 用户管理
       sysName: '系统用户',
-      sysCode: '登陆账号',
+      username: '登陆账号',
       roleCode: '角色',
       password: '密码',
       status: '状态',

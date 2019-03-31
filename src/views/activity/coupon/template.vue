@@ -140,7 +140,8 @@ import { fetchCouponTemplateList, modifyCouponTemplate, publishCoupon } from '@/
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-
+import { getAccessToken } from '@/utils/auth'
+import Constants from '@/utils/constants'
 export default {
   name: 'CouponTemplate',
   components: { Pagination },
@@ -256,7 +257,7 @@ export default {
   },
   computed: {
     actionURL() {
-      return process.env.BASE_API + '/admin/upload'
+      return process.env.BASE_API + '/admin/upload?access_token=' + getAccessToken(Constants.access_token)
     }
   },
   created() {

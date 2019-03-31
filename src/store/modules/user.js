@@ -1,5 +1,5 @@
 import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { getToken, removeToken, setAccessToken } from '@/utils/auth'
+import { removeToken, setAccessToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 
 const user = {
@@ -7,7 +7,7 @@ const user = {
     user: '',
     code: '',
     name: '',
-    sysCode: getToken(),
+    username: '',
     avatar: '',
     introduction: '',
     permission: []
@@ -17,8 +17,8 @@ const user = {
     SET_CODE: (state, code) => {
       state.code = code
     },
-    SET_SYSCODE: (state, sysCode) => {
-      state.sysCode = sysCode
+    SET_USERNAME: (state, username) => {
+      state.username = username
     },
     SET_NAME: (state, name) => {
       state.name = name
@@ -60,7 +60,7 @@ const user = {
           } else {
             reject('getInfo: permission must be a non-null array !')
           }
-
+          commit('SET_USERNAME', data.username)
           commit('SET_NAME', data.sysName)
           commit('SET_AVATAR', data.avatar)
           resolve(response)

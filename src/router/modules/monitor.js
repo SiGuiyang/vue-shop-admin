@@ -8,56 +8,56 @@ const monitorRouter = {
   meta: {
     title: 'monitor',
     icon: 'table',
-    permission: '/admin/monitor/serviceUrl'
+    permission: 'ROLE_ADMIN'
   },
   children: [
     {
       path: 'hystrix',
       component: () => import('@/views/monitor/hystrix'),
       name: 'Hystrix',
-      meta: { title: 'hystrix', permission: '/admin/monitor/serviceUrl' }
+      meta: { title: 'hystrix', permission: 'ROLE_ADMIN' }
     },
     {
       path: 'interface',
       component: () => import('@/views/monitor/interface/index'),
       name: 'InterfaceService',
-      meta: { title: 'interfaceService', permission: '/admin/monitor/serviceUrl' },
+      meta: { title: 'interfaceService', permission: 'ROLE_ADMIN' },
       children: [
         {
           path: 'activity',
           component: () => import('@/views/monitor/interface/activity'),
           name: 'ActivityInterface',
-          meta: { title: 'activityInterface', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'activityInterface', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'admin',
           component: () => import('@/views/monitor/interface/admin'),
           name: 'AdminInterface',
-          meta: { title: 'adminInterface', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'adminInterface', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'goods',
           component: () => import('@/views/monitor/interface/goods'),
           name: 'GoodsInterface',
-          meta: { title: 'goodsInterface', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'goodsInterface', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'order',
           component: () => import('@/views/monitor/interface/order'),
           name: 'OrderInterface',
-          meta: { title: 'orderInterface', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'orderInterface', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'settlement',
           component: () => import('@/views/monitor/interface/settlement'),
           name: 'SettlementInterface',
-          meta: { title: 'settlementInterface', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'settlementInterface', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'user',
           component: () => import('@/views/monitor/interface/user'),
           name: 'UserInterface',
-          meta: { title: 'userInterface', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'userInterface', permission: 'ROLE_ADMIN' }
         }
       ]
     },
@@ -66,43 +66,43 @@ const monitorRouter = {
       component: () => import('@/views/monitor/database/index'),
       redirect: '/monitor/database/user',
       name: 'DatabaseService',
-      meta: { title: 'databaseService', permission: '/admin/monitor/serviceUrl' },
+      meta: { title: 'databaseService', permission: 'ROLE_ADMIN' },
       children: [
         {
           path: 'activity',
           component: () => import('@/views/monitor/database/activity'),
           name: 'ActivityDatabase',
-          meta: { title: 'activityDatabase', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'activityDatabase', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'admin',
           component: () => import('@/views/monitor/database/admin'),
           name: 'AdminDatabase',
-          meta: { title: 'adminDatabase', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'adminDatabase', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'goods',
           component: () => import('@/views/monitor/database/goods'),
           name: 'GoodsDatabase',
-          meta: { title: 'goodsDatabase', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'goodsDatabase', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'order',
           component: () => import('@/views/monitor/database/order'),
           name: 'OrderDatabase',
-          meta: { title: 'orderDatabase', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'orderDatabase', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'settlement',
           component: () => import('@/views/monitor/database/settlement'),
           name: 'SettlementDatabase',
-          meta: { title: 'settlementDatabase', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'settlementDatabase', permission: 'ROLE_ADMIN' }
         },
         {
           path: 'user',
           component: () => import('@/views/monitor/database/user'),
           name: 'UserDatabase',
-          meta: { title: 'userDatabase', permission: '/admin/monitor/serviceUrl' }
+          meta: { title: 'userDatabase', permission: 'ROLE_ADMIN' }
         }
       ]
     }

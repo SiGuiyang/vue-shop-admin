@@ -1,12 +1,18 @@
 import request from '@/utils/request'
+import Config from '@/utils/config'
 
 export function loginByUsername(username, password) {
   const data = {
     username,
-    password
+    password,
+    grant_type: 'password'
   }
   return request({
-    url: '/admin/login',
+    auth: {
+      username: Config.client_id,
+      password: Config.client_secret
+    },
+    url: '/oauth/token',
     method: 'post',
     data
   })

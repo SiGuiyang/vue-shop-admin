@@ -10,27 +10,27 @@ const goodsRouter = {
   meta: {
     title: 'goods',
     icon: 'nested',
-    permission: '/admin/goods/list'
+    permission: 'ROLE_ADMIN'
   },
   children: [
     {
       path: 'manage/list',
       component: () => import('@/views/goods/goodsManage'), // Parent router-view
       name: 'GoodsManageList',
-      meta: { title: 'goodsManageList', permission: '/admin/goods/list' }
+      meta: { title: 'goodsManageList', permission: 'ROLE_ADMIN' }
     },
     {
       path: 'manage/goodsEdit',
       component: () => import('@/views/common/goodsEdit'), // Parent router-view
       name: 'GoodsEdit',
       hidden: true,
-      meta: { title: 'goodsEdit', noCache: true, permission: '/admin/goods/modify' }
+      meta: { title: 'goodsEdit', noCache: true, permission: 'ROLE_ADMIN' }
     },
     {
       path: 'manage/classification',
       name: 'Classification',
       component: () => import('@/views/goods/classification'),
-      meta: { title: 'classification', permission: '/admin/goods/classification' }
+      meta: { title: 'classification', permission: 'ROLE_ADMIN' }
     }
   ]
 }

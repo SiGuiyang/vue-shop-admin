@@ -60,10 +60,10 @@ export const constantRouterMap = [
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
-        meta: { title: 'dashboard', icon: 'dashboard', noCache: true, permission: '/admin/home' }
+        meta: { title: 'dashboard', icon: 'dashboard', noCache: true, permission: 'ROLE_ADMIN' }
       }
     ],
-    meta: { permission: '/admin/home' }
+    meta: { permission: 'ROLE_ADMIN' }
   }
 ]
 

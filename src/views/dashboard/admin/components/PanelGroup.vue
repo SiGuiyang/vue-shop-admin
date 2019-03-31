@@ -6,8 +6,8 @@
           <svg-icon icon-class="peoples" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">New Visits</div>
-          <count-to :start-val="0" :end-val="102400" :duration="2600" class="card-panel-num"/>
+          <div class="card-panel-text">注册人数</div>
+          <count-to :start-val="0" :end-val="registerCustomer" :duration="2600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -17,8 +17,8 @@
           <svg-icon icon-class="message" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Messages</div>
-          <count-to :start-val="0" :end-val="81212" :duration="3000" class="card-panel-num"/>
+          <div class="card-panel-text">当天商户入驻数</div>
+          <count-to :start-val="0" :end-val="registerSeller" :duration="3000" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -28,8 +28,8 @@
           <svg-icon icon-class="money" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Purchases</div>
-          <count-to :start-val="0" :end-val="9280" :duration="3200" class="card-panel-num"/>
+          <div class="card-panel-text">当天营业额</div>
+          <count-to :start-val="0" :end-val="turnover" :duration="3200" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -39,8 +39,8 @@
           <svg-icon icon-class="shopping" class-name="card-panel-icon" />
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">Shoppings</div>
-          <count-to :start-val="0" :end-val="13600" :duration="3600" class="card-panel-num"/>
+          <div class="card-panel-text">当天订单数</div>
+          <count-to :start-val="0" :end-val="orderCount" :duration="3600" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -53,6 +53,14 @@ import CountTo from 'vue-count-to'
 export default {
   components: {
     CountTo
+  },
+  data() {
+    return {
+      registerCustomer: 0, // 注册人数
+      registerSeller: 0, // 入驻商户数
+      turnover: 0, // 营业额
+      orderCount: 1000 // 下单数
+    }
   },
   methods: {
     handleSetLineChartData(type) {

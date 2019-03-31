@@ -3,7 +3,10 @@ import store from './store'
 import { Message } from 'element-ui'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
-import { getToken } from '@/utils/auth' // getToken from cookie
+import { getAccessToken } from '@/utils/auth' // getToken from cookie
+import Constants from '@/utils/constants'
+// import Config from '@/utils/config'
+// import Url from '@/utils/url'
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -19,7 +22,7 @@ const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  if (getToken()) { // determine if there has token
+  if (getAccessToken(Constants.access_token)) { // determine if there has token
     /* has token*/
     if (to.path === '/login') {
       next({ path: '/' })
@@ -52,6 +55,15 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
+    // if (Url.getParam('code')) {
+    //   console.log('33')
+    //   store.dispatch('GetAccessToken', Url.getParam('code')).then(() => {
+    //     console.log('获取token成功')
+    //   })
+    // } else {
+    //   // 跳转授权地址
+    //   window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
+    // }
     /* has no token*/
     if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next()

@@ -8,20 +8,20 @@ const riskRouter = {
   meta: {
     title: 'riskManage',
     icon: 'table',
-    permission: '/admin/activity/banner/list'
+    permission: 'ROLE_ADMIN'
   },
   children: [
     {
       path: 'rule',
       component: () => import('@/views/risk/rule'),
       name: 'RiskRule',
-      meta: { title: 'riskRule', permission: '/admin/activity/banner/list' }
+      meta: { title: 'riskRule', permission: 'ROLE_ADMIN' }
     },
     {
       path: 'blackList',
       component: () => import('@/views/risk/blackList'),
       name: 'RiskBlackList',
-      meta: { title: 'riskBlackList', permission: '/admin/activity/banner/list' }
+      meta: { title: 'riskBlackList', permission: 'ROLE_ADMIN' }
     }
   ]
 }

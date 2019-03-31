@@ -10,26 +10,26 @@ const statisticsRouter = {
   meta: {
     title: 'statistics',
     icon: 'chart',
-    permission: '/admin/statistics'
+    permission: 'ROLE_ADMIN'
   },
   children: [
     {
       path: 'coupon',
       component: () => import('@/views/statistics/coupon'),
       name: 'CouponStatistics',
-      meta: { title: 'couponStatistics', noCache: true, permission: '/admin/statistics/coupon' }
+      meta: { title: 'couponStatistics', noCache: true, permission: 'ROLE_ADMIN' }
     },
     {
       path: 'fightGroup',
       component: () => import('@/views/statistics/fightGroup'),
       name: 'fightGroupStatistics',
-      meta: { title: 'fightGroupStatistics', noCache: true, permission: '/admin/statistics/fightGroup' }
+      meta: { title: 'fightGroupStatistics', noCache: true, permission: 'ROLE_ADMIN' }
     },
     {
       path: 'integral',
       component: () => import('@/views/statistics/integral'),
       name: 'integralStatistics',
-      meta: { title: 'integralStatistics', noCache: true, permission: '/admin/statistics/integral' }
+      meta: { title: 'integralStatistics', noCache: true, permission: 'ROLE_ADMIN' }
     }
   ]
 }

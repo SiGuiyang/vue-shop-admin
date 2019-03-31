@@ -1,32 +1,25 @@
 <template>
   <div class="dashboard-container">
-    <h1>{{ msg }}</h1>
+    <component :is="currentRole"/>
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+import adminDashboard from './admin'
 
 export default {
   name: 'Dashboard',
+  components: { adminDashboard },
   data() {
     return {
-      msg: 'Welcome 进入 Pager 分布式电商系统'
+      currentRole: 'adminDashboard'
     }
+  },
+  computed: {
+    ...mapGetters([
+      'roles'
+    ])
   }
 }
 </script>
-
-<style scoped>
-  .dashboard-container{
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 84px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  h1 {
-    color: green;
-  }
-</style>
-

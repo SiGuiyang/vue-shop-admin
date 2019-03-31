@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import qs from 'qs'
-import { getToken } from '@/utils/auth'
+import { getAccessToken } from '@/utils/auth'
 import router from '@/router'
-
+import Constants from '@/utils/constants'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
@@ -17,14 +17,13 @@ service.interceptors.request.use(
     const requestMethod = config.method
     if (requestMethod === 'post') { // post 方式
       const requestData = config.data
-      requestData.sysCode = getToken() // 后台每个请求都追加sysCode参数
+      requestData.access_token = getAccessToken(Constants.access_token) // 后台每个请求都追加sysCode参数
       config.data = qs.stringify(requestData)
     } else if (requestMethod === 'get') { // get 方式
       const requestParams = config.params
-      requestParams.sysCode = getToken() // 后台每个请求都追加sysCode参数
+      requestParams.access_token = getAccessToken(Constants.access_token) // 后台每个请求都追加sysCode参数
       config.params = requestParams
     }
-
     return config
   },
   error => {

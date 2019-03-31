@@ -78,10 +78,10 @@ export default {
         this.__resizeHandler()
       }
     },
-    setOptions({ expectedData, actualData } = {}) {
+    setOptions({ expectedData, actualData, fantasyData } = {}) {
       this.chart.setOption({
         xAxis: {
-          data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+          data: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
           boundaryGap: false,
           axisTick: {
             show: false
@@ -107,7 +107,7 @@ export default {
           }
         },
         legend: {
-          data: ['expected', 'actual']
+          data: ['expected', 'actual', 'fantasy']
         },
         series: [{
           name: 'expected', itemStyle: {
@@ -131,6 +131,26 @@ export default {
           type: 'line',
           itemStyle: {
             normal: {
+              color: '#7dfa11',
+              lineStyle: {
+                color: '#7dfa11',
+                width: 2
+              },
+              areaStyle: {
+                color: '#f3f8ff'
+              }
+            }
+          },
+          data: actualData,
+          animationDuration: 2800,
+          animationEasing: 'quadraticOut'
+        },
+        {
+          name: 'fantasy',
+          smooth: true,
+          type: 'line',
+          itemStyle: {
+            normal: {
               color: '#3888fa',
               lineStyle: {
                 color: '#3888fa',
@@ -141,7 +161,7 @@ export default {
               }
             }
           },
-          data: actualData,
+          data: fantasyData,
           animationDuration: 2800,
           animationEasing: 'quadraticOut'
         }]

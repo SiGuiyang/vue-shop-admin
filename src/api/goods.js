@@ -34,21 +34,3 @@ export function getGoodsInfo(data) {
     data
   })
 }
-
-// 分类列表
-export function fetchClassificationList(data) {
-  return service({
-    url: '/admin/goods/classification',
-    method: 'post',
-    data
-  })
-}
-
-// 修改商品分类
-export function modifyClassification(data) {
-  return service({
-    url: '/admin/goods/classification/modify',
-    method: 'post',
-    data
-  })
-}

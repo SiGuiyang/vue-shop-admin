@@ -60,15 +60,6 @@ export function modifyUserCoupons(data) {
   })
 }
 
-// 发送优惠券
-export function publishCoupon(data) {
-  return service({
-    url: '/admin/publish/coupon',
-    method: 'post',
-    data
-  })
-}
-
 // 站内信列表
 export function fetchStationList(data) {
   return service({

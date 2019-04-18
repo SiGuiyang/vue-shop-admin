@@ -11,7 +11,7 @@
         class="tags-view-item"
         @click.middle.native="closeSelectedTag(tag)"
         @contextmenu.prevent.native="openMenu(tag,$event)">
-        {{ generateTitle(tag.title) }}
+        {{ tag.meta.title }}
         <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
@@ -65,8 +65,8 @@ export default {
       return route.path === this.$route.path
     },
     addViewTags() {
-      const { name } = this.$route
-      if (name) {
+      const { meta } = this.$route
+      if (meta) {
         this.$store.dispatch('addView', this.$route)
       }
       return false

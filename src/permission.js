@@ -10,15 +10,16 @@ import Constants from '@/utils/constants'
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
+const whiteList = ['/login', '/404', '/401', '*', '/dashboard'] // whitelist
+
 // permission judge function
-function hasPermission(roles, permissionRoles) {
-  if (permissionRoles === null || permissionRoles === undefined || permissionRoles === '') {
+function hasPermission(permissions, to) {
+  const perm = to.meta.permission
+  if (whiteList.indexOf(to.path) !== -1) {
     return true
   }
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
+  return permissions.some(permission => perm.indexOf(permission) >= 0)
 }
-
-const whiteList = ['/login']// no redirect whitelist
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
@@ -28,10 +29,10 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
-      if (store.getters.permission.length === 0) { // 判断当前用户是否已拉取完user_info信息
+      if (store.getters.permissions.length === 0) { // 判断当前用户是否已拉取完user_info信息
         store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          const permissions = res.data.permission
-          store.dispatch('GenerateRoutes', { permissions }).then(() => { // 根据roles权限生成可访问的路由表
+          const routers = res.data.routers
+          store.dispatch('GenerateRoutes', { routers }).then(() => { // 根据roles权限生成可访问的路由表
             router.addRoutes(store.getters.addRouters) // 动态添加可访问路由表
             next({ ...to, replace: true }) // hack方法 确保addRoutes已完成 ,set the replace: true so the navigation will not leave a history record
           })
@@ -46,7 +47,7 @@ router.beforeEach((to, from, next) => {
         })
       } else {
         // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.permission, to.meta.permission)) {
+        if (hasPermission(store.getters.permissions, to)) {
           next()
         } else {
           next({ path: '/401', replace: true, query: { noGoBack: true }})
@@ -65,7 +66,7 @@ router.beforeEach((to, from, next) => {
     //   window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
     // }
     /* has no token*/
-    if (whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
+    if (to.path !== '/dashboard' && whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
       next()
     } else {
       next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页

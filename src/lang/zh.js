@@ -62,7 +62,8 @@ export default {
     goodsDatabase: '商品数据中心',
     orderDatabase: '订单数据中心',
     settlementDatabase: '结算数据中心',
-    userDatabase: '用户中心'
+    userDatabase: '用户中心',
+    generatorManage: '代码生成'
   },
   activity: {
     banner: {

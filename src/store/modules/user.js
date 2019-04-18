@@ -6,11 +6,12 @@ const user = {
   state: {
     user: '',
     code: '',
+    permissions: [], // 所有权限
     name: '',
     username: '',
+    router: [],
     avatar: '',
-    introduction: '',
-    permission: []
+    introduction: ''
   },
 
   mutations: {
@@ -23,11 +24,14 @@ const user = {
     SET_NAME: (state, name) => {
       state.name = name
     },
+    SET_PERMISSIONS: (state, permissions) => {
+      state.permissions = permissions
+    },
+    SET_ROUTER: (state, router) => {
+      state.router = router
+    },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
-    },
-    SET_PERMISSION: (state, permission) => {
-      state.permission = permission
     }
   },
 
@@ -37,7 +41,6 @@ const user = {
       const username = userInfo.username.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, userInfo.password).then(response => {
-          console.log(response)
           setAccessToken(Constants.access_token, response.access_token)
           resolve()
         }).catch(error => {
@@ -55,8 +58,8 @@ const user = {
           }
           const data = response.data
 
-          if (data.permission && data.permission.length > 0) { // 验证返回的roles是否是一个非空数组
-            commit('SET_PERMISSION', data.permission)
+          if (data.permissions && data.permissions.length > 0) { // 验证返回的roles是否是一个非空数组
+            commit('SET_PERMISSIONS', data.permissions)
           } else {
             reject('getInfo: permission must be a non-null array !')
           }
@@ -73,8 +76,7 @@ const user = {
     LogOut({ commit, state }) {
       return new Promise((resolve, reject) => {
         logout({}).then(() => {
-          commit('SET_SYSCODE', '')
-          commit('SET_PERMISSION', [])
+          commit('SET_PERMISSIONS', [])
           removeToken()
           resolve()
         }).catch(error => {
@@ -86,7 +88,6 @@ const user = {
     // 前端 登出
     FedLogOut({ commit }) {
       return new Promise(resolve => {
-        commit('SET_SYSCODE', '')
         removeToken()
         resolve()
       })

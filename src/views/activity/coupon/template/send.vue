@@ -1,0 +1,91 @@
+<template>
+  <el-dialog :visible.sync="reissueFormVisible" title="补发优惠券" width="50%">
+    <el-upload
+      :on-success="handleUploadSuccess"
+      :file-list="uploadFile"
+      :action="actionURL"
+      accept=".xlsx"
+      class="upload-demo">
+      <el-button v-waves size="small" type="primary">点击上传<i class="el-icon-upload el-icon-right"/></el-button>
+      <div slot="tip" class="el-upload__tip">只能上传xlsx文件，且不超过10MB</div>
+    </el-upload>
+
+    <div slot="footer" class="dialog-footer">
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="warning" icon="el-icon-download" @click="handleDownload">{{ $t('table.downloadTemplate') }}</el-button>
+      <el-button @click="reissueFormVisible = false">{{ $t('table.cancel') }}</el-button>
+      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="handleReissueCoupon">{{ $t('table.confirm') }}</el-button>
+    </div>
+  </el-dialog>
+</template>
+
+<script>
+import { publishCoupon } from '@/api/coupon'
+import { getAccessToken } from '@/utils/auth'
+import Constants from '@/utils/constants'
+import permission from '@/directive/permission'
+import waves from '@/directive/waves' // Waves directive
+
+export default {
+  directives: { permission, waves },
+  data() {
+    return {
+      reissueFormVisible: false,
+      downloadLoading: false,
+      uploadFile: [],
+      downloadContent: {
+        downloadFile: 'http://pk6b0a7n8.bkt.clouddn.com/coupon_send_template.xlsx',
+        downloadFilename: 'coupon_send_template'
+      },
+      publishCoupon: {
+        file: undefined,
+        templateId: undefined
+      },
+      reissueRules: {
+        file: [
+          { validator: (rule, value, callback) => {
+            if (value === null || value === undefined || value === '') {
+              callback(new Error('上传文件不能为空'))
+            } else {
+              const suffix = value.substring(value.lastIndexOf('.') + 1, value.length)
+              if (suffix !== 'xlsx') {
+                callback(new Error('上传文件格式必须是xlsx'))
+              } else {
+                callback()
+              }
+            }
+          }, trigger: 'blur'
+          }
+        ]
+      }
+    }
+  },
+  computed: {
+    actionURL() {
+      return process.env.BASE_API + '/admin/upload?access_token=' + getAccessToken(Constants.access_token)
+    }
+  },
+  methods: {
+    handleUploadSuccess(respnse) {
+      this.publishCoupon.file = respnse.data.url
+    },
+    handleDownload() {
+      window.location.href = process.env.BASE_API + '/admin/download?downloadFile=' + this.downloadContent.downloadFile + '&downloadFilename=' + this.downloadContent.downloadFilename
+    },
+    handleReissueCoupon() {
+      publishCoupon(this.publishCoupon).then(response => {
+        this.reissueFormVisible = false
+        this.$notify({
+          title: '成功',
+          message: '发送优惠券成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    }
+  }
+}
+</script>
+
+<style scoped>
+
+</style>

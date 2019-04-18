@@ -15,12 +15,18 @@ service.interceptors.request.use(
   config => {
     // Do something before request is sent
     const requestMethod = config.method
-    if (requestMethod === 'post') { // post 方式
-      const requestData = config.data
+    if (requestMethod === 'post' || requestMethod === 'put') { // post 方式
+      let requestData = config.data
+      if (requestData === undefined || requestData === null || requestData === '') {
+        requestData = {}
+      }
       requestData.access_token = getAccessToken(Constants.access_token) // 后台每个请求都追加sysCode参数
       config.data = qs.stringify(requestData)
-    } else if (requestMethod === 'get') { // get 方式
-      const requestParams = config.params
+    } else if (requestMethod === 'get' || requestMethod === 'delete') { // get 方式
+      let requestParams = config.params
+      if (requestParams === undefined || requestParams === null || requestParams === '') {
+        requestParams = {}
+      }
       requestParams.access_token = getAccessToken(Constants.access_token) // 后台每个请求都追加sysCode参数
       config.params = requestParams
     }
@@ -28,7 +34,6 @@ service.interceptors.request.use(
   },
   error => {
     // Do something with request error
-    console.log(error) // for debug
     Promise.reject(error)
   }
 )
@@ -43,14 +48,7 @@ service.interceptors.response.use(
    */
   response => {
     const res = response.data
-    if (res.code === 500) {
-      Message({
-        message: '网络发生点小问题，请稍等',
-        type: 'error',
-        duration: 5 * 1000
-      })
-      return Promise.reject()
-    } else if (res.code === 1000 || res.code === 3000) {
+    if (res.code === 1000 || res.code === 3000) {
       Message({
         message: res.msg,
         type: 'error',
@@ -65,12 +63,15 @@ service.interceptors.response.use(
     }
   },
   error => {
-    console.log('err' + error) // for debug
-    Message({
-      message: error.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    const res = error.response
+    if (res.status === 504 || res.status === 503) {
+      Message({
+        message: '服务器开小差，请稍等！',
+        type: 'error',
+        duration: 5 * 1000
+      })
+      router.push({ path: '/401' })
+    }
     return Promise.reject(error)
   }
 )

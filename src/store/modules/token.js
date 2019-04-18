@@ -32,7 +32,6 @@ const token = {
         getRemoteAccessToken(params).then(response => {
           commit('SET_ACCESS_TOKEN', response.value)
           commit('SET_EXPIRES_IN', response.expiresIn)
-          console.log(response)
           setAccessToken(Constants.access_token, response)
           resolve()
           window.location.href = Config.redirect_uri

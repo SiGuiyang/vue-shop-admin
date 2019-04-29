@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :visible.sync="reissueFormVisible" title="补发优惠券" width="50%">
+  <el-dialog :visible.sync="sendFormVisible" title="批量拉黑" width="50%">
     <el-upload
       :on-success="handleUploadSuccess"
       :file-list="uploadFile"
@@ -11,9 +11,9 @@
     </el-upload>
 
     <div slot="footer" class="dialog-footer">
-      <el-button v-waves :loading="downloadLoading" class="filter-item" type="warning" icon="el-icon-download" @click="handleDownload">{{ $t('table.downloadTemplate') }}</el-button>
-      <el-button @click="reissueFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="handleReissueCoupon">{{ $t('table.confirm') }}</el-button>
+      <el-button v-waves :loading="downloadLoading" class="filter-item" type="warning" icon="el-icon-download" @click="handleDownload">下载模板</el-button>
+      <el-button @click="sendFormVisible = false">{{ $t('table.cancel') }}</el-button>
+      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="handleReissueCoupon">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -29,7 +29,7 @@ export default {
   directives: { permission, waves },
   data() {
     return {
-      reissueFormVisible: false,
+      sendFormVisible: false,
       downloadLoading: false,
       uploadFile: [],
       downloadContent: {
@@ -73,7 +73,7 @@ export default {
     },
     handleReissueCoupon() {
       publishCoupon(this.publishCoupon).then(() => {
-        this.reissueFormVisible = false
+        this.sendFormVisible = false
         this.$notify({
           title: '成功',
           message: '发送优惠券成功',

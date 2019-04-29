@@ -2,8 +2,8 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input :placeholder="$t('activity.fightGroup.activityName')" v-model="listQuery.activityName" style="width: 200px;" class="filter-item" />
-      <el-date-picker v-model="listQuery.beginTime" :placeholder="$t('time.beginTime')" format="yyyy-MM-dd HH:mm:ss" class="filter-item" type="datetime"/>
-      <el-date-picker v-model="listQuery.endTime" :placeholder="$t('time.endTime')" format="yyyy-MM-dd HH:mm:ss" class="filter-item" type="datetime"/>
+      <el-date-picker v-model="listQuery.beginTime" placeholder="开始时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="filter-item" type="date"/>
+      <el-date-picker v-model="listQuery.endTime" placeholder="结束时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="filter-item" type="date"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button v-waves v-permission="'ROLE_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
@@ -16,7 +16,6 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" type="selection" width="65" align="center"/>>
       <el-table-column label="活动名称" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.activityName }}</span>
@@ -33,6 +32,13 @@
         </template>
       </el-table-column>
 
+      <el-table-column label="状态" width="100" align="center">
+        <template slot-scope="scope">
+          <el-tag v-if="scope.row.deleteStatus" type="danger">禁用</el-tag>
+          <el-tag v-else type="success">启用</el-tag>
+        </template>
+      </el-table-column>
+
       <el-table-column label="创建时间" width="200" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
@@ -45,19 +51,25 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="300" fixed="right" class-name="small-padding fixed-width" align="center">
+      <el-table-column label="操作" width="240" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleQuery(scope.row)">编辑</el-button>
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/fightGroup/rule/'+scope.row.id">
-            <!-- 规则-->
-            <el-button v-waves class="filter-item" type="success" size="mini">{{ $t('activity.fightGroup.rule') }}</el-button>
+          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
+          <!-- 启用-->
+          <el-button v-permission="'ROLE_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <!-- 禁用-->
+          <el-button v-permission="'ROLE_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
+          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/rule/'+scope.row.id">
+            <!-- 拼团规则-->
+            <el-button v-waves type="success" size="small">{{ $t('activity.fightGroup.rule') }}</el-button>
           </router-link>
-          <!-- 商品-->
-          <el-button v-waves v-permission="'ROLE_ADMIN'" class="filter-item" type="warning" size="mini" @click="handleJump(scope.row)">拼团商品</el-button>
+          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/goods/'+scope.row.id">
+            <!-- 拼团商品-->
+            <el-button v-waves type="warning" size="small">拼团商品</el-button>
+          </router-link>
           <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/record/'+scope.row.id">
-            <!-- 记录-->
-            <el-button v-waves class="filter-item" type="primary" size="mini">成团记录</el-button>
+            <!-- 拼团记录-->
+            <el-button v-waves type="primary" size="small">成团记录</el-button>
           </router-link>
         </template>
       </el-table-column>
@@ -70,7 +82,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/assembly'
+import { fetchList, modifyAssembly } from '@/api/assembly'
 import { parseTime } from '@/utils'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -115,16 +127,6 @@ export default {
     },
     handleFilter() { // 搜索
       this.listQuery.page = 1
-      if (this.listQuery.beginTime !== undefined &&
-        this.listQuery.endTime !== undefined &&
-        this.listQuery.beginTime.getTime() > this.listQuery.endTime.getTime()) {
-        this.$message({
-          message: '开始时间不能大于结束时间',
-          type: 'warning'
-        })
-
-        return
-      }
       this.getFightGroup()
     },
     getActivityTime(row) {
@@ -146,26 +148,19 @@ export default {
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
     },
-    handleQuery(row) {
+    handleUpdate(row) {
       this.formData = Object.assign({}, row)
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleJump(row) {
-      let event = ''
-      if (row.goodsId === undefined || row.goodsId === '' || row.goodsId === null) {
-        event = 'add'
-      } else {
-        event = 'info'
-      }
-      this.$router.push({
-        path: '/activity/assembly/edit',
-        query: {
-          goodsId: row.goodsId,
-          event: event,
-          operationType: 'fightGroup'
-        }
+    handleDisable(id, deleteStatus) {
+      modifyAssembly({ id: id, deleteStatus: deleteStatus }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+        this.getFightGroup()
       })
     }
   }

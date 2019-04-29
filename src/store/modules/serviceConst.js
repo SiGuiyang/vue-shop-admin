@@ -8,47 +8,27 @@ const serviceConst = {
     couponTypeOptions: []
   },
   mutations: {
-    SET_ORDERSTATUSOPTIONS: (state, orderStatusOptions) => {
+    SET_ORDER_STATUS_OPTIONS: (state, orderStatusOptions) => {
       state.orderStatusOptions = orderStatusOptions
     },
-    SET_ORDERTYPEOPTIONS: (state, orderTypeOptions) => {
+    SET_ORDER_TYPE_OPTIONS: (state, orderTypeOptions) => {
       state.orderTypeOptions = orderTypeOptions
     },
-    SET_GOODSTYPEOPTIONS: (state, goodsTypeOptions) => {
+    SET_GOODS_TYPE_OPTIONS: (state, goodsTypeOptions) => {
       state.goodsTypeOptions = goodsTypeOptions
     },
-    SET_COUPONTYPEOPTIONS: (state, couponTypeOptions) => {
+    SET_COUPON_TYPE_OPTIONS: (state, couponTypeOptions) => {
       state.couponTypeOptions = couponTypeOptions
     }
   },
   actions: {
     FetchCommonEnumInfo({ commit }) {
       return new Promise((resolve, reject) => {
-        const params = {}
-        params.type = 'orderStatus'
-        fetchCommonEnumInfo(params).then(response => { // 订单状态
-          commit('SET_ORDERSTATUSOPTIONS', response.data)
-        }).catch(error => {
-          reject(error)
-        })
-
-        params.type = 'orderType'
-        fetchCommonEnumInfo(params).then(response => { // 订单类型
-          commit('SET_ORDERTYPEOPTIONS', response.data)
-        }).catch(error => {
-          reject(error)
-        })
-
-        params.type = 'couponType'
-        fetchCommonEnumInfo(params).then(response => { // 优惠券类型
-          commit('SET_COUPONTYPEOPTIONS', response.data)
-        }).catch(error => {
-          reject(error)
-        })
-
-        params.type = 'goodsType'
-        fetchCommonEnumInfo(params).then(response => { // 商品类型
-          commit('SET_GOODSTYPEOPTIONS', response.data)
+        fetchCommonEnumInfo({}).then(response => { // 订单状态
+          commit('SET_ORDER_STATUS_OPTIONS', response.data.orderStatus)
+          commit('SET_ORDER_TYPE_OPTIONS', response.data.orderType)
+          commit('SET_GOODS_TYPE_OPTIONS', response.data.goodsType)
+          commit('SET_COUPON_TYPE_OPTIONS', response.data.couponType)
         }).catch(error => {
           reject(error)
         })

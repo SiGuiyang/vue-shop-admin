@@ -1,6 +1,6 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%" @open="handleOpen">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px">
+    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="140px">
       <el-form-item :label="$t('activity.banner.title')" prop="title">
         <el-input v-model="formData.title" placeholder="请设置"/>
       </el-form-item>
@@ -36,18 +36,10 @@
           <el-option v-for="(item,index) in shareChannelOptions" :key="index" :label="item.value" :value="item.key"/>
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.status')" prop="deleteStatus">
-        <el-switch
-          v-model="formData.deleteStatus"
-          active-text="关闭"
-          inactive-text="启用"
-          active-color="#ff4949"
-          inactive-color="#13ce66" />
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button v-permission="'/admin/activity/banner/modify'" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
     </div>
   </el-dialog>
 
@@ -55,10 +47,12 @@
 
 <script>
 import { addBanner, modifyBanner } from '@/api/banner'
+import Upload from '@/components/Upload/singleImage3'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 export default {
   directives: { waves, permission },
+  components: { Upload },
   props: {
     formData: {
       type: Object,
@@ -76,8 +70,8 @@ export default {
   data() {
     return {
       textMap: {
-        update: '编辑',
-        create: '新建'
+        update: '编辑Banner',
+        create: '新建Banner'
       },
       dialogStatus: undefined,
       dialogFormVisible: false,

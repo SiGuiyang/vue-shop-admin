@@ -7,7 +7,7 @@
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button v-permission="'ROLE_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" :disabled="reissueDisabled" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="reissueFormVisible = true">{{ $t('table.reissueCoupon') }}</el-button>
+      <el-button v-permission="'ROLE_ADMIN'" :disabled="reissueDisabled" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleSend">{{ $t('table.reissueCoupon') }}</el-button>
     </div>
 
     <el-table
@@ -25,27 +25,27 @@
           <span class="link-type">{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.templateType')" align="center" width="100">
+      <el-table-column :label="$t('activity.coupon.templateType')" align="center" width="160">
         <template slot-scope="scope">
           <span>{{ getTemplateType(scope.row.templateType) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center" width="80">
+      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center" width="120">
         <template slot-scope="scope">
           <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column :label="$t('activity.coupon.orderAmount')" align="center" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderAmount }}</span>
+          <span class="icon-money"> <svg-icon icon-class="money" /> {{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.couponAmount')" align="center" width="100">
+      <el-table-column :label="$t('activity.coupon.couponAmount')" align="center" width="120">
         <template slot-scope="scope">
-          <span>{{ scope.row.couponAmount != null ? scope.row.couponAmount: '——' }}</span>
+          <span class="icon-money"> <svg-icon icon-class="money" /> {{ scope.row.couponAmount != null ? scope.row.couponAmount: '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountStrength')" align="center" width="100">
+      <el-table-column :label="$t('activity.coupon.discountStrength')" align="center" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
         </template>
@@ -55,7 +55,7 @@
           <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createUser')" align="center" width="150">
+      <el-table-column :label="$t('common.createUser')" align="center" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
@@ -65,9 +65,11 @@
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" align="center">
+      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" width="160" fixed="right" align="center">
         <template slot-scope="scope">
           <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-permission="'ROLE_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_ADMIN'" v-else type="danger" size="mini" @click="handleDisable(scope.row.id,true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -80,7 +82,7 @@
 </template>
 
 <script>
-import { fetchCouponTemplateList } from '@/api/activity'
+import { fetchList, modifyTemplate } from '@/api/couponTemplate'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -126,7 +128,7 @@ export default {
   methods: {
     getCouponTemplateList() {
       this.listLoading = true
-      fetchCouponTemplateList(this.listQuery).then(response => {
+      fetchList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         setTimeout(() => {
@@ -137,7 +139,12 @@ export default {
       })
     },
     getTemplateType(type) {
-      return this.templateTypeOptions.filter(v => v.key === type)[0].value
+      const arr = this.templateTypeOptions.filter(v => v.key === type)
+      if (arr.length === 0) {
+        return '--'
+      } else {
+        return arr[0].value
+      }
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -151,7 +158,6 @@ export default {
       } else {
         this.reissueDisabled = true
       }
-      console.log(row)
     },
     handleModifyStatus(row, status) {
       this.$message({
@@ -178,7 +184,27 @@ export default {
       }
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
+      console.log(this.formData)
+    },
+    handleDisable(id, deleteStatus) {
+      modifyTemplate({ id: id, deleteStatus: deleteStatus }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+        this.getCouponTemplateList()
+      })
+    },
+    handleSend() {
+      const _this = this.$refs['sendForm']
+      _this.reissueFormVisible = true
     }
   }
 }
 </script>
+
+<style scoped>
+  .icon-money {
+    color: #f4516c;
+  }
+</style>

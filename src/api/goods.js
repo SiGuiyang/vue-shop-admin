@@ -17,8 +17,8 @@ export function fetchGoodsList(data) {
   })
 }
 
-// 新增修改商品
-export function modifyGoods(data) {
+// 新增商品
+export function addGoods(data) {
   return service({
     url: '/admin/goods/modify',
     method: 'post',
@@ -26,10 +26,19 @@ export function modifyGoods(data) {
   })
 }
 
+// 修改商品
+export function modifyGoods(data) {
+  return service({
+    url: '/admin/goods/modify',
+    method: 'put',
+    data
+  })
+}
+
 // 查看商品详情
 export function getGoodsInfo(data) {
   return service({
-    url: '/admin/goods/info',
+    url: '/admin/goods/' + data.goodsId,
     method: 'post',
     data
   })

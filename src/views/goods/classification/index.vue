@@ -51,12 +51,11 @@
 <script>
 import { fetchList } from '@/api/classification'
 import waves from '@/directive/waves' // Waves directive
-import Upload from '@/components/Upload/singleImage3'
 import IForm from './form'
 
 export default {
   name: 'Classification',
-  components: { Upload, IForm },
+  components: { IForm },
   directives: { waves },
   data() {
     return {
@@ -103,10 +102,8 @@ export default {
     },
     handleQuery(row) { // 查看分类中的商品
       this.formData = Object.assign({}, row) // copy obj
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
+      const _this = this.$refs['dataForm']
+      _this.dialogFormVisible = true
     }
   }
 }

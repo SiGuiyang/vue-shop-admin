@@ -19,29 +19,14 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" prop="id" width="65" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('activity.coupon.couponName')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.couponName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.couponName')" align="center" width="200">
-        <template slot-scope="scope">
-          <span>{{ scope.row.username }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('activity.coupon.phone')" align="center" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('activity.coupon.templateName')" align="center" width="200">
-        <template slot-scope="scope">
-          <span>{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('activity.coupon.discountType')" align="center" width="100">

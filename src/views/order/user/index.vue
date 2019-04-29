@@ -22,45 +22,45 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" type="selection" width="65" align="center"/>>
-      <el-table-column :label="$t('order.phone')" width="200" align="center">
+      <el-table-column type="selection" width="65" align="center"/>>
+      <el-table-column label="手机号码" width="200" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.phone }}</span>
+          <span>{{ scope.row.userOrder.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('order.orderCode')" width="220" align="center">
+      <el-table-column label="订单号" width="220" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderCode }}</span>
+          <span>{{ scope.row.userOrder.orderCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('order.orderAmount')" width="160" align="center">
+      <el-table-column label="订单金额" width="160" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderAmount }}</span>
+          <span>{{ scope.row.userOrder.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('order.integralAmount')" width="140" align="center">
+      <el-table-column label="消费积分" width="140" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.integralAmount }}</span>
+          <span>{{ scope.row.userOrder.integralAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('order.discountAmount')" width="140" align="center">
+      <el-table-column label="优惠券金额" width="140" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.discountAmount }}</span>
+          <span>{{ scope.row.userOrder.discountAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('order.orderStatus')" width="100" align="center">
+      <el-table-column label="订单状态" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ getOrderStatus(scope.row.orderStatus) }}</span>
+          <el-tag type="success">{{ getOrderStatus(scope.row.userOrder.orderStatus) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('order.createTime')" width="200" align="center">
+      <el-table-column label="创建时间" width="200" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.userOrder.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" width="100" fixed="right" class-name="small-padding fixed-width" align="center">
+      <el-table-column label="操作" width="100" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'/admin/order/user/info'" type="primary" size="mini" @click="handleQuery(scope.row.id)">{{ $t('table.query') }}</el-button>
+          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleQuery(scope.row.userOrder.id)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -123,13 +123,13 @@ export default {
       if (status === undefined || status === '' || status === null) {
         return '——'
       }
-      return this.$store.state.orderStatusOptions.filter(os => os.key === status)[0].value
+      return this.orderStatusOptions.filter(os => os.key === status)[0].value
     },
     getOrderType(type) {
       if (type === undefined || type === '' || type === null) {
         return '——'
       }
-      return this.$store.state.orderTypeOptions.filter(ot => ot.type === type)[0].value
+      return this.orderTypeOptions.filter(ot => ot.type === type)[0].value
     },
     getOrderList() { // 订单列表
       this.listLoading = true
@@ -172,12 +172,10 @@ export default {
         this.orderDetail.buyerGoods.forEach(g => {
           this.orderDetail.totalAmount += g.settlementAmount
         })
+        _this.dialogFormVisible = true
       }).catch(() => {
         _this.dialogFormVisible = false
       })
-    },
-    handleChange(val) {
-      console.log(val)
     }
   }
 }

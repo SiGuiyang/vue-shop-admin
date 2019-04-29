@@ -85,6 +85,7 @@ export default {
           type: 'success',
           message: '代码生成成功'
         })
+        this.dialogFormVisible = false
       }).catch(() => {
         this.listLoading = false
       })

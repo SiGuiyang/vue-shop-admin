@@ -26,7 +26,6 @@ const permission = {
 /**
  * 递归过滤异步路由表，返回符合用户角色权限的路由表
  * @param routes asyncRouterMap
- * @param roles
  */
 function filterAsyncRouter(routes) {
   const res = []

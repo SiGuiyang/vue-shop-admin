@@ -29,12 +29,12 @@
 
           <el-col :xs="18" :sm="18" :lg="12" class="card-panel-col">
             <span>订单状态：</span>
-            <span>{{ getOrderStatus(orderData.order.orderStatus) }}</span>
+            <span>{{ this.$parent.getOrderStatus(orderData.order.orderStatus) }}</span>
           </el-col>
 
           <el-col :xs="18" :sm="18" :lg="12" class="card-panel-col">
             <span>订单类型：</span>
-            <span>{{ getOrderType(orderData.order.orderType) }}</span>
+            <span>{{ this.$parent.getOrderType(orderData.order.orderType) }}</span>
           </el-col>
 
           <el-col :xs="18" :sm="18" :lg="12" class="card-panel-col">
@@ -144,10 +144,23 @@ export default {
       dialogFormVisible: false,
       orderDetailTitle: '订单详情'
     }
+  },
+  methods: {
+    handleChange(val) {
+      console.log(val)
+    }
   }
 }
 </script>
 
-<style>
-
+<style rel="stylesheet/scss" lang="scss" scoped>
+  .card-panel-col{
+    margin-top: 32px;
+  }
+  .icon-money {
+    color: #f4516c;
+  }
+  .common-color {
+    color: #40c9c6;
+  }
 </style>

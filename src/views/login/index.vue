@@ -100,10 +100,13 @@ export default {
           this.loading = true
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
             this.loading = false
+            this.$message({
+              type: 'success',
+              message: '登陆成功'
+            })
             this.$router.push({ path: this.redirect || '/' })
-          }).catch((error) => {
+          }).catch(() => {
             this.loading = false
-            this.$message.error(error)
           })
         } else {
           console.log('error submit!!')

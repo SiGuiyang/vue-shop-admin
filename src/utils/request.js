@@ -4,6 +4,7 @@ import qs from 'qs'
 import { getAccessToken } from '@/utils/auth'
 import router from '@/router'
 import Constants from '@/utils/constants'
+import store from '@/store'
 // create an axios instance
 const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
@@ -49,6 +50,7 @@ service.interceptors.response.use(
   response => {
     const res = response.data
     if (res.code === 1000 || res.code === 3000) {
+      console.log('eeeeeeeeeeee')
       Message({
         message: res.msg,
         type: 'error',
@@ -64,13 +66,10 @@ service.interceptors.response.use(
   },
   error => {
     const res = error.response
-    if (res.status === 504 || res.status === 503) {
-      Message({
-        message: '服务器开小差，请稍等！',
-        type: 'error',
-        duration: 5 * 1000
+    if (res.status === 401 || res.status === 504 || res.status === 503 || res.status === 502) {
+      store.dispatch('FedLogOut').then(() => {
+        router.push({ path: '/' })
       })
-      router.push({ path: '/401' })
     }
     return Promise.reject(error)
   }

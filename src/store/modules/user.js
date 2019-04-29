@@ -1,5 +1,5 @@
-import { loginByUsername, logout, getUserInfo } from '@/api/login'
-import { removeToken, setAccessToken } from '@/utils/auth'
+import { loginByUsername, getUserInfo } from '@/api/login'
+import { removeAccessToken, setAccessToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 
 const user = {
@@ -63,7 +63,7 @@ const user = {
           } else {
             reject('getInfo: permission must be a non-null array !')
           }
-          commit('SET_USERNAME', data.username)
+          commit('SET_USERNAME', data.sysCode)
           commit('SET_NAME', data.sysName)
           commit('SET_AVATAR', data.avatar)
           resolve(response)
@@ -73,36 +73,11 @@ const user = {
       })
     },
     // 登出
-    LogOut({ commit, state }) {
-      return new Promise((resolve, reject) => {
-        logout({}).then(() => {
-          commit('SET_PERMISSIONS', [])
-          removeToken()
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-
-    // 前端 登出
-    FedLogOut({ commit }) {
-      return new Promise(resolve => {
-        removeToken()
+    LogOut({ commit }) {
+      return new Promise((resolve) => {
+        commit('SET_PERMISSIONS', [])
+        removeAccessToken(Constants.access_token)
         resolve()
-      })
-    },
-
-    // 动态修改权限
-    ChangeRoles({ commit, dispatch }, role) {
-      return new Promise(resolve => {
-        getUserInfo(role).then(response => {
-          const data = response.data
-          commit('SET_NAME', data.sysName)
-          commit('SET_AVATAR', data.avatar)
-          dispatch('GenerateRoutes', data) // 动态修改权限后 重绘侧边菜单
-          resolve()
-        })
       })
     }
   }

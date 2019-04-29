@@ -12,7 +12,7 @@ export function fetchList(data) {
 // 修改商品分类
 export function modify(data) {
   return service({
-    url: '/admin/classification',
+    url: '/admin/classification/modify',
     method: 'put',
     data
   })

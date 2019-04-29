@@ -17,11 +17,6 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="序号" prop="id" width="65" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="模块" align="center">
         <template slot-scope="scope">
           <span>{{ getModuleName(scope.row.module) }}</span>

@@ -24,14 +24,6 @@
       <el-form-item :label="$t('activity.coupon.description')" prop="description">
         <el-input :autosize="{ minRows: 4, maxRows: 8}" v-model="formData.description" type="textarea" placeholder="请添加说明"/>
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.deleteStatus')" prop="deleteStatus">
-        <el-switch
-          v-model="formData.deleteStatus"
-          active-text="关闭"
-          inactive-text="启用"
-          active-color="#ff4949"
-          inactive-color="#13ce66" />
-      </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
@@ -109,7 +101,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.createUser = this.$store.state.user.username
-          addTemplate(this.formatData).then(() => {
+          addTemplate(this.formData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -117,7 +109,7 @@ export default {
               type: 'success',
               duration: 2000
             })
-            this.getCouponTemplateList()
+            this.$parent.getCouponTemplateList()
           })
         }
       })
@@ -125,7 +117,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          const tempData = Object.assign({}, this.formatData)
+          const tempData = Object.assign({}, this.formData)
           modifyTemplate(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -134,7 +126,7 @@ export default {
               type: 'success',
               duration: 2000
             })
-            this.getCouponTemplateList()
+            this.$parent.getCouponTemplateList()
           })
         }
       })

@@ -2,9 +2,6 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.goodsName" placeholder="商品名称" style="width: 200px;" class="filter-item" />
-      <el-select v-model="listQuery.goodsType" placeholder="商品类型" clearable style="width: 120px" class="filter-item">
-        <el-option v-for="(item,index) in goodsTypeOptions" :key="index" :label="item.value" :value="item.type"/>
-      </el-select>
       <el-select v-model="listQuery.goodsStatus" placeholder="商品状态" clearable style="width: 120px" class="filter-item">
         <el-option v-for="(item,index) in goodsStatusOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
@@ -12,9 +9,7 @@
         <el-option v-for="(item,index) in classifications" :key="index" :label="item.className" :value="item.id"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <router-link v-permission="'ROLE_ADMIN'" :to="'/goods/goods/edit/-1/create/goods'">
-        <el-button v-waves class="filter-item" type="primary" icon="el-icon-edit">添加</el-button>
-      </router-link>
+      <el-button v-waves class="filter-item" type="success" icon="el-icon-search" @click="handleQuery">查看活动商品</el-button>
     </div>
 
     <el-table
@@ -37,7 +32,7 @@
       </el-table-column>
       <el-table-column label="商品类型" width="120" align="center">
         <template slot-scope="scope">
-          <span>{{ getGoodsType(scope.row.goodsType) }}</span>
+          <span>拼团商品</span>
         </template>
       </el-table-column>
       <el-table-column label="商品编码" width="200" align="center">
@@ -47,17 +42,17 @@
       </el-table-column>
       <el-table-column label="价格" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.goodsAmount }}</span>
+          <span class="icon-money"><svg-icon icon-class="money" />{{ scope.row.goodsAmount }}</span>
         </template>
       </el-table-column>
       <el-table-column label="折扣价格" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.goodsDiscountAmount }}</span>
+          <span class="icon-money"><svg-icon icon-class="money" />{{ scope.row.goodsDiscountAmount }}</span>
         </template>
       </el-table-column>
       <el-table-column label="商品状态" width="100" align="center">
         <template slot-scope="scope">
-          <span>{{ getGoodsStatus(scope.row.goodsStatus) }}</span>
+          <el-tag type="success">{{ getGoodsStatus(scope.row.goodsStatus) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="库存" class-name="status-col" min-width="100" align="center">
@@ -70,10 +65,12 @@
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100" class-name="small-padding fixed-width" fixed="right" align="center">
+      <el-table-column label="操作" width="180" class-name="small-padding fixed-width" fixed="right" align="center">
         <template slot-scope="scope">
+          <el-button v-if="scope.row.join" :disabled="disabled" type="warning" size="small" @click="handleActivityGoods(scope.row.id)">已参与活动</el-button>
+          <el-button v-else type="success" size="small" @click="handleActivityGoods(scope.row.id)">参与活动</el-button>
           <router-link v-permission="'ROLE_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
-            <el-button type="primary" size="mini">编辑</el-button>
+            <el-button type="primary" size="small">编辑</el-button>
           </router-link>
         </template>
       </el-table-column>
@@ -81,21 +78,22 @@
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getGoodsList" />
 
+    <activity-goods ref="goodsForm" :goods-data="goodsData"/>
   </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import { fetchGoodsList } from '@/api/goods'
 import { fetchList } from '@/api/classification'
+import { getFightGroupGoods, modifyFightGroupGoods } from '@/api/assembly'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import Upload from '@/components/Upload/singleImage3'
+import ActivityGoods from './activityGoods'
 
 export default {
   name: 'GoodsManage',
-  components: { Pagination, Upload },
+  components: { Pagination, ActivityGoods },
   directives: { waves, permission },
   data() {
     return {
@@ -107,25 +105,23 @@ export default {
         page: 1,
         pageSize: 20,
         goodsName: undefined,
-        goodsType: undefined,
+        goodsType: 3,
         goodsStatus: undefined,
-        gcsId: undefined
+        activityId: undefined
       },
       classifications: [],
       goodsStatusOptions: [
         { key: 1, value: '上架' },
         { key: 2, value: '下架' }
-      ]
+      ],
+      goodsData: {},
+      disabled: true
     }
-  },
-  computed: {
-    ...mapGetters([
-      'goodsTypeOptions'
-    ])
   },
   created() {
     this.getClassification()
     this.getGoodsList()
+    this.listQuery.activityId = this.$route.params.id
   },
   methods: {
     getGoodsList() { // 商品列表
@@ -146,9 +142,6 @@ export default {
         this.classifications = response.data
       })
     },
-    getGoodsType(goodsType) {
-      return this.$store.state.serviceConst.goodsTypeOptions.filter(gt => gt.type === goodsType)[0].value
-    },
     getClassName(gcsId) {
       if (gcsId === undefined || gcsId === null || gcsId === '') {
         return '——'
@@ -164,7 +157,29 @@ export default {
     handleFilter() { // 搜索
       this.listQuery.page = 1
       this.getGoodsList()
+    },
+    handleQuery() {
+      getFightGroupGoods({ activityId: this.listQuery.activityId }).then(response => {
+        const _this = this.$refs['goodsForm']
+        _this.dialogFormVisible = true
+        this.goodsData = response.data
+      })
+    },
+    handleActivityGoods(goodsId) { // 设置拼团活动商品
+      modifyFightGroupGoods({ activityId: this.listQuery.activityId, goodsId: goodsId }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+        this.getGoodsList()
+      })
     }
   }
 }
 </script>
+
+<style scoped>
+  .icon-money {
+    color: #f4516c;
+  }
+</style>

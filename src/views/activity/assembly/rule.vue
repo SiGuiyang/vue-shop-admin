@@ -1,28 +1,28 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="activityRule" label-position="left" label-width="100px">
-      <el-form-item :label="$t('activity.fightGroup.activityName')" prop="activityName" size="medium">
+    <el-form ref="dataForm" :rules="rules" :model="activityRule" label-position="left" label-width="120px">
+      <el-form-item label="活动名称" prop="activityName" size="medium">
         <el-input v-model="activityRule.activityName" disabled placeholder="请设置"/>
       </el-form-item>
-      <el-form-item :label="$t('activity.fightGroup.purchaseLimit')" prop="purchaseLimit">
+      <el-form-item label="每人限购数量" prop="purchaseLimit">
         <el-input v-model="activityRule.purchaseLimit" placeholder="请设置"/>
       </el-form-item>
-      <el-form-item :label="$t('activity.fightGroup.fightCount')" prop="fightCount">
+      <el-form-item label="成团人数" prop="fightCount">
         <el-input v-model="activityRule.fightCount" placeholder="请设置"/>
       </el-form-item>
-      <el-form-item :label="$t('activity.fightGroup.description')" prop="description">
+      <el-form-item label="说明" prop="description">
         <el-input v-model="activityRule.description" placeholder="请设置" type="textarea"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="goBack()">{{ $t('table.cancel') }}</el-button>
-      <el-button v-permission="'/admin/activity/fightGroup/modify'" type="primary" @click="createData()">{{ $t('table.confirm') }}</el-button>
+      <el-button @click="goBack()">取消</el-button>
+      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="createData()">确认</el-button>
     </div>
   </div>
 </template>
 
 <script>
-import { fightGroupRuleInfo, modifyFightGroupRule } from '@/api/activity'
+import { fightGroupRuleInfo, modifyFightGroupRule } from '@/api/assembly'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Upload from '@/components/Upload/singleImage3'
@@ -35,31 +35,48 @@ export default {
     return {
       activityRule: {
         id: undefined,
-        groupId: undefined,
+        activityId: undefined,
         activityName: undefined,
         purchaseLimit: undefined,
         fightCount: undefined,
         description: undefined
       },
       rules: {
-        activityName: [{ required: true, message: '活动标题不能为空', trigger: 'blur' }],
-        purchaseLimit: [{ required: true, message: '限购数量不能为空', trigger: 'blur' }],
-        fightCount: [{ required: true, message: '成团数量不能为空', trigger: 'blur' }],
-        description: [{ required: true, message: '规则说明不能为空', trigger: 'blur' }]
+        purchaseLimit: [{ required: true, message: '限购数量不能为空', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (/^[1-9]\d*$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('限购数量只能是整数'))
+              }
+            }, trigger: 'change'
+          }
+        ],
+        fightCount: [{ required: true, message: '成团数量不能为空', trigger: 'blur' },
+          {
+            validator: (rule, value, callback) => {
+              if (/^[1-9]\d*$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('成团数量只能是整数'))
+              }
+            }, trigger: 'change'
+          }]
       },
       tempRoute: {}
     }
   },
   created() {
-    this.tempRoute = Object.assign({}, this.$route)
-    console.log(this.$route.params.id)
     this.initData()
   },
   methods: {
     initData() {
       const params = {}
-      params.createUser = this.$store.state.user.sysCode
+      params.createUser = this.$store.state.user.username
+      this.tempRoute = this.$route
       params.id = this.$route.params.id
+      this.activityRule.activityId = this.$route.params.id
       fightGroupRuleInfo(params).then(response => {
         this.activityRule = response.data
       })
@@ -71,13 +88,11 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.activityRule.createUser = this.$store.state.user.sysCode
+          this.activityRule.createUser = this.$store.state.user.username
           modifyFightGroupRule(this.activityRule).then(() => {
-            this.$notify({
-              title: '成功',
-              message: '操作成功',
+            this.$message({
               type: 'success',
-              duration: 2000
+              message: '操作成功'
             })
             this.goBack()
           })

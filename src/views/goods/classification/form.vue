@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="60%">
+  <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="60%" @opened="handleOpen">
     <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px">
       <el-form-item :label="$t('goods.classificationName')" prop="className">
         <el-input v-model="formData.className" placeholder="请设置"/>
@@ -18,7 +18,10 @@
 </template>
 <script>
 import { modify } from '@/api/classification'
+import Upload from '@/components/Upload/singleImage3'
+
 export default {
+  components: { Upload },
   props: {
     formData: {
       type: Object,
@@ -36,16 +39,17 @@ export default {
     }
   },
   methods: {
+    handleOpen() {
+      this.$refs['dataForm'].clearValidate()
+    },
     updateData() {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
       modify(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
-          message: '更新成功',
+        this.$message({
           type: 'success',
-          duration: 2000
+          message: '操作成功'
         })
         this.$parent.getList()
       })

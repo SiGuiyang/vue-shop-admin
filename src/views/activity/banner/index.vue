@@ -17,11 +17,6 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" prop="id" width="65" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
       <el-table-column :label="$t('activity.banner.title')" width="150" align="center">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.title }}</span>
@@ -59,7 +54,8 @@
       </el-table-column>
       <el-table-column :label="$t('activity.banner.status')" class-name="status-col" width="120" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
+          <el-tag v-if="scope.row.deleteStatus" type="danger">禁用</el-tag>
+          <el-tag v-else type="success">启用</el-tag>
         </template>
       </el-table-column>
 
@@ -73,9 +69,11 @@
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" width="100" align="center">
+      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" width="160" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDisable(scope.row.id, false)">启用</el-button>
+          <el-button v-else type="danger" size="mini" @click="handleDisable(scope.row.id, true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -86,7 +84,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/banner'
+import { fetchList, modifyBanner } from '@/api/banner'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -154,7 +152,7 @@ export default {
         this.total = response.total
 
         this.list.forEach(k => {
-          k.shareChannel = JSON.parse(k.shareChannel)
+          k.shareChannel = JSON.parse(JSON.parse(k.shareChannel))
         })
 
         setTimeout(() => {
@@ -165,7 +163,12 @@ export default {
       })
     },
     getBannerType(bannerType) {
-      return this.bannerTypeOptions.filter(k => k.key === bannerType)[0].value
+      const arr = this.bannerTypeOptions.filter(k => k.key === bannerType)
+      if (arr.length === 0) {
+        return '--'
+      } else {
+        return arr[0].value
+      }
     },
     getShareChannel(channel) {
       let content = ''
@@ -207,6 +210,15 @@ export default {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
+    },
+    handleDisable(id, deleteStatus) {
+      modifyBanner({ id: id, deleteStatus: deleteStatus }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+        this.getBannerList()
+      })
     }
   }
 }

@@ -10,7 +10,7 @@
         <el-input v-model="goodsData.goodsName" placeholder="请设置"/>
       </el-form-item>
       <el-form-item label="商品类型" prop="goodsType">
-        <el-radio-group v-model="goodsData.goodsType" placeholder="请选择">
+        <el-radio-group v-model="goodsData.goodsType" :disabled="goodsTypeDisabled" placeholder="请选择">
           <el-radio v-for="(item,index) in goodsTypeOptions" :key="index" :label="item.type">{{ item.value }}</el-radio>
         </el-radio-group>
       </el-form-item>
@@ -92,9 +92,6 @@
       <template v-if="operationType === 'goods'">
         <el-button type="primary" @click="dialogStatus === 'create'?createData():updateData()">确认</el-button>
       </template>
-      <template v-else-if="operationType === 'assembly'">
-        <el-button type="primary" @click="handleAssemblyData()">确认</el-button>
-      </template>
     </div>
   </div>
 </template>
@@ -112,6 +109,7 @@ export default {
     return {
       operationType: undefined,
       dialogStatus: undefined,
+      goodsTypeDisabled: false,
       goodsData: {
         id: undefined,
         goodsDetailId: undefined,
@@ -168,6 +166,7 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
     const requestParams = this.$route.params // 获取路由传入的参数
     this.operationType = requestParams.operationType // 操作类型
+    this.restEvent(requestParams.event)
     this.initData(requestParams)
     this.getClassification()
   },
@@ -220,6 +219,15 @@ export default {
       this.goodsData.detailsImgFourth = ''
       this.goodsData.detailsImgFifth = ''
     },
+    restEvent(event) {
+      if (event === 'create') {
+        this.dialogStatus = 'create'
+        this.goodsTypeDisabled = false
+      } else {
+        this.dialogStatus = 'update'
+        this.goodsTypeDisabled = true
+      }
+    },
     createData() { // 添加商品
       addGoods(this.goodsData).then(() => {
         this.$message({
@@ -242,9 +250,6 @@ export default {
           })
         }
       })
-    },
-    handleAssemblyData() {
-      console.log('assembly')
     }
   }
 }

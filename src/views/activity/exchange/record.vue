@@ -2,6 +2,10 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.phone" type="text" placeholder="手机号码" style="width: 200px;" class="filter-item"/>
+      <el-select v-model="listQuery.ruleId" placeholder="换购规则" style="width: 200px;" class="filter-item">
+        <el-option v-for="item in exchangeRules" :key="item.id" :value="item.id" :label="item.ruleName"/>
+      </el-select>
+
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
     </div>
 
@@ -18,45 +22,39 @@
           <span>{{ scope.row.activityName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="用户名称" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.username }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="手机号码" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否团长" align="center">
+      <el-table-column label="换购规则" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.master" type="success">是</el-tag>
-          <el-tag v-else type="warning">否</el-tag>
+          <span>{{ scope.row.ruleName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否开团" align="center">
+      <el-table-column label="商品名称" align="center">
         <template slot-scope="scope">
-          <el-tag type="success">{{ getStatus(scope.row.openFightStatus) }}</el-tag>
+          <span>{{ scope.row.goodsName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="参团时间" align="center">
+      <el-table-column label="商品价格" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.goodsAmount }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="购买时间" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="成团时间" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.groupTime }}</span>
-        </template>
-      </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getFightGroupRecordList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getExchangeRecordList" />
   </div>
 </template>
 
 <script>
-import { fetchFightGroupRecord } from '@/api/assembly'
+import { fetchExchangeRecordList, fetchRuleList } from '@/api/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -85,24 +83,28 @@ export default {
         page: 1,
         pageSize: 20,
         activityId: undefined,
+        ruleId: undefined,
         phone: undefined
       },
       recordStatusOptions: [
         { key: 0, value: '已开团' },
         { key: 1, value: '未成团' },
         { key: 2, value: '已成团' }
-      ]
+      ],
+      exchangeRules: []
     }
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route)
-    this.getFightGroupRecordList()
+    this.listQuery.activityId = this.$route.params.id
+    this.initRule(this.listQuery)
+    this.getExchangeRecordList()
   },
   methods: {
-    getFightGroupRecordList() { // 活动列表
+    getExchangeRecordList() { // 活动列表
       this.listLoading = true
       this.listQuery.activityId = this.$route.params.id
-      fetchFightGroupRecord(this.listQuery).then(response => {
+      fetchExchangeRecordList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -115,10 +117,12 @@ export default {
     },
     handleFilter() { // 搜索
       this.listQuery.page = 1
-      this.getFightGroupRecordList()
+      this.getExchangeRecordList()
     },
-    getStatus(status) {
-      return this.recordStatusOptions.filter(rso => rso.key === status)[0].value
+    initRule(data) {
+      fetchRuleList(data).then(response => {
+        this.exchangeRules = response.data
+      })
     }
   }
 }

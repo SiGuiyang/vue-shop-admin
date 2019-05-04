@@ -59,3 +59,29 @@ export function modifyRule(data) {
     data
   })
 }
+
+// 设置换购商品的规则
+export function modifyGoodsRule(data) {
+  return service({
+    url: '/admin/exchange/goods/rule',
+    method: 'put',
+    data
+  })
+}
+
+// 查看商品的规则详情
+export function queryGoodsRuleInfo(data) {
+  return service({
+    url: '/admin/exchange/goods/rule/' + data.activityId + '/' + data.goodsId,
+    method: 'get'
+  })
+}
+
+// 满赠换购记录
+export function fetchExchangeRecordList(data) {
+  return service({
+    url: 'admin/exchange/purchase/history',
+    method: 'post',
+    data
+  })
+}

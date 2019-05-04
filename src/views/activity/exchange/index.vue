@@ -59,9 +59,13 @@
           <el-button v-permission="'ROLE_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
           <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/exchange/rule/'+scope.row.id">
             <!-- 满赠规则-->
-            <el-button v-waves type="success" size="small">{{ $t('activity.fightGroup.rule') }}</el-button>
+            <el-button v-waves type="success" size="small">规则</el-button>
           </router-link>
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/record/'+scope.row.id">
+          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/exchange/goods/'+scope.row.id">
+            <!-- 满赠规则-->
+            <el-button v-waves type="warning" size="small">满赠商品</el-button>
+          </router-link>
+          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/exchange/record/'+scope.row.id">
             <!-- 购买记录-->
             <el-button v-waves type="primary" size="small">购买记录</el-button>
           </router-link>

@@ -4,6 +4,9 @@
       <el-form-item label="配置项名称" prop="configName">
         <el-input :disabled="configNameDisabled" v-model="formData.configName" placeholder="请设置"/>
       </el-form-item>
+      <el-form-item label="配置项类型" prop="configType">
+        <el-input :disabled="configTypeDisabled" v-model="formData.configType" placeholder="请设置"/>
+      </el-form-item>
       <el-form-item label="配置项值" prop="configValue">
         <el-input v-model="formData.configValue" placeholder="请设置"/>
       </el-form-item>
@@ -46,8 +49,10 @@ export default {
       dialogStatus: undefined,
       dialogFormVisible: false,
       configNameDisabled: false,
+      configTypeDisabled: false,
       rules: {
         configName: [{ required: true, message: '配置项名称不能为空', trigger: 'blur' }],
+        configType: [{ required: true, message: '配置项类型不能为空', trigger: 'blur' }],
         configValue: [{ required: true, message: '配置项值不能为空', trigger: 'blur' }],
         module: [{ required: true, message: '模块不能为空', trigger: 'blur' }]
       }
@@ -63,15 +68,14 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
-          addConfig(this.temp).then(() => {
+          const tempData = Object.assign({}, this.formData)
+          addConfig(tempData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
+            this.$message({
               type: 'success',
-              duration: 2000
+              message: '创建成功'
             })
-            this.getConfigList()
+            this.$parent.getList()
           })
         }
       })
@@ -83,12 +87,10 @@ export default {
           modifyConfig(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
-              title: '成功',
-              message: '更新成功',
               type: 'success',
-              duration: 2000
+              message: '更新成功'
             })
-            this.getConfigList()
+            this.$parent.getList()
           })
         }
       })

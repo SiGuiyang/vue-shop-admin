@@ -19,6 +19,7 @@ const getters = {
   orderTypeOptions: state => state.serviceConst.orderTypeOptions,
   goodsTypeOptions: state => state.serviceConst.goodsTypeOptions,
   couponTypeOptions: state => state.serviceConst.couponTypeOptions,
+  moduleTypeOptions: state => state.serviceConst.moduleTypeOptions,
   expires_in: state => state.token.expires_in
 }
 export default getters

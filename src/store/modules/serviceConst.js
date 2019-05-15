@@ -5,7 +5,8 @@ const serviceConst = {
     orderStatusOptions: [],
     orderTypeOptions: [],
     goodsTypeOptions: [],
-    couponTypeOptions: []
+    couponTypeOptions: [],
+    moduleTypeOptions: []
   },
   mutations: {
     SET_ORDER_STATUS_OPTIONS: (state, orderStatusOptions) => {
@@ -19,6 +20,9 @@ const serviceConst = {
     },
     SET_COUPON_TYPE_OPTIONS: (state, couponTypeOptions) => {
       state.couponTypeOptions = couponTypeOptions
+    },
+    SET_MODULE_TYPE_OPTIONS: (state, moduleTypeOptions) => {
+      state.moduleTypeOptions = moduleTypeOptions
     }
   },
   actions: {
@@ -29,6 +33,7 @@ const serviceConst = {
           commit('SET_ORDER_TYPE_OPTIONS', response.data.orderType)
           commit('SET_GOODS_TYPE_OPTIONS', response.data.goodsType)
           commit('SET_COUPON_TYPE_OPTIONS', response.data.couponType)
+          commit('SET_MODULE_TYPE_OPTIONS', response.data.moduleType)
         }).catch(error => {
           reject(error)
         })

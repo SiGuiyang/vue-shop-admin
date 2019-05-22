@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="listQuery.roleName" placeholder="角色名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
 
     <el-table
@@ -47,10 +47,10 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" fixed="right" width="220" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="'ROLE_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleEnable(scope.row, false)">启用</el-button>
-          <el-button v-permission="'ROLE_ADMIN'" v-else type="danger" size="mini" @click="handleEnable(scope.row, true)">禁用</el-button>
-          <el-button v-permission="'ROLE_ADMIN'" type="warning" size="mini" @click="handlePermission(scope.row)">授权</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleEnable(scope.row, false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="mini" @click="handleEnable(scope.row, true)">禁用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="warning" size="mini" @click="handlePermission(scope.row)">授权</el-button>
         </template>
       </el-table-column>
     </el-table>

@@ -52,7 +52,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
-          addRole(this.formDatam).then(() => {
+          addRole(this.formData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',

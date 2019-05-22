@@ -5,7 +5,7 @@
       <el-date-picker v-model="listQuery.beginTime" placeholder="开始时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="filter-item" type="date"/>
       <el-date-picker v-model="listQuery.endTime" placeholder="结束时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="filter-item" type="date"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-waves v-permission="'ROLE_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-waves v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -54,20 +54,20 @@
       <el-table-column label="操作" width="240" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
           <!-- 启用-->
-          <el-button v-permission="'ROLE_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
           <!-- 禁用-->
-          <el-button v-permission="'ROLE_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/rule/'+scope.row.id">
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
+          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/assembly/rule/'+scope.row.id">
             <!-- 拼团规则-->
             <el-button v-waves type="success" size="small">{{ $t('activity.fightGroup.rule') }}</el-button>
           </router-link>
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/goods/'+scope.row.id">
+          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/assembly/goods/'+scope.row.id">
             <!-- 拼团商品-->
             <el-button v-waves type="warning" size="small">拼团商品</el-button>
           </router-link>
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/activity/assembly/record/'+scope.row.id">
+          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/assembly/record/'+scope.row.id">
             <!-- 拼团记录-->
             <el-button v-waves type="primary" size="small">成团记录</el-button>
           </router-link>

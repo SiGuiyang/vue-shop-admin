@@ -16,7 +16,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="goBack()">取消</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="createData()">确认</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" @click="createData()">确认</el-button>
     </div>
   </div>
 </template>

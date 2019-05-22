@@ -1,1 +1,32 @@
-[1, 10, 11, 11, 12, 12, 13, 13, 14, 14, 15, 15, 16, 16, 17, 17, 18, 18, 19, 19, 2, 20, 20, 21, 21, 22, 22, 23, 23, 24, 24, 25, 25, 26, 26, 27, 27, 28, 28, 29, 29, 3, 30, 30, 31, 31, 32, 32, 33, 33, 34, 34, 35, 35, 36, 36, 37, 37, 38, 38, 39, 39, 4, 40, 40, 41, 41, 42, 42, 5, 6, 7, 8, 9]
+@/views/activity/coupon/index
+permission.js:50 @/views/activity/coupon/template/index
+permission.js:50 @/views/activity/coupon/user/index
+permission.js:50 @/views/activity/exchange/index
+permission.js:50 @/views/activity/assembly/index
+permission.js:50 @/views/activity/assembly/rule
+permission.js:50 @/views/activity/assembly/record
+permission.js:50 @/views/activity/banner/index
+permission.js:50 @/views/activity/station/index
+permission.js:50 @/views/goods/classification/index
+permission.js:50 @/views/goods/goods/index
+permission.js:50 @/views/order/user/index
+permission.js:50 @/views/order/sale/index
+permission.js:50 @/views/order/seller/index
+permission.js:50 @/views/finance/fund/index
+permission.js:50 @/views/finance/trade/index
+permission.js:50 @/views/statistics/coupon/index
+permission.js:50 @/views/statistics/group/index
+permission.js:50 @/views/statistics/integral/index
+permission.js:50 @/views/risk/rule
+permission.js:50 @/views/risk/blackList
+permission.js:50 @/views/monitor/hystrix
+permission.js:50 @/views/monitor/interface/index
+permission.js:50 @/views/monitor/database/index
+permission.js:50 @/views/monitor/database/activity
+permission.js:50 @/views/monitor/database/admin
+permission.js:50 @/views/monitor/database/goods
+permission.js:50 @/views/monitor/database/order
+permission.js:50 @/views/system/user/index
+permission.js:50 @/views/system/menu/index
+permission.js:50 @/views/system/role/index
+permission.js:50 @/views/system/config/index

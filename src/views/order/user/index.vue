@@ -60,7 +60,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleQuery(scope.row.userOrder.id)">查看</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleQuery(scope.row.userOrder.id)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>

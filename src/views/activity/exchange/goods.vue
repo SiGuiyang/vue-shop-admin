@@ -66,7 +66,7 @@
       </el-table-column>
       <el-table-column label="操作" width="340" class-name="small-padding fixed-width" fixed="right" align="center">
         <template slot-scope="scope">
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
+          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
             <el-button type="primary" size="small">编辑</el-button>
           </router-link>
           <el-button v-if="scope.row.join" :disabled="disabled" type="warning" size="small" @click="handleActivityGoods(scope.row.id)">已参与活动</el-button>
@@ -85,7 +85,7 @@
       </el-select>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogRuleVisible = false">取消</el-button>
-        <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="handleRuleGoods">确认</el-button>
+        <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" @click="handleRuleGoods">确认</el-button>
       </div>
     </el-dialog>
 

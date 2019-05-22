@@ -69,7 +69,7 @@
         <template slot-scope="scope">
           <el-button v-if="scope.row.join" :disabled="disabled" type="warning" size="small" @click="handleActivityGoods(scope.row.id)">已参与活动</el-button>
           <el-button v-else type="success" size="small" @click="handleActivityGoods(scope.row.id)">参与活动</el-button>
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
+          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
             <el-button type="primary" size="small">编辑</el-button>
           </router-link>
         </template>

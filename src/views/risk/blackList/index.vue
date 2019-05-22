@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="'ROLE_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleBatchCreate">批量拉黑</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleBatchCreate">批量拉黑</el-button>
     </div>
     <!--表格渲染-->
     <el-table
@@ -23,9 +23,9 @@
       <el-table-column prop="createUser" label="创建人"/>
       <el-table-column label="操作" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">编辑</el-button>
-          <el-button v-permission="'ROLE_ADMIN'" v-if="scope.row.deleteStatus" type="danger" size="mini" @click="handleBlack(scope.row.id, false)">拉入</el-button>
-          <el-button v-permission="'ROLE_ADMIN'" v-else type="success" size="mini" @click="handleBlack(scope.row.id, true)">移除</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">编辑</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="danger" size="mini" @click="handleBlack(scope.row.id, false)">拉入</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="success" size="mini" @click="handleBlack(scope.row.id, true)">移除</el-button>
         </template>
       </el-table-column>
     </el-table>

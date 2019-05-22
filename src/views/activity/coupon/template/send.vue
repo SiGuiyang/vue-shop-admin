@@ -13,7 +13,7 @@
     <div slot="footer" class="dialog-footer">
       <el-button v-waves :loading="downloadLoading" class="filter-item" type="warning" icon="el-icon-download" @click="handleDownload">{{ $t('table.downloadTemplate') }}</el-button>
       <el-button @click="reissueFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="handleReissueCoupon">{{ $t('table.confirm') }}</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" @click="handleReissueCoupon">{{ $t('table.confirm') }}</el-button>
     </div>
   </el-dialog>
 </template>

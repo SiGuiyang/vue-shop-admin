@@ -13,7 +13,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" type="primary" @click="dialogStatus === 'create'? createData(): updateData()">确认</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" @click="dialogStatus === 'create'? createData(): updateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>

@@ -32,7 +32,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">{{ $t('table.edit') }}</el-button>
         </template>
       </el-table-column>
     </el-table>

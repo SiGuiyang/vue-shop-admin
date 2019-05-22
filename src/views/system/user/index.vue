@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input :placeholder="$t('system.user.sysName')" v-model="listQuery.sysName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-permission="'ROLE_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -50,8 +50,8 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-permission="'ROLE_ADMIN'" type="danger" size="mini" @click="handleDelete(scope.row.id)">{{ $t('table.delete') }}</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="danger" size="mini" @click="handleDelete(scope.row.id)">{{ $t('table.delete') }}</el-button>
         </template>
       </el-table-column>
     </el-table>

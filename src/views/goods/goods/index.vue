@@ -12,7 +12,7 @@
         <el-option v-for="(item,index) in classifications" :key="index" :label="item.className" :value="item.id"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <router-link v-permission="'ROLE_ADMIN'" :to="'/goods/goods/edit/-1/create/goods'">
+      <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/goods/goods/edit/-1/create/goods'">
         <el-button v-waves class="filter-item" type="primary" icon="el-icon-edit">添加</el-button>
       </router-link>
     </div>
@@ -72,7 +72,7 @@
       </el-table-column>
       <el-table-column label="操作" width="100" class-name="small-padding fixed-width" fixed="right" align="center">
         <template slot-scope="scope">
-          <router-link v-permission="'ROLE_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
+          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/goods/goods/edit/'+scope.row.id+'/info/goods'">
             <el-button type="primary" size="mini">编辑</el-button>
           </router-link>
         </template>

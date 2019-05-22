@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="'ROLE_ADMIN'" v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
     <tree-table :data="list" :columns="columns" border>
       <el-table-column label="图标" prop="icon" align="center">

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-waves v-permission="'ROLE_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-waves v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -44,11 +44,11 @@
       <el-table-column label="操作" fixed="right" width="160" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'ROLE_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
 
-          <el-button v-permission="'ROLE_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
 
-          <el-button v-permission="'ROLE_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>

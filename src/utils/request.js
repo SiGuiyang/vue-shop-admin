@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
 import qs from 'qs'
-import { getAccessToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import router from '@/router'
 import Constants from '@/utils/constants'
 import store from '@/store'
@@ -10,27 +10,24 @@ const service = axios.create({
   baseURL: process.env.BASE_API, // api 的 base_url
   timeout: 10000 // request timeout
 })
-
 // request interceptor
 service.interceptors.request.use(
   config => {
     // Do something before request is sent
-    const requestMethod = config.method
-    if (requestMethod === 'post' || requestMethod === 'put') { // post 方式
-      let requestData = config.data
-      if (requestData === undefined || requestData === null || requestData === '') {
-        requestData = {}
-      }
-      requestData.access_token = getAccessToken(Constants.access_token) // 后台每个请求都追加sysCode参数
-      config.data = qs.stringify(requestData)
-    } else if (requestMethod === 'get' || requestMethod === 'delete') { // get 方式
-      let requestParams = config.params
-      if (requestParams === undefined || requestParams === null || requestParams === '') {
-        requestParams = {}
-      }
-      requestParams.access_token = getAccessToken(Constants.access_token) // 后台每个请求都追加sysCode参数
-      config.params = requestParams
+    // 添加请求凭证token
+    let requestParams = config.params
+    if (requestParams === undefined || requestParams === null || requestParams === '') {
+      requestParams = {}
     }
+    requestParams.access_token = getToken(Constants.access_token) // 后台每个请求都追加sysCode参数
+    config.params = requestParams
+    // 修改数据
+    let requestData = config.data
+    if (requestData === undefined || requestData === null || requestData === '') {
+      requestData = {}
+    }
+
+    config.data = qs.stringify(requestData)
     return config
   },
   error => {
@@ -41,16 +38,9 @@ service.interceptors.request.use(
 
 // response interceptor
 service.interceptors.response.use(
-  /**
-   * 下面的注释为通过在response里，自定义code来标示请求状态
-   * 当code返回如下情况则说明权限有问题，登出并返回到登录页
-   * 如想通过 xmlhttprequest 来状态码标识 逻辑可写在下面error中
-   * 以下代码均为样例，请结合自生需求加以修改，若不需要，则可删除
-   */
   response => {
     const res = response.data
     if (res.code === 1000 || res.code === 3000) {
-      console.log('eeeeeeeeeeee')
       Message({
         message: res.msg,
         type: 'error',
@@ -67,7 +57,7 @@ service.interceptors.response.use(
   error => {
     const res = error.response
     if (res.status === 401 || res.status === 504 || res.status === 503 || res.status === 502) {
-      store.dispatch('FedLogOut').then(() => {
+      store.dispatch('LogOut').then(() => {
         router.push({ path: '/' })
       })
     }

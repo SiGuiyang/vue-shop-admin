@@ -1,6 +1,11 @@
 import request from '@/utils/request'
 import Config from '@/utils/config'
 
+/**
+ * 密码登陆
+ * @param username 用户名
+ * @param password 密码
+ */
 export function loginByUsername(username, password) {
   const data = {
     username,

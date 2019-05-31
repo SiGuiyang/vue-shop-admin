@@ -1,11 +1,12 @@
 import router from './router'
 import store from './store'
+import Cookie from 'js-cookie'
 import NProgress from 'nprogress' // progress bar
 import 'nprogress/nprogress.css'// progress bar style
-import { getAccessToken } from '@/utils/auth' // getToken from cookie
+import { getToken } from '@/utils/auth' // getToken from cookie
 import Constants from '@/utils/constants'
-// import Config from '@/utils/config'
-// import Url from '@/utils/url'
+import Config from '@/utils/config'
+import Url from '@/utils/url'
 
 NProgress.configure({ showSpinner: false })// NProgress Configuration
 
@@ -22,7 +23,7 @@ function hasPermission(permissions, to) {
 
 router.beforeEach((to, from, next) => {
   NProgress.start() // start progress bar
-  if (getAccessToken(Constants.access_token)) { // determine if there has token
+  if (getToken(Constants.access_token)) { // determine if there has token
     /* has token*/
     if (to.path === '/login') {
       next({ path: '/' })
@@ -53,22 +54,25 @@ router.beforeEach((to, from, next) => {
         // 可删 ↑
       }
     }
-  } else {
-    // if (Url.getParam('code')) {
-    //   console.log('33')
-    //   store.dispatch('GetAccessToken', Url.getParam('code')).then(() => {
-    //     console.log('获取token成功')
-    //   })
-    // } else {
-    //   // 跳转授权地址
-    //   window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
-    // }
-    /* has no token*/
-    if (to.path !== '/dashboard' && whiteList.indexOf(to.path) !== -1) { // 在免登录白名单，直接进入
-      next()
+  } else { // 未登陆
+    const authLogin = Cookie.get(Constants.auth_login)
+    if (authLogin === '1') {
+      if (Url.getParam('code') != null) {
+        const code = Url.getParam('code')
+        store.dispatch('GetAccessToken', code).then(() => {
+          next('/dashboard')
+        })
+      } else {
+        // 跳转授权地址
+        window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
+      }
     } else {
-      next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
-      NProgress.done() // if current page is login will not trigger afterEach hook, so manually handle it
+      if (to.path !== '/dashboard' && whiteList.indexOf(to.path) !== -1) {
+        next()
+      } else {
+        next(`/login?redirect=${to.path}`) // 否则全部重定向到登录页
+        NProgress.done() // if current page is login will not trigger afterEach hook, so manually handle it
+      }
     }
   }
 })

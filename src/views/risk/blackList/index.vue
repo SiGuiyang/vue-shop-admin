@@ -43,7 +43,7 @@ import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import IForm from './form'
 import ISend from './send'
-import { getAccessToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 export default {
   components: { Pagination, IForm, ISend },
@@ -62,7 +62,7 @@ export default {
   },
   computed: {
     actionURL() {
-      return process.env.BASE_API + '/admin/upload?access_token=' + getAccessToken(Constants.access_token)
+      return process.env.BASE_API + '/admin/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   created() {

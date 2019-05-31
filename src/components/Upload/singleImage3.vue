@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { getAccessToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 export default {
   name: 'SingleImageUpload3',
@@ -42,7 +42,7 @@ export default {
       return this.value
     },
     actionUrl() {
-      return process.env.BASE_API + '/admin/upload?access_token=' + getAccessToken(Constants.access_token)
+      return process.env.BASE_API + '/admin/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {

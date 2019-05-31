@@ -1,7 +1,18 @@
 <template>
-  <el-dialog :title="orderDetailTitle" :visible.sync="dialogFormVisible" width="70%">
+  <el-dialog :visible.sync="dialogFormVisible" title="订单详情" width="70%">
     <el-collapse v-model="activeNames" @change="handleChange">
-      <el-collapse-item title="用户信息" name="1">
+      <el-collapse-item title="订单状态" name="1">
+        <el-row class="panel-group">
+          <el-steps :active="orderStatusActive" finish-status="success">
+            <el-step title="待付款" />
+            <el-step title="待收货" />
+            <el-step title="已取消" />
+            <el-step title="待评价" />
+          </el-steps>
+        </el-row>
+      </el-collapse-item>
+
+      <el-collapse-item title="用户信息" name="2">
         <el-row :gutter="36" class="panel-group">
           <el-col :xs="18" :sm="18" :lg="12" class="card-panel-col">
             <span>手机号：</span>
@@ -20,7 +31,7 @@
 
         </el-row>
       </el-collapse-item>
-      <el-collapse-item title="订单信息" name="2">
+      <el-collapse-item title="订单信息" name="3">
         <el-row :gutter="36" class="panel-group">
           <el-col :xs="18" :sm="18" :lg="12" class="card-panel-col">
             <span>订单号：</span>
@@ -51,7 +62,7 @@
           </el-col>
         </el-row>
       </el-collapse-item>
-      <el-collapse-item title="优惠券信息" name="3">
+      <el-collapse-item title="优惠券信息" name="4">
         <el-row :gutter="36" class="panel-group">
           <el-col :xs="18" :sm="18" :lg="12" class="card-panel-col">
             <span>优惠券名称：</span>
@@ -79,7 +90,7 @@
           </el-col>
         </el-row>
       </el-collapse-item>
-      <el-collapse-item title="商品信息" name="4">
+      <el-collapse-item title="商品信息" name="5">
         <el-row>
           <el-table
             :data="orderData.buyerGoods"
@@ -140,9 +151,9 @@ export default {
   },
   data() {
     return {
-      activeNames: ['1', '2', '3', '4'],
+      activeNames: ['1', '2', '3', '4', '5'],
       dialogFormVisible: false,
-      orderDetailTitle: '订单详情'
+      orderStatusActive: 3
     }
   },
   methods: {

@@ -1,5 +1,5 @@
 import { getRemoteAccessToken, checkRemoteAccessToken } from '@/api/token'
-import { setAccessToken, getAccessToken, removeAccessToken } from '@/utils/auth'
+import { setToken, getToken, removeToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 import Config from '@/utils/config'
 
@@ -30,22 +30,22 @@ const token = {
         params.redirect_uri = Config.redirect_uri
         params.scope = 'app'
         getRemoteAccessToken(params).then(response => {
-          commit('SET_ACCESS_TOKEN', response.value)
-          commit('SET_EXPIRES_IN', response.expiresIn)
-          setAccessToken(Constants.access_token, response)
+          console.log(response)
+          commit('SET_ACCESS_TOKEN', response.access_token)
+          commit('SET_EXPIRES_IN', response.expires_in)
+          setToken(Constants.access_token, response.access_token)
           resolve()
-          window.location.href = Config.redirect_uri
         })
       })
     },
     GetCheckAccessToken({ commit, state }) {
       return new Promise(resolve => {
         const params = {}
-        params.token = getAccessToken(Constants.access_token)
+        params.token = getToken(Constants.access_token)
         checkRemoteAccessToken(params).then(response => {
           if (response.code === '204') {
-            removeAccessToken(Constants.access_token)
-            removeAccessToken(Constants.j_session_id)
+            removeToken(Constants.access_token)
+            removeToken(Constants.j_session_id)
           }
           resolve()
         })

@@ -20,7 +20,7 @@
 
 <script>
 import { publishCoupon } from '@/api/coupon'
-import { getAccessToken } from '@/utils/auth'
+import { getToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 import permission from '@/directive/permission'
 import waves from '@/directive/waves' // Waves directive
@@ -61,7 +61,7 @@ export default {
   },
   computed: {
     actionURL() {
-      return process.env.BASE_API + '/admin/upload?access_token=' + getAccessToken(Constants.access_token)
+      return process.env.BASE_API + '/admin/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {

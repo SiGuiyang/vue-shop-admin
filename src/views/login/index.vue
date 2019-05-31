@@ -35,16 +35,17 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-
-      <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
-
+      <el-button :loading="loading" type="primary" style="width: 50%;" @click.native.prevent="handlePasswordLogin">密码登陆</el-button>
+      <el-button :loading="authLoading" type="success" style="width: 46%;" @click.native.prevent="handleAuthLogin">授权码登陆</el-button>
     </el-form>
   </div>
 </template>
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-
+import Cookie from 'js-cookie'
+import Constants from '@/utils/constants'
+import Config from '@/utils/config'
 export default {
   name: 'Login',
   data() {
@@ -73,7 +74,7 @@ export default {
       },
       passwordType: 'password',
       loading: false,
-      showDialog: false,
+      authLoading: false,
       redirect: undefined
     }
   },
@@ -94,7 +95,7 @@ export default {
         this.passwordType = 'password'
       }
     },
-    handleLogin() {
+    handlePasswordLogin() { // 密码登陆
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
@@ -112,6 +113,23 @@ export default {
           console.log('error submit!!')
           return false
         }
+      })
+    },
+    handleAuthLogin() {
+      this.$confirm('您选择的是授权码登陆，将跳转授权页面, 是否授权?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        Cookie.set(Constants.auth_login, '1')
+        // 跳转授权地址
+        window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
+      }).catch(() => {
+        Cookie.remove(Constants.auth_login)
+        this.$message({
+          type: 'info',
+          message: '已取消授权'
+        })
       })
     }
   }
@@ -207,12 +225,6 @@ $light_gray:#eee;
       margin: 0px auto 40px auto;
       text-align: center;
       font-weight: bold;
-    }
-    .set-language {
-      color: #fff;
-      position: absolute;
-      top: 5px;
-      right: 0px;
     }
   }
   .show-pwd {

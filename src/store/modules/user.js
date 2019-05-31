@@ -1,5 +1,5 @@
 import { loginByUsername, getUserInfo } from '@/api/login'
-import { removeAccessToken, setAccessToken } from '@/utils/auth'
+import { removeToken, setToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 
 const user = {
@@ -39,9 +39,10 @@ const user = {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
       const username = userInfo.username.trim()
+      const password = userInfo.password.trim()
       return new Promise((resolve, reject) => {
-        loginByUsername(username, userInfo.password).then(response => {
-          setAccessToken(Constants.access_token, response.access_token)
+        loginByUsername(username, password).then(response => {
+          setToken(Constants.access_token, response.access_token)
           resolve()
         }).catch(error => {
           reject(error)
@@ -76,7 +77,8 @@ const user = {
     LogOut({ commit }) {
       return new Promise((resolve) => {
         commit('SET_PERMISSIONS', [])
-        removeAccessToken(Constants.access_token)
+        removeToken(Constants.access_token)
+        removeToken(Constants.auth_login)
         resolve()
       })
     }

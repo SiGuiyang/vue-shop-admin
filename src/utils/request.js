@@ -58,6 +58,11 @@ service.interceptors.response.use(
     const res = error.response
     if (res.status === 401 || res.status === 504 || res.status === 503 || res.status === 502) {
       store.dispatch('LogOut').then(() => {
+        Message({
+          message: '网络出了点问题，请稍等',
+          type: 'error',
+          duration: 5 * 1000
+        })
         router.push({ path: '/' })
       })
     }

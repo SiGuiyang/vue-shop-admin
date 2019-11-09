@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { addTemplate, modifyTemplate } from '@/api/couponTemplate'
+import { addTemplate, modifyTemplate } from '@/api/activity/couponTemplate'
 import permission from '@/directive/permission'
 import waves from '@/directive/waves' // Waves directive
 
@@ -100,7 +100,7 @@ export default {
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.createUser = this.$store.state.user.username
+          this.formData.createUser = this.$store.state.user.username
           addTemplate(this.formData).then(() => {
             this.dialogFormVisible = false
             this.$notify({

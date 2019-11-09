@@ -7,8 +7,8 @@ const user = {
     user: '',
     code: '',
     permissions: [], // 所有权限
-    name: '',
     username: '',
+    phone: '',
     router: [],
     avatar: '',
     introduction: ''
@@ -18,11 +18,11 @@ const user = {
     SET_CODE: (state, code) => {
       state.code = code
     },
+    SET_PHONE: (state, phone) => {
+      state.phone = phone
+    },
     SET_USERNAME: (state, username) => {
       state.username = username
-    },
-    SET_NAME: (state, name) => {
-      state.name = name
     },
     SET_PERMISSIONS: (state, permissions) => {
       state.permissions = permissions
@@ -38,7 +38,7 @@ const user = {
   actions: {
     // 用户名登录
     LoginByUsername({ commit }, userInfo) {
-      const username = userInfo.username.trim()
+      const username = userInfo.phone.trim()
       const password = userInfo.password.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, password).then(response => {
@@ -64,8 +64,8 @@ const user = {
           } else {
             reject('getInfo: permission must be a non-null array !')
           }
-          commit('SET_USERNAME', data.sysCode)
-          commit('SET_NAME', data.sysName)
+          commit('SET_PHONE', data.phone)
+          commit('SET_USERNAME', data.username)
           commit('SET_AVATAR', data.avatar)
           resolve(response)
         }).catch(error => {

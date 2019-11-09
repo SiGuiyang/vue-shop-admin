@@ -98,8 +98,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { addGoods, modifyGoods, getGoodsInfo } from '@/api/goods'
-import { fetchList } from '@/api/classification'
+import { addGoods, modifyGoods, getGoodsInfo } from '@/api/goods/goods'
+import { fetchList } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
@@ -209,15 +209,15 @@ export default {
       this.goodsData.goodsInventory = undefined
       this.goodsData.placeOrigin = undefined
       this.goodsData.storage = undefined
-      this.goodsData.goodsImg = ''
-      this.goodsData.bannerFirst = ''
-      this.goodsData.bannerSecond = ''
-      this.goodsData.bannerThird = ''
-      this.goodsData.detailsImgFirst = ''
-      this.goodsData.detailsImgSecond = ''
-      this.goodsData.detailsImgThird = ''
-      this.goodsData.detailsImgFourth = ''
-      this.goodsData.detailsImgFifth = ''
+      this.goodsData.goodsImg = undefined
+      this.goodsData.bannerFirst = undefined
+      this.goodsData.bannerSecond = undefined
+      this.goodsData.bannerThird = undefined
+      this.goodsData.detailsImgFirst = undefined
+      this.goodsData.detailsImgSecond = undefined
+      this.goodsData.detailsImgThird = undefined
+      this.goodsData.detailsImgFourth = undefined
+      this.goodsData.detailsImgFifth = undefined
     },
     restEvent(event) {
       if (event === 'create') {

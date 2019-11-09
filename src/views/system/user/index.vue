@@ -1,57 +1,53 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('system.user.sysName')" v-model="listQuery.sysName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-input v-model="listQuery.phone" placeholder="手机号码" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
 
     <el-table
       v-loading="listLoading"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" prop="id" align="center" width="65">
+      <el-table-column label="手机号码" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.sysName')" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sysName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('system.user.username')" align="center">
+      <el-table-column label="姓名" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.roleCode')" align="center">
+      <el-table-column label="拥有角色" align="center">
         <template slot-scope="scope">
           <span>{{ getRoles(scope.row) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('system.user.status')" class-name="status-col" width="100" align="center">
+      <el-table-column label="状态" class-name="status-col" width="100" align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createUser')" align="center">
+      <el-table-column label="创建人" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createTime')" align="center">
+      <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
+      <el-table-column label="操作" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
           <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="danger" size="mini" @click="handleDelete(scope.row.id)">{{ $t('table.delete') }}</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDelete(scope.row, false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="mini" @click="handleDelete(scope.row, true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,8 +85,8 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
-        sysName: undefined
+        pageSize: 10,
+        phone: undefined
       },
       statusOptions: ['published', 'draft', 'deleted'],
       formData: {
@@ -117,9 +113,8 @@ export default {
         this.list = response.data
         this.total = response.total
         this.list.forEach(k => {
-          k.roleIds = JSON.parse(k.roleIds)
+          this.roleIds = JSON.parse(k.roleIds)
         })
-
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
@@ -127,7 +122,7 @@ export default {
         this.listLoading = false
       })
     },
-    getRoles(row) {
+    getRoles(row) { // 拥有的角色
       let content = ''
       if (row.roles !== null) {
         for (let i = 0; i < row.roles.length; i++) {
@@ -141,7 +136,7 @@ export default {
         this.roleCodeOptions = response.data
       })
     },
-    handleFilter() {
+    handleFilter() { // 查询列表
       this.listQuery.page = 1
       this.getUserList()
     },
@@ -152,7 +147,7 @@ export default {
       })
       row.status = status
     },
-    handleCreate() {
+    handleCreate() { // 创建
       this.initRoleCodes()
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
@@ -160,21 +155,25 @@ export default {
       _this.dialogFormVisible = true
       this.restForm()
     },
-    handleModify(row) {
+    handleModify(row) { // 编辑弹框
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
-      console.log(this.formData)
       this.initRoleCodes()
       _this.dialogStatus = 'update'
       _this.passwordDisabled = true
       _this.dialogFormVisible = true
     },
-    handleDelete(id) {
-      del(id).then(() => {
-        this.$message({
+    handleDelete(row, data) {
+      this.formData = Object.assign({}, row) // copy obj
+      this.formData.deleteStatus = data
+      del(this.formData).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
           type: 'success',
-          message: '删除成功'
+          duration: 2000
         })
+        this.getUserList()
       })
     },
     restForm() {

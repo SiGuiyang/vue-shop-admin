@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { modify, add } from '@/api/blackList'
+import { modify, add } from '@/api/risk/blackList'
 
 export default {
   name: 'Form',

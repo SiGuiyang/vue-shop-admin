@@ -14,53 +14,53 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;"
       @selection-change="handleSelectionChange">
       <el-table-column align="center" type="selection" width="65"/>
-      <el-table-column :label="$t('activity.coupon.templateName')" align="center" width="200">
+      <el-table-column label="模板名称" align="center" width="200">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.templateType')" align="center" width="160">
+      <el-table-column label="模板类型" align="center" width="160">
         <template slot-scope="scope">
           <span>{{ getTemplateType(scope.row.templateType) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center" width="120">
+      <el-table-column label="状态" align="center" width="120">
         <template slot-scope="scope">
           <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.orderAmount')" align="center" width="200">
+      <el-table-column label="订单满减金额" align="center" width="200">
         <template slot-scope="scope">
           <span class="icon-money"> <svg-icon icon-class="money" /> {{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.couponAmount')" align="center" width="120">
+      <el-table-column label="优惠券金额" align="center" width="120">
         <template slot-scope="scope">
           <span class="icon-money"> <svg-icon icon-class="money" /> {{ scope.row.couponAmount != null ? scope.row.couponAmount: '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountStrength')" align="center" width="120">
+      <el-table-column label="折扣力度" align="center" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.description')" align="center" width="260">
+      <el-table-column label="说明" align="center" width="260">
         <template slot-scope="scope">
           <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createUser')" align="center" width="160">
+      <el-table-column label="创建人" align="center" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.createTime')" align="center" width="200">
+      <el-table-column label="创建时间" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { fetchList, modifyTemplate } from '@/api/couponTemplate'
+import { fetchList, modifyTemplate } from '@/api/activity/couponTemplate'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -110,7 +110,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         templateName: undefined,
         templateType: undefined
       },
@@ -187,7 +187,12 @@ export default {
       console.log(this.formData)
     },
     handleDisable(id, deleteStatus) {
-      modifyTemplate({ id: id, deleteStatus: deleteStatus }).then(() => {
+      const params = {
+        id: id,
+        updateUser: this.$store.state.user.username,
+        deleteStatus: deleteStatus
+      }
+      modifyTemplate(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

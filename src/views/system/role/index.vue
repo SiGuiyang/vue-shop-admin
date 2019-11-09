@@ -10,16 +10,11 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="序号" prop="id" align="center" width="65">
-        <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="角色名称">
+      <el-table-column label="角色名称" align="center">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
           <el-tag>{{ scope.row.roleName }}</el-tag>
@@ -88,7 +83,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         roleName: undefined
       },
       showReviewer: false,

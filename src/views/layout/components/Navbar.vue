@@ -25,7 +25,7 @@
         <el-dropdown-menu slot="dropdown">
           <router-link to="/">
             <el-dropdown-item>
-              {{ name }}
+              {{ username }}
             </el-dropdown-item>
             <el-dropdown-item divided>
               {{ $t('navbar.dashboard') }}
@@ -64,7 +64,7 @@ export default {
   computed: {
     ...mapGetters([
       'sidebar',
-      'name',
+      'username',
       'avatar',
       'device'
     ])

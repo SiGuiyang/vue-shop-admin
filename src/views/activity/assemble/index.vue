@@ -2,8 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input :placeholder="$t('activity.fightGroup.activityName')" v-model="listQuery.activityName" style="width: 200px;" class="filter-item" />
-      <el-date-picker v-model="listQuery.beginTime" placeholder="开始时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="filter-item" type="date"/>
-      <el-date-picker v-model="listQuery.endTime" placeholder="结束时间" format="yyyy-MM-dd" value-format="yyyy-MM-dd" class="filter-item" type="date"/>
+      <el-date-picker
+        :default-time="['00:00:00', '23:59:59']"
+        v-model="listQuery.timeRange"
+        type="datetimerange"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        class="filter-item"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button v-waves v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
@@ -12,7 +19,7 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -61,7 +68,7 @@
           <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
           <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/assembly/rule/'+scope.row.id">
             <!-- 拼团规则-->
-            <el-button v-waves type="success" size="small">{{ $t('activity.fightGroup.rule') }}</el-button>
+            <el-button v-waves type="success" size="small">拼团规则</el-button>
           </router-link>
           <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/assembly/goods/'+scope.row.id">
             <!-- 拼团商品-->
@@ -75,14 +82,14 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getFightGroup" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList()" />
 
     <i-form ref="dataForm" :form-data="formData" />
   </div>
 </template>
 
 <script>
-import { fetchList, modifyAssembly } from '@/api/assembly'
+import { fetchList, modify } from '@/api/activity/assemble'
 import { parseTime } from '@/utils'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -100,19 +107,18 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         activityName: undefined,
-        beginTime: undefined,
-        endTime: undefined
+        timeRange: undefined
       },
       formData: {}
     }
   },
   created() {
-    this.getFightGroup()
+    this.getList()
   },
   methods: {
-    getFightGroup() { // 活动列表
+    getList() { // 活动列表
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data
@@ -127,7 +133,7 @@ export default {
     },
     handleFilter() { // 搜索
       this.listQuery.page = 1
-      this.getFightGroup()
+      this.getList()
     },
     getActivityTime(row) {
       const beginTime = row.beginTime
@@ -139,8 +145,7 @@ export default {
       this.formData.id = undefined
       this.formData.activityName = undefined
       this.formData.activityImg = undefined
-      this.formData.beginTime = undefined
-      this.formData.endTime = undefined
+      this.formData.timeRange = undefined
     },
     handleCreate() {
       this.restForm()
@@ -150,17 +155,23 @@ export default {
     },
     handleUpdate(row) {
       this.formData = Object.assign({}, row)
+      this.formData.timeRange = [this.formData.beginTime, this.formData.endTime]
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
     handleDisable(id, deleteStatus) {
-      modifyAssembly({ id: id, deleteStatus: deleteStatus }).then(() => {
+      const params = {
+        id: id,
+        deleteStatus: deleteStatus,
+        updateUser: this.$store.state.user.username
+      }
+      modify(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'
         })
-        this.getFightGroup()
+        this.getList()
       })
     }
   }

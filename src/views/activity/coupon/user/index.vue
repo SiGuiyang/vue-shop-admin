@@ -1,13 +1,16 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('activity.coupon.couponName')" v-model="listQuery.couponName" style="width: 200px;" class="filter-item"/>
       <el-input :placeholder="$t('activity.coupon.phone')" v-model="listQuery.phone" style="width: 200px;" class="filter-item"/>
-      <el-select v-model="listQuery.discountType" :placeholder="$t('activity.coupon.discountType')" clearable style="width: 120px" class="filter-item">
-        <el-option v-for="(item,index) in discountTypeOptions" :key="index" :label="item.value" :value="item.key"/>
-      </el-select>
-      <el-date-picker v-model="listQuery.beginTime" :placeholder="$t('time.beginTime')" format="yyyy-MM-dd" class="filter-item" type="date"/>
-      <el-date-picker v-model="listQuery.endTime" :placeholder="$t('time.endTime')" format="yyyy-MM-dd" class="filter-item" type="date"/>
+      <el-date-picker
+        :default-time="['00:00:00', '23:59:59']"
+        v-model="listQuery.timeRange"
+        type="datetimerange"
+        value-format="yyyy-MM-dd HH:mm:ss"
+        range-separator="至"
+        start-placeholder="开始日期"
+        end-placeholder="结束日期"
+        class="filter-item"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
     </div>
 
@@ -15,58 +18,53 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('activity.coupon.couponName')" align="center" width="200">
+      <el-table-column label="优惠券名称" align="center" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.couponName }}</span>
+          <span>{{ scope.row.templateName }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.phone')" align="center" width="120">
+      <el-table-column label="手机号码" align="center" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountType')" align="center" width="100">
+      <el-table-column label="优惠券类型" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ getDiscountType(scope.row.discountType) }}</span>
+          <span>{{ getDiscountType(scope.row.templateType) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.deleteStatus')" align="center" width="100">
+      <el-table-column label="状态" align="center" width="100">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
+          <el-tag :type="scope.row.used | statusFilter">{{ scope.row.used ? '已使用' : '未使用' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.orderAmount')" align="center" width="140">
+      <el-table-column label="满减订单金额" align="center" width="140">
         <template slot-scope="scope">
-          <span>{{ scope.row.orderAmount }}</span>
+          <span class="icon-money"> <svg-icon icon-class="money" />{{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.couponAmount')" align="center" width="100">
+      <el-table-column label="优惠金额" align="center" width="100">
         <template slot-scope="scope">
-          <span>{{ scope.row.couponAmount != null ? scope.row.couponAmount : '——' }}</span>
+          <span class="icon-money"> <svg-icon icon-class="money" />{{ scope.row.couponAmount != null ? scope.row.couponAmount : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.coupon.discountStrength')" align="center" width="100">
+      <el-table-column label="折扣力度" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('time.beginTime')" align="center" width="140">
+      <el-table-column label="有效期" align="center" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.beginTime | parseTime('{y}-{m}-{d}') }}</span>
+          <span>{{ scope.row.beginTime | parseTime('{y}-{m}-{d}') }} 至 {{ scope.row.endTime | parseTime('{y}-{m}-{d}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('time.endTime')" align="center" width="140">
+      <el-table-column label="创建时间" align="center" width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.endTime | parseTime('{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column :label="$t('common.createTime')" align="center" width="200">
-        <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -76,7 +74,7 @@
 </template>
 
 <script>
-import { fetchUserCoupons } from '@/api/activity'
+import { fetchUserCoupons } from '@/api/activity/activity'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -102,11 +100,8 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 10,
-        couponName: undefined,
         phone: undefined,
-        discountType: undefined,
-        beginTime: undefined,
-        endTime: undefined
+        timeRange: undefined
       },
       discountTypeOptions: [
         { key: 1, value: '优惠券' },
@@ -141,3 +136,8 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .icon-money {
+    color: #f4516c;
+  }
+</style>

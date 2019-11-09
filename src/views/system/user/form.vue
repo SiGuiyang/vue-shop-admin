@@ -1,29 +1,68 @@
 <template>
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px" width="50%">
-      <el-form-item :label="$t('system.user.sysName')" prop="sysName">
-        <el-input v-model="formData.sysName" placeholder="请设置"/>
+  <el-dialog
+    :title="textMap[dialogStatus]"
+    :visible.sync="dialogFormVisible">
+    <el-form
+      ref="dataForm"
+      :rules="rules"
+      :model="formData"
+      label-position="left"
+      label-width="100px"
+      width="50%">
+      <el-form-item
+        label="手机号码"
+        prop="phone">
+        <el-input
+          v-model="formData.phone"
+          placeholder="请设置"/>
       </el-form-item>
-      <el-form-item :label="$t('system.user.username')" prop="username">
-        <el-input v-model="formData.username" placeholder="请设置"/>
+      <el-form-item
+        label="姓名"
+        prop="username">
+        <el-input
+          v-model="formData.username"
+          placeholder="请设置"/>
       </el-form-item>
-      <el-form-item :label="$t('system.user.password')" prop="password">
-        <el-input v-model="formData.password" :disabled="passwordDisabled" type="password" placeholder="请设置"/>
+      <el-form-item
+        label="密码"
+        prop="password">
+        <el-input
+          v-model="formData.password"
+          :disabled="passwordDisabled"
+          type="password"
+          placeholder="请设置"/>
       </el-form-item>
-      <el-form-item :label="$t('system.user.roleCode')" prop="roleIds">
-        <el-select v-model="formData.roleIds" class="filter-item" multiple placeholder="请选择">
-          <el-option v-for="(item,index) in roleCodeOptions" :key="index" :label="item.roleName" :value="item.id"/>
+      <el-form-item
+        label="拥有角色"
+        prop="roleIds">
+        <el-select
+          v-model="formData.roleIds"
+          class="filter-item"
+          multiple
+          placeholder="请选择">
+          <el-option
+            v-for="(item,index) in roleCodeOptions"
+            :key="index"
+            :label="item.roleName"
+            :value="item.id"/>
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('system.user.avatar')" prop="avatar">
+      <el-form-item
+        label="头像"
+        prop="avatar">
         <div style="margin-bottom: 20px;">
-          <Upload v-model="formData.avatar" />
+          <Upload v-model="formData.avatar"/>
         </div>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div
+      slot="footer"
+      class="dialog-footer">
       <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">{{ $t('table.confirm') }}</el-button>
+      <el-button
+        type="primary"
+        @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">{{ $t('table.confirm') }}
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -59,8 +98,8 @@ export default {
         create: '新增'
       },
       rules: {
-        sysName: [{ required: true, message: '用户名不能为空', trigger: 'blur' }],
-        username: [{ required: true, message: '系统登陆名不能为空', trigger: 'blur' }],
+        phone: [{ required: true, message: '手机号码不能为空', trigger: 'blur' }],
+        username: [{ required: true, message: '姓名不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
         roleIds: [{ required: true, message: '角色不能为空', trigger: 'blur' }],
         avatar: [{ required: true, message: '用户头像不能为空', trigger: 'blur' }]
@@ -110,5 +149,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

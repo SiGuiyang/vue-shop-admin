@@ -4,21 +4,10 @@
       <el-form-item :label="$t('goods.classificationName')" prop="className">
         <el-input v-model="formData.className" placeholder="请设置"/>
       </el-form-item>
-      <el-form-item label="父级分类">
-        <v-tree-select v-model="formData.parentId" :data="classification" value-field-name="id"/>
-      </el-form-item>
-      <el-form-item label="分类banner" prop="bannerIds">
-        <el-select
-          v-model="formData.bannerIds"
-          multiple
-          class="filter-item"
-          placeholder="请选择">
-          <el-option
-            v-for="(item,index) in bannerList"
-            :key="index"
-            :label="item.title"
-            :value="item.id"/>
-        </el-select>
+      <el-form-item :label="$t('goods.goodsImg')" prop="icon">
+        <div style="margin-bottom: 20px;">
+          <Upload v-model="formData.icon" />
+        </div>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -30,22 +19,13 @@
 <script>
 import { modify } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
-import VTreeSelect from 'vue-treeselect'
 
 export default {
-  components: { Upload, VTreeSelect },
+  components: { Upload },
   props: {
     formData: {
       type: Object,
       default: () => ({})
-    },
-    classification: {
-      type: Array,
-      default: () => ([])
-    },
-    bannerList: {
-      type: Array,
-      default: () => ([])
     }
   },
   data() {

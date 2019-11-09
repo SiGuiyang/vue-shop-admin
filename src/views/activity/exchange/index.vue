@@ -10,7 +10,7 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -73,14 +73,14 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getExchange" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
 
     <i-form ref="dataForm" :form-data="formData" />
   </div>
 </template>
 
 <script>
-import { fetchList, modifyExchangeActivity } from '@/api/exchange'
+import { fetchList, modifyExchange } from '@/api/activity/exchange'
 import { parseTime } from '@/utils'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -98,7 +98,7 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         activityName: undefined,
         beginTime: undefined,
         endTime: undefined
@@ -107,10 +107,10 @@ export default {
     }
   },
   created() {
-    this.getExchange()
+    this.getList()
   },
   methods: {
-    getExchange() { // 活动列表
+    getList() { // 活动列表
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data
@@ -125,7 +125,7 @@ export default {
     },
     handleFilter() { // 搜索
       this.listQuery.page = 1
-      this.getExchange()
+      this.getList()
     },
     getActivityTime(row) {
       const beginTime = row.beginTime
@@ -137,11 +137,9 @@ export default {
       this.formData.id = undefined
       this.formData.activityName = undefined
       this.formData.activityImg = undefined
-      this.formData.beginTime = undefined
-      this.formData.endTime = undefined
     },
     handleCreate() {
-      this.restForm()
+      this.formData = {}
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
@@ -153,12 +151,17 @@ export default {
       _this.dialogFormVisible = true
     },
     handleDisable(id, deleteStatus) {
-      modifyExchangeActivity({ id: id, deleteStatus: deleteStatus }).then(() => {
+      const params = {
+        id: id,
+        deleteStatus: deleteStatus,
+        updateUser: this.$store.state.user.username
+      }
+      modifyExchange(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'
         })
-        this.getExchange()
+        this.getList()
       })
     }
   }

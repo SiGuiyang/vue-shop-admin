@@ -62,8 +62,6 @@ export default {
           type: 'success'
         })
       })
-      console.log(checked)
-      console.log(halfChecked)
     }
   }
 }

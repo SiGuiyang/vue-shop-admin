@@ -8,7 +8,7 @@
     <el-table
       v-loading="listLoading"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { fetchList, del, modify } from '@/api/blackList'
+import { fetchList, del, modify } from '@/api/risk/blackList'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination

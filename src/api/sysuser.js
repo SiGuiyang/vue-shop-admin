@@ -19,9 +19,10 @@ export function modify(data) {
 }
 
 // 修改系统用户
-export function del(id) {
+export function del(data) {
   return service({
-    url: '/admin/system/user/' + id,
-    method: 'delete'
+    url: '/admin/system/user/' + data.id,
+    method: 'post',
+    data
   })
 }

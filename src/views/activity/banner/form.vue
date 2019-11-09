@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import { addBanner, modifyBanner } from '@/api/banner'
+import { create, modify } from '@/api/activity/banner'
 import Upload from '@/components/Upload/singleImage3'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -97,7 +97,8 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
-          addBanner(this.formData).then(() => {
+          this.formData.updateUser = this.$store.state.user.username
+          create(this.formData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -114,7 +115,8 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
-          modifyBanner(tempData).then(() => {
+          tempData.updateUser = this.$store.state.user.username
+          modify(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',

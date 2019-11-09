@@ -19,7 +19,7 @@ export function loginByUsername(username, password) {
     },
     url: '/oauth/token',
     method: 'post',
-    data
+    params: data
   })
 }
 

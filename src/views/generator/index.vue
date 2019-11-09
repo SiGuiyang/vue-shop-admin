@@ -38,7 +38,7 @@
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
-    <i-form ref="dataForm" :list="formData" :table-name="selectedTable"/>
+    <i-form ref="dataForm" :list="formData" :table-name="selectedTable" :table-schema="selectedSchema"/>
   </div>
 </template>
 
@@ -60,8 +60,8 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 20,
-        tableSchema: '',
-        tableName: ''
+        tableSchema: null,
+        tableName: null
       },
       tableSchemaOptions: [
         { tableSchema: 'pager_order', tableSchemaName: '订单实例' },
@@ -70,7 +70,8 @@ export default {
         { tableSchema: 'pager_shop', tableSchemaName: '数据中心实例' }
       ],
       formData: [],
-      selectedTable: ''
+      selectedTable: null,
+      selectedSchema: null
     }
   },
   methods: {
@@ -94,10 +95,11 @@ export default {
       })
     },
     handleModify(row) {
-      const params = { tableName: row.tableName, tableSchema: this.listQuery.tableSchema }
+      const params = { tableName: row.tableName, tableSchema: row.tableSchema }
+      this.selectedTable = row.tableName
+      this.selectedSchema = row.tableSchema
       getTableColumn(params).then(response => {
         this.formData = response.data
-        this.selectedTable = row.tableName
       })
       const _this = this.$refs['dataForm']
       _this.dialogFormVisible = true

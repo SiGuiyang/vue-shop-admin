@@ -3,24 +3,24 @@ import service from '@/utils/request'
 // 获取table data
 export function fetchList(data) {
   return service({
-    url: '/admin/exchangeActivity/list',
+    url: '/admin/activity/exchange/list',
     method: 'post',
     data
   })
 }
 // 新增
-export function addExchangeActivity(data) {
+export function createExchange(data) {
   return service({
-    url: 'admin/exchangeActivity',
+    url: 'admin/activity/exchange/create',
     method: 'post',
     data
   })
 }
 
 // 修改
-export function modifyExchangeActivity(data) {
+export function modifyExchange(data) {
   return service({
-    url: 'admin/exchangeActivity',
+    url: 'admin/activity/exchange/modify',
     method: 'put',
     data
   })
@@ -29,7 +29,7 @@ export function modifyExchangeActivity(data) {
 // 获取满赠换购活动
 export function getExchangeActivity(data) {
   return service({
-    url: 'admin/exchange/' + data.activityId,
+    url: 'admin/activity/exchange/' + data.activityId,
     method: 'get'
   })
 }
@@ -37,7 +37,7 @@ export function getExchangeActivity(data) {
 // 获取规则table data
 export function fetchRuleList(data) {
   return service({
-    url: '/admin/exchange/rule/list',
+    url: '/admin/activity/exchange/rule/list',
     method: 'post',
     data
   })
@@ -45,7 +45,7 @@ export function fetchRuleList(data) {
 // 新增规则
 export function addRule(data) {
   return service({
-    url: 'admin/exchange/rule',
+    url: 'admin/activity/exchange/rule/create',
     method: 'post',
     data
   })
@@ -54,7 +54,7 @@ export function addRule(data) {
 // 修改规则
 export function modifyRule(data) {
   return service({
-    url: 'admin/exchange/rule',
+    url: 'admin/activity/exchange/rule/modify',
     method: 'put',
     data
   })
@@ -63,7 +63,7 @@ export function modifyRule(data) {
 // 设置换购商品的规则
 export function modifyGoodsRule(data) {
   return service({
-    url: '/admin/exchange/goods/rule',
+    url: '/admin/activity/exchange/goods/rule',
     method: 'put',
     data
   })
@@ -72,7 +72,7 @@ export function modifyGoodsRule(data) {
 // 查看商品的规则详情
 export function queryGoodsRuleInfo(data) {
   return service({
-    url: '/admin/exchange/goods/rule/' + data.activityId + '/' + data.goodsId,
+    url: '/admin/activity/exchange/goods/rule/' + data.activityId + '/' + data.goodsId,
     method: 'get'
   })
 }
@@ -80,7 +80,7 @@ export function queryGoodsRuleInfo(data) {
 // 满赠换购记录
 export function fetchExchangeRecordList(data) {
   return service({
-    url: 'admin/exchange/purchase/history',
+    url: 'admin/activity/exchange/purchase/history',
     method: 'post',
     data
   })

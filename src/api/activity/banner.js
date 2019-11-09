@@ -10,19 +10,30 @@ export function fetchList(data) {
 }
 
 // 新增Banner
-export function addBanner(data) {
+export function create(data) {
   return service({
-    url: '/admin/activity/banner/modify',
+    url: '/admin/activity/banner/create',
     method: 'post',
     data
   })
 }
 
 // 修改 Banner
-export function modifyBanner(data) {
+export function modify(data) {
   return service({
     url: '/admin/activity/banner/modify',
     method: 'put',
+    data
+  })
+}
+
+/**
+ * 根据banner 类型获取banner列表
+ */
+export function bannerListAll(data) {
+  return service({
+    url: '/admin/activity/banner/listAll',
+    method: 'post',
     data
   })
 }

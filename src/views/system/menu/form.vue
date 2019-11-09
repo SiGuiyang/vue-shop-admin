@@ -122,7 +122,6 @@ export default {
       })
     },
     selected(name) {
-      console.log(name)
       this.formData.icon = name
     }
   }

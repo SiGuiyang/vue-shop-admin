@@ -62,14 +62,14 @@ export default {
         name: undefined,
         path: undefined,
         component: undefined,
-        sequence: 0,
+        sequence: null,
         hidden: false,
         icon: undefined,
         children: []
       },
       listQuery: {
         page: 1,
-        pageSize: 20
+        pageSize: 10
       },
       columns: [
         {

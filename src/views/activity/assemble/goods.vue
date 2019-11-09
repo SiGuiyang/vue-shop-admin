@@ -83,9 +83,9 @@
 </template>
 
 <script>
-import { fetchGoodsList } from '@/api/goods'
-import { fetchList } from '@/api/classification'
-import { getFightGroupGoods, modifyFightGroupGoods } from '@/api/assembly'
+import { fetchGoodsList } from '@/api/goods/goods'
+import { fetchList } from '@/api/goods/classification'
+import { getAssembleGoods, modifyAssembleGoods } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -159,14 +159,14 @@ export default {
       this.getGoodsList()
     },
     handleQuery() {
-      getFightGroupGoods({ activityId: this.listQuery.activityId }).then(response => {
+      getAssembleGoods({ activityId: this.listQuery.activityId }).then(response => {
         const _this = this.$refs['goodsForm']
         _this.dialogFormVisible = true
         this.goodsData = response.data
       })
     },
     handleActivityGoods(goodsId) { // 设置拼团活动商品
-      modifyFightGroupGoods({ activityId: this.listQuery.activityId, goodsId: goodsId }).then(() => {
+      modifyAssembleGoods({ activityId: this.listQuery.activityId, goodsId: goodsId }).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

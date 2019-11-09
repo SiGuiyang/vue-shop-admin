@@ -13,7 +13,7 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { fetchExchangeRecordList, fetchRuleList } from '@/api/exchange'
+import { fetchExchangeRecordList, fetchRuleList } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination

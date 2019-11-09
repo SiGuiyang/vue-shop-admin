@@ -7,14 +7,14 @@
         <h3 class="title">{{ $t('login.title') }}</h3>
       </div>
 
-      <el-form-item prop="username">
+      <el-form-item prop="phone">
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
         <el-input
-          v-model="loginForm.username"
-          :placeholder="$t('login.username')"
-          name="username"
+          v-model="loginForm.phone"
+          :placeholder="placeholder.phone"
+          name="phone"
           type="text"
           auto-complete="on"
         />
@@ -27,7 +27,7 @@
         <el-input
           :type="passwordType"
           v-model="loginForm.password"
-          :placeholder="$t('login.password')"
+          :placeholder="placeholder.password"
           name="password"
           auto-complete="on"
           @keyup.enter.native="handleLogin" />
@@ -64,12 +64,16 @@ export default {
       }
     }
     return {
+      placeholder: {
+        phone: '手机号码',
+        password: '密码'
+      },
       loginForm: {
-        username: 'admin',
+        phone: '13813145021',
         password: '111111'
       },
       loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
+        phone: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',

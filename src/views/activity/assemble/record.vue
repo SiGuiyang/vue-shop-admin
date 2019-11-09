@@ -9,15 +9,10 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="活动名称" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.activityName }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="用户名称" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.username }}</span>
@@ -36,7 +31,7 @@
       </el-table-column>
       <el-table-column label="是否开团" align="center">
         <template slot-scope="scope">
-          <el-tag type="success">{{ getStatus(scope.row.openFightStatus) }}</el-tag>
+          <el-tag type="success">{{ getStatus(scope.row.status) }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="参团时间" align="center">
@@ -51,12 +46,12 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getFightGroupRecordList" />
+    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
   </div>
 </template>
 
 <script>
-import { fetchFightGroupRecord } from '@/api/assembly'
+import { members } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -96,15 +91,16 @@ export default {
   },
   created() {
     this.tempRoute = Object.assign({}, this.$route)
-    this.getFightGroupRecordList()
+    this.getList()
   },
   methods: {
-    getFightGroupRecordList() { // 活动列表
+    getList() { // 活动列表
       this.listLoading = true
       this.listQuery.activityId = this.$route.params.id
-      fetchFightGroupRecord(this.listQuery).then(response => {
+      members(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
+        console.log(this.list)
 
         setTimeout(() => {
           this.listLoading = false
@@ -115,7 +111,7 @@ export default {
     },
     handleFilter() { // 搜索
       this.listQuery.page = 1
-      this.getFightGroupRecordList()
+      this.getList()
     },
     getStatus(status) {
       return this.recordStatusOptions.filter(rso => rso.key === status)[0].value

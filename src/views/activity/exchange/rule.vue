@@ -7,7 +7,7 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { fetchRuleList, getExchangeActivity, modifyRule } from '@/api/exchange'
+import { fetchRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -121,7 +121,12 @@ export default {
       _this.dialogFormVisible = true
     },
     handleDisable(id, deleteStatus) {
-      modifyRule({ id: id, deleteStatus: deleteStatus }).then(() => {
+      const params = {
+        id: id,
+        updateUser: this.$store.state.user.username,
+        deleteStatus: deleteStatus
+      }
+      modifyRule(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

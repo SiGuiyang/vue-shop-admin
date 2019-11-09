@@ -9,11 +9,16 @@
           <Upload v-model="formData.activityImg" />
         </div>
       </el-form-item>
-      <el-form-item label="开始时间" prop="beginTime">
-        <el-date-picker v-model="formData.beginTime" placeholder="开始时间" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd HH:mm:ss" class="filter-item" type="date"/>
-      </el-form-item>
-      <el-form-item label="结束时间" prop="endTime">
-        <el-date-picker v-model="formData.endTime" placeholder="结束时间" format="yyyy 年 MM 月 dd 日" value-format="yyyy-MM-dd HH:mm:ss" class="filter-item" type="date"/>
+      <el-form-item label="活动时间" prop="timeRange">
+        <el-date-picker
+          :default-time="['00:00:00', '23:59:59']"
+          v-model="formData.timeRange"
+          type="datetimerange"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          class="filter-item"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -24,7 +29,7 @@
 </template>
 
 <script>
-import { addAssembly, modifyAssembly } from '@/api/assembly'
+import { create, modify } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Upload from '@/components/Upload/singleImage3'
@@ -35,10 +40,7 @@ export default {
   props: {
     formData: {
       type: Object,
-      default: () => ({
-        beginTime: undefined,
-        endTime: undefined
-      })
+      default: () => ({})
     }
   },
   data() {
@@ -63,13 +65,14 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
-          addAssembly(this.formData).then(() => {
+          this.formData.updateUser = this.$store.state.user.username
+          create(this.formData).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'
             })
             this.dialogFormVisible = false
-            this.$parent.getFightGroup()
+            this.$parent.getList()
           })
         }
       })
@@ -78,13 +81,14 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
-          modifyAssembly(tempData).then(() => {
+          tempData.updateUser = this.$store.state.user.username
+          modify(tempData).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'
             })
             this.dialogFormVisible = false
-            this.$parent.getFightGroup()
+            this.$parent.getList()
           })
         }
       })

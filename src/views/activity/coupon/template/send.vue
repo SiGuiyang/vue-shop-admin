@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { publishCoupon } from '@/api/coupon'
+import { publishCoupon } from '@/api/activity/coupon'
 import { getToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 import permission from '@/directive/permission'

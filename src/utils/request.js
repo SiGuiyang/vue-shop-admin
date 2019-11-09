@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { Message } from 'element-ui'
-import qs from 'qs'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
 import Constants from '@/utils/constants'
@@ -21,13 +20,6 @@ service.interceptors.request.use(
     }
     requestParams.access_token = getToken(Constants.access_token) // 后台每个请求都追加sysCode参数
     config.params = requestParams
-    // 修改数据
-    let requestData = config.data
-    if (requestData === undefined || requestData === null || requestData === '') {
-      requestData = {}
-    }
-
-    config.data = qs.stringify(requestData)
     return config
   },
   error => {

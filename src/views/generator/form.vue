@@ -1,9 +1,9 @@
 <template>
-  <el-dialog :visible.sync="dialogFormVisible" title="代码配置" width="70%">
+  <el-dialog :visible.sync="dialogFormVisible" :title="titleTxt" width="70%">
     <el-table
       v-loading="listLoading"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -17,33 +17,9 @@
           <span>{{ scope.row.dataType }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="表格列标题" align="center">
+      <el-table-column label="列注释" align="center">
         <template slot-scope="scope">
-          <el-input v-model="list[scope.$index].columnTitle"/>
-        </template>
-      </el-table-column>
-      <el-table-column label="列表查询" align="center">
-        <template slot-scope="scope">
-          <el-tooltip :content="scope.row.queryDisplay === 'true' ? '查询': '不查询'" placement="top">
-            <el-switch
-              v-model="list[scope.$index].queryDisplay"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-value="true"
-              inactive-value="false"/>
-          </el-tooltip>
-        </template>
-      </el-table-column>
-      <el-table-column label="列表显示" align="center">
-        <template slot-scope="scope">
-          <el-tooltip :content="scope.row.columnDisplay === 'true' ? '显示': '不显示'" placement="top">
-            <el-switch
-              v-model="list[scope.$index].columnDisplay"
-              active-color="#13ce66"
-              inactive-color="#ff4949"
-              active-value="true"
-              inactive-value="false"/>
-          </el-tooltip>
+          <span>{{ scope.row.columnComment }}</span>
         </template>
       </el-table-column>
     </el-table>
@@ -67,23 +43,32 @@ export default {
     tableName: {
       type: String,
       default: ''
+    },
+
+    tableSchema: {
+      type: String,
+      default: ''
     }
   },
   data() {
     return {
       listLoading: false,
-      dialogFormVisible: false
+      dialogFormVisible: false,
+      titleTxt: null
     }
   },
   created() {
+    this.titleTxt = '代码配置 ' + this.tableSchema + ' -> ' + this.tableName
   },
   methods: {
     handleSubmit() {
-      const params = { columns: JSON.stringify(this.list), tableName: this.tableName }
+      const params = { tableSchema: this.tableSchema, tableName: this.tableName }
       generatorCode(params).then(() => {
-        this.$message({
+        this.$notify({
+          title: '成功',
+          message: '代码生成成功',
           type: 'success',
-          message: '代码生成成功'
+          duration: 2000
         })
         this.dialogFormVisible = false
       }).catch(() => {
@@ -93,7 +78,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-
-</style>

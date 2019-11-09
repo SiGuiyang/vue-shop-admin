@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { addRule, modifyRule } from '@/api/exchange'
+import { addRule, modifyRule } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 
@@ -61,6 +61,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.createUser = this.$store.state.user.username
+          this.activityRule.updateUser = this.$store.state.user.username
           addRule(this.activityRule).then(() => {
             this.$message({
               type: 'success',
@@ -75,7 +76,7 @@ export default {
     updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.activityRule.createUser = this.$store.state.user.username
+          this.activityRule.updateUser = this.$store.state.user.username
           modifyRule(this.activityRule).then(() => {
             this.$message({
               type: 'success',

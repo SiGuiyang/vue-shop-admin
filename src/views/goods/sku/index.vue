@@ -21,7 +21,7 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -86,8 +86,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchGoodsList } from '@/api/goods'
-import { fetchList } from '@/api/classification'
+import { fetchGoodsList } from '@/api/goods/goods'
+import { fetchList } from '@/api/goods/classification'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination

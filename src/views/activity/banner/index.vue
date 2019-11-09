@@ -13,7 +13,7 @@
       v-loading="listLoading"
       :key="tableKey"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { fetchList, modifyBanner } from '@/api/banner'
+import { fetchList, modify } from '@/api/activity/banner'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -112,13 +112,14 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 20,
+        pageSize: 10,
         title: undefined,
         bannerType: undefined
       },
       bannerTypeOptions: [
         { key: 'home', value: '首页' },
-        { key: 'integralShop', value: '积分商城' }
+        { key: 'integralShop', value: '积分商城' },
+        { key: 'classification', value: '分类' }
       ],
       shareChannelOptions: [
         { key: 'qq', value: 'QQ' },
@@ -150,11 +151,6 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
-
-        this.list.forEach(k => {
-          k.shareChannel = JSON.parse(JSON.parse(k.shareChannel))
-        })
-
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
@@ -200,8 +196,8 @@ export default {
       this.formData.shareUrl = undefined
       this.formData.shareTitle = undefined
       this.formData.shareSubtitle = undefined
-      this.formData.shareIcon = ''
-      this.formData.shareChannel = []
+      this.formData.shareIcon = undefined
+      this.formData.shareChannel = undefined
       this.formData.createUser = undefined
       this.formData.deleteStatus = false
     },
@@ -212,7 +208,12 @@ export default {
       _this.dialogFormVisible = true
     },
     handleDisable(id, deleteStatus) {
-      modifyBanner({ id: id, deleteStatus: deleteStatus }).then(() => {
+      const params = {
+        id: id,
+        updateUser: this.$store.state.user.username,
+        deleteStatus: deleteStatus
+      }
+      modify(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

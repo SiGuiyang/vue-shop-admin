@@ -7,8 +7,8 @@
       <el-form-item label="每人限购数量" prop="purchaseLimit">
         <el-input v-model="activityRule.purchaseLimit" placeholder="请设置"/>
       </el-form-item>
-      <el-form-item label="成团人数" prop="fightCount">
-        <el-input v-model="activityRule.fightCount" placeholder="请设置"/>
+      <el-form-item label="成团人数" prop="assembleCount">
+        <el-input v-model="activityRule.assembleCount" placeholder="请设置"/>
       </el-form-item>
       <el-form-item label="说明" prop="description">
         <el-input v-model="activityRule.description" placeholder="请设置" type="textarea"/>
@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { fightGroupRuleInfo, modifyFightGroupRule } from '@/api/assembly'
+import { ruleInfo, modifyRule } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Upload from '@/components/Upload/singleImage3'
@@ -38,7 +38,7 @@ export default {
         activityId: undefined,
         activityName: undefined,
         purchaseLimit: undefined,
-        fightCount: undefined,
+        assembleCount: undefined,
         description: undefined
       },
       rules: {
@@ -53,7 +53,7 @@ export default {
             }, trigger: 'change'
           }
         ],
-        fightCount: [{ required: true, message: '成团数量不能为空', trigger: 'blur' },
+        assembleCount: [{ required: true, message: '成团数量不能为空', trigger: 'blur' },
           {
             validator: (rule, value, callback) => {
               if (/^[1-9]\d*$/.test(value)) {
@@ -72,12 +72,8 @@ export default {
   },
   methods: {
     initData() {
-      const params = {}
-      params.createUser = this.$store.state.user.username
       this.tempRoute = this.$route
-      params.id = this.$route.params.id
-      this.activityRule.activityId = this.$route.params.id
-      fightGroupRuleInfo(params).then(response => {
+      ruleInfo(this.$route.params.id).then(response => {
         this.activityRule = response.data
       })
     },
@@ -89,7 +85,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.createUser = this.$store.state.user.username
-          modifyFightGroupRule(this.activityRule).then(() => {
+          modifyRule(this.activityRule).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'

@@ -5,19 +5,30 @@ import service from '@/utils/request'
  */
 export function getList(data) {
   return service({
-    url: '/admin/brand/list',
+    url: '/admin/goods/brand/list',
     method: 'post',
     data
   })
 }
 
 /**
- * 新增或者修改品牌
+ * 新增品牌
  */
-export function createOrModify(data) {
+export function create(data) {
   return service({
-    url: '/admin/brand/create',
+    url: '/admin/goods/brand/create',
     method: 'post',
+    data
+  })
+}
+
+/**
+ * 修改品牌
+ */
+export function modify(data) {
+  return service({
+    url: '/admin/goods/brand/modify',
+    method: 'put',
     data
   })
 }

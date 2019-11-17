@@ -3,7 +3,21 @@
     <div class="filter-container">
       <el-button v-permission="'ROLE_SUPER_ADMIN'" v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
-    <tree-table :data="list" :columns="columns" border>
+    <el-table
+      v-loading="listLoading"
+      :data="list"
+      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+      :default-expand-all="expand"
+      row-key="id"
+      stripe
+      fit
+      highlight-current-row
+      style="width: 100%;">
+      <el-table-column label="菜单名称" prop="icon" align="center">
+        <template slot-scope="scope">
+          <el-tag> {{ scope.row.name }}</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column label="图标" prop="icon" align="center">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" style="height: 45px;width: 16px;" />
@@ -35,7 +49,8 @@
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
-    </tree-table>
+    </el-table>
+    <!--</tree-table>-->
     <i-form ref="dataForm" :form-data="formData" :menus="menuData"/>
   </div>
 </template>
@@ -51,32 +66,23 @@ export default {
   components: { treeTable, IForm },
   data() {
     return {
-      menuData: [],
+      menuData: null,
       selectItem: null,
       list: [],
       total: 0,
-      listLoading: true,
+      listLoading: false,
+      expand: false,
       formData: {
         id: undefined,
         parentId: undefined,
         name: undefined,
         path: undefined,
         component: undefined,
-        sequence: null,
+        sequence: 0,
         hidden: false,
         icon: undefined,
-        children: []
-      },
-      listQuery: {
-        page: 1,
-        pageSize: 10
-      },
-      columns: [
-        {
-          text: '菜单名称',
-          value: 'name'
-        }
-      ]
+        children: undefined
+      }
     }
   },
   created() {
@@ -87,10 +93,9 @@ export default {
       this.listLoading = true
       fetchList({}).then(response => {
         this.list = response.data
+        debugger
         this.menuData = response.data
-        setTimeout(() => {
-          this.listLoading = false
-        }, 1.5 * 1000)
+        this.listLoading = false
       }).catch(() => {
         this.listLoading = false
       })
@@ -108,20 +113,12 @@ export default {
         sequence: 0,
         hidden: false,
         icon: undefined,
-        children: []
+        children: undefined
       }
     },
     handleModify(row) {
       const temp = Object.assign({}, row) // copy obj
-      this.formData.id = temp.id
-      this.formData.parentId = temp.parentId
-      this.formData.name = temp.name
-      this.formData.path = temp.path
-      this.formData.component = temp.component
-      this.formData.sequence = 0
-      this.formData.hidden = false
-      this.formData.children = []
-      this.formData.icon = temp.icon
+      this.formData = temp
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true

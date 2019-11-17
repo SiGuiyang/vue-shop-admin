@@ -17,7 +17,7 @@
         <el-input v-model="formData.name" placeholder="请设置"/>
       </el-form-item>
       <el-form-item label="序号" prop="sequence">
-        <el-input v-model="formData.sequence" placeholder="请设置"/>
+        <el-input-number v-model="formData.sequence" :min="1" :max="10" label="请设置" />
       </el-form-item>
       <el-form-item label="请求路径" prop="path">
         <el-input v-model="formData.path" placeholder="请设置"/>
@@ -32,24 +32,25 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item label="父级菜单" prop="parentId">
-        <v-tree-select v-model="formData.parentId" :data="menus" value-field-name="id"/>
+        <treeselect v-model="formData.parentId" :options="menus" placeholder="请选择"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">确认</el-button>
+      <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import { add, modify } from '@/api/menu'
-import VTreeSelect from 'vue-treeselect'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import SvgIcons from '@/components/SvgIcons/index'
 
 export default {
   name: 'Form',
-  components: { SvgIcons, VTreeSelect },
+  components: { SvgIcons, Treeselect },
   props: {
     formData: {
       type: Object,
@@ -86,7 +87,7 @@ export default {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    handleCreateData() {
+    createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
@@ -104,9 +105,10 @@ export default {
         }
       })
     },
-    handleUpdateData() {
+    updateData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          debugger
           const formDataData = Object.assign({}, this.formData)
           modify(formDataData).then(() => {
             this.dialogFormVisible = false

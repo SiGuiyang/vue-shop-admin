@@ -15,7 +15,7 @@
   </el-dialog>
 </template>
 <script>
-import { create, modify } from '@/api/goods/group'
+import { postCreate, putModify } from '@/api/goods/group'
 
 export default {
   props: {
@@ -53,7 +53,7 @@ export default {
       tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
       tempData.event = this.dialogStatus === 'create' ? 'add' : 'modify'
-      create(tempData).then(() => {
+      postCreate(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',
@@ -67,7 +67,7 @@ export default {
     updateData() {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
-      modify(tempData).then(() => {
+      putModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',

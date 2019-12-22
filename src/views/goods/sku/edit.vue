@@ -98,8 +98,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { addGoods, modifyGoods, getGoodsInfo } from '@/api/goods/goods'
-import { fetchList } from '@/api/goods/classification'
+import { postAddGoods, putModifyGoods, postGoodsInfo } from '@/api/goods/goods'
+import { postList } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
@@ -178,7 +178,7 @@ export default {
       // 查询时走数据库查询商品信息
       const params = {}
       params.goodsId = requestParams.id
-      getGoodsInfo(params).then(response => {
+      postGoodsInfo(params).then(response => {
         this.goodsData = Object.assign({}, response.data.goods) // 拷贝
         this.goodsData = Object.assign(this.goodsData, response.data.goodsDetail) // 拷贝
         const goodsDetail = response.data.goodsDetail
@@ -186,7 +186,7 @@ export default {
       })
     },
     getClassification() {
-      fetchList({}).then(response => {
+      postList({}).then(response => {
         this.classifications = response.data
       })
     },
@@ -229,7 +229,7 @@ export default {
       }
     },
     createData() { // 添加商品
-      addGoods(this.goodsData).then(() => {
+      postAddGoods(this.goodsData).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'
@@ -241,7 +241,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const updateDate = Object.assign({}, this.goodsData)
-          modifyGoods(updateDate).then(() => {
+          putModifyGoods(updateDate).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'

@@ -36,7 +36,7 @@
 
       <el-table-column label="状态" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.deleteStatus" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.serverStatus" type="danger">禁用</el-tag>
           <el-tag v-else type="success">启用</el-tag>
         </template>
       </el-table-column>
@@ -46,7 +46,7 @@
           <!-- 编辑-->
           <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
 
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.serverStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
 
           <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
         </template>
@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { fetchRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
+import { getRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -84,12 +84,12 @@ export default {
   created() {
     this.listQuery.activityId = this.$route.params.id
     this.initActivity(this.listQuery.activityId) // 初始化活动
-    this.getRuleList()
+    this.handleRuleList()
   },
   methods: {
-    getRuleList() { // 活动列表
+    handleRuleList() { // 活动列表
       this.listLoading = true
-      fetchRuleList(this.listQuery).then(response => {
+      getRuleList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -120,18 +120,18 @@ export default {
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDisable(id, deleteStatus) {
+    handleDisable(id, serverStatus) {
       const params = {
         id: id,
         updateUser: this.$store.state.user.username,
-        deleteStatus: deleteStatus
+        serverStatus: serverStatus
       }
       modifyRule(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'
         })
-        this.getRuleList()
+        this.handleRuleList()
       })
     }
   }

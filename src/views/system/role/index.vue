@@ -12,8 +12,7 @@
       :data="list"
       stripe
       fit
-      highlight-current-row
-      style="width: 100%;">
+      highlight-current-row>
       <el-table-column label="角色名称" align="center">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>

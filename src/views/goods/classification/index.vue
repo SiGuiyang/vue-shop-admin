@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { fetchList, tree } from '@/api/goods/classification'
+import { postList, postTree } from '@/api/goods/classification'
 import { bannerListAll } from '@/api/activity/banner'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -96,7 +96,7 @@ export default {
   methods: {
     getList() { // 商品分类列表
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      postList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -108,7 +108,7 @@ export default {
       })
     },
     getTreeList() { // 分类树形列表
-      tree().then((response) => {
+      postTree().then((response) => {
         this.treeList = response.data
       })
     },

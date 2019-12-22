@@ -108,9 +108,9 @@
 </template>
 
 <script>
-import { fetchGoodsList } from '@/api/goods/goods'
-import { fetchRuleList, modifyGoodsRule, queryGoodsRuleInfo } from '@/api/activity/exchange'
-import { fetchList } from '@/api/goods/classification'
+import { postGoodsList } from '@/api/goods/goods'
+import { getRuleList, modifyGoodsRule, queryGoodsRuleInfo } from '@/api/activity/exchange'
+import { postList } from '@/api/goods/classification'
 import { getAssembleGoods, modifyAssembleGoods } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -158,7 +158,7 @@ export default {
   methods: {
     getGoodsList() { // 商品列表
       this.listLoading = true
-      fetchGoodsList(this.listQuery).then(response => {
+      postGoodsList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -170,7 +170,7 @@ export default {
       })
     },
     getClassification() {
-      fetchList({}).then(response => {
+      postList({}).then(response => {
         this.classifications = response.data
       })
     },
@@ -208,7 +208,7 @@ export default {
     },
     handleClickRuleGoods(goodsId) { // 商品
       this.selectedGoodsId = goodsId
-      fetchRuleList(this.listQuery).then(response => {
+      getRuleList(this.listQuery).then(response => {
         this.ruleData = response.data
         this.dialogRuleVisible = true
       }).catch(() => {

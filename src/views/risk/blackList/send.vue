@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import { publishCoupon } from '@/api/activity/coupon'
+import { postPublishCoupon } from '@/api/activity/coupon'
 import { getToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
 import permission from '@/directive/permission'
@@ -72,7 +72,7 @@ export default {
       window.location.href = process.env.BASE_API + '/admin/download?downloadFile=' + this.downloadContent.downloadFile + '&downloadFilename=' + this.downloadContent.downloadFilename
     },
     handleReissueCoupon() {
-      publishCoupon(this.publishCoupon).then(() => {
+      postPublishCoupon(this.publishCoupon).then(() => {
         this.sendFormVisible = false
         this.$notify({
           title: '成功',

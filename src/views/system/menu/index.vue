@@ -13,37 +13,37 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="菜单名称" prop="icon" align="center">
+      <el-table-column label="菜单名称" prop="icon" width="200" align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="图标" prop="icon" align="center">
+      <el-table-column label="图标" prop="icon" width="100" align="center">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" style="height: 45px;width: 16px;" />
         </template>
       </el-table-column>
-      <el-table-column label="请求地址" prop="path" align="center">
+      <el-table-column label="请求地址" prop="path" width="200" align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.path }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="组建路径" prop="component" align="center">
+      <el-table-column label="组建路径" prop="component" width="280" align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.component }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" prop="sequence" align="center" >
+      <el-table-column label="排序" prop="sequence" width="100" align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.sequence }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="隐藏" prop="hidden" align="center">
+      <el-table-column label="隐藏" prop="hidden" width="100" align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.hidden ? '是' : '否' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" prop="operation" align="center" fixed="right" width="180">
+      <el-table-column label="操作" prop="operation" width="200" align="center" fixed="right">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
@@ -93,7 +93,6 @@ export default {
       this.listLoading = true
       fetchList({}).then(response => {
         this.list = response.data
-        debugger
         this.menuData = response.data
         this.listLoading = false
       }).catch(() => {
@@ -117,14 +116,12 @@ export default {
       }
     },
     handleModify(row) {
-      const temp = Object.assign({}, row) // copy obj
-      this.formData = temp
+      this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
     handleDelete(row) {
-      console.log(row.id)
       if (row.parentId === undefined || row.parentId === '' || row.parentId === null) {
         this.$confirm('此操作将永久删除关联下级菜单, 是否继续?', '提示', {
           confirmButtonText: '确定',

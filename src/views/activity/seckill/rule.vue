@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { fetchRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
+import { getRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -84,12 +84,12 @@ export default {
   created() {
     this.listQuery.activityId = this.$route.params.id
     this.initActivity(this.listQuery.activityId) // 初始化活动
-    this.getRuleList()
+    this.handleRuleList()
   },
   methods: {
-    getRuleList() { // 活动列表
+    handleRuleList() { // 活动列表
       this.listLoading = true
-      fetchRuleList(this.listQuery).then(response => {
+      getRuleList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 

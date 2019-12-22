@@ -68,7 +68,7 @@ export default {
               message: '操作成功'
             })
             this.dialogFormVisible = false
-            this.$parent.getRuleList()
+            this.$parent.handleRuleList()
           })
         }
       })
@@ -83,7 +83,7 @@ export default {
               message: '操作成功'
             })
             this.dialogFormVisible = false
-            this.$parent.getRuleList()
+            this.$parent.handleRuleList()
           })
         }
       })

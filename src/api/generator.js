@@ -4,8 +4,8 @@ import service from '@/utils/request'
 export function fetchList(data) {
   return service({
     url: '/admin/generator/tables',
-    method: 'get',
-    params: data
+    method: 'post',
+    data
   })
 }
 
@@ -13,8 +13,8 @@ export function fetchList(data) {
 export function getTableColumn(data) {
   return service({
     url: '/admin/generator/tables',
-    method: 'post',
-    data
+    method: 'get',
+    params: data
   })
 }
 

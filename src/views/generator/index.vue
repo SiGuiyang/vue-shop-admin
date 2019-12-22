@@ -11,7 +11,7 @@
     <el-table
       v-loading="listLoading"
       :data="list"
-      border
+      stripe
       fit
       highlight-current-row
       style="width: 100%;">
@@ -38,7 +38,7 @@
     </el-table>
 
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
-    <i-form ref="dataForm" :list="formData" :table-name="selectedTable" :table-schema="selectedSchema"/>
+    <i-form ref="dataForm" :list="formData"/>
   </div>
 </template>
 
@@ -67,7 +67,8 @@ export default {
         { tableSchema: 'pager_order', tableSchemaName: '订单实例' },
         { tableSchema: 'pager_activity', tableSchemaName: '活动实例' },
         { tableSchema: 'pager_goods', tableSchemaName: '商品实例' },
-        { tableSchema: 'pager_shop', tableSchemaName: '数据中心实例' }
+        { tableSchema: 'pager_shop', tableSchemaName: '数据中心实例' },
+        { tableSchema: 'pager_platform', tableSchemaName: '基础平台' }
       ],
       formData: [],
       selectedTable: null,
@@ -80,6 +81,7 @@ export default {
       this.getList()
     },
     getList() {
+      this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
@@ -96,13 +98,13 @@ export default {
     },
     handleModify(row) {
       const params = { tableName: row.tableName, tableSchema: row.tableSchema }
-      this.selectedTable = row.tableName
-      this.selectedSchema = row.tableSchema
+      const _this = this.$refs['dataForm']
       getTableColumn(params).then(response => {
         this.formData = response.data
+        _this.dialogFormVisible = true
+        _this.tableName = row.tableName
+        _this.tableSchema = row.tableSchema
       })
-      const _this = this.$refs['dataForm']
-      _this.dialogFormVisible = true
     }
   }
 }

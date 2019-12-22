@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 获取商品状态
-export function fetchGoodsStatus() {
+export function postGoodsStatus() {
   return service({
     url: '/admin/goods/status',
     method: 'post'
@@ -9,7 +9,7 @@ export function fetchGoodsStatus() {
 }
 
 // 获取商品列表
-export function fetchGoodsList(data) {
+export function postGoodsList(data) {
   return service({
     url: '/admin/goods/list',
     method: 'post',
@@ -18,7 +18,7 @@ export function fetchGoodsList(data) {
 }
 
 // 新增商品
-export function addGoods(data) {
+export function postAddGoods(data) {
   return service({
     url: '/admin/goods/modify',
     method: 'post',
@@ -27,7 +27,7 @@ export function addGoods(data) {
 }
 
 // 修改商品
-export function modifyGoods(data) {
+export function putModifyGoods(data) {
   return service({
     url: '/admin/goods/modify',
     method: 'put',
@@ -36,7 +36,7 @@ export function modifyGoods(data) {
 }
 
 // 查看商品详情
-export function getGoodsInfo(data) {
+export function postGoodsInfo(data) {
   return service({
     url: '/admin/goods/' + data.goodsId,
     method: 'post',

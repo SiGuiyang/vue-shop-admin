@@ -35,11 +35,10 @@ export function getExchangeActivity(data) {
 }
 
 // 获取规则table data
-export function fetchRuleList(data) {
+export function getRuleList(data) {
   return service({
-    url: '/admin/activity/exchange/rule/list',
-    method: 'post',
-    data
+    url: '/admin/activity/exchange/rule/' + data.activityId,
+    method: 'get'
   })
 }
 // 新增规则

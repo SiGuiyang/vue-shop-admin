@@ -28,18 +28,18 @@ export function modify(data) {
 }
 
 // 活动规则详情
-export function ruleInfo(data) {
+export function getRuleInfo(data) {
   return service({
     url: '/admin/activity/assemble/rule/' + data,
-    method: 'post'
+    method: 'get'
   })
 }
 
 // 活动规则修改
-export function modifyRule(data) {
+export function putModifyRule(data) {
   return service({
     url: '/admin/activity/assemble/rule/modify',
-    method: 'post',
+    method: 'put',
     data
   })
 }

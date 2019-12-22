@@ -54,7 +54,7 @@
 </template>
 
 <script>
-import { fetchExchangeRecordList, fetchRuleList } from '@/api/activity/exchange'
+import { fetchExchangeRecordList, getRuleList } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -120,7 +120,7 @@ export default {
       this.getExchangeRecordList()
     },
     initRule(data) {
-      fetchRuleList(data).then(response => {
+      getRuleList(data).then(response => {
         this.exchangeRules = response.data
       })
     }

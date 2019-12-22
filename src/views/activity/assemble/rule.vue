@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { ruleInfo, modifyRule } from '@/api/activity/assemble'
+import { getRuleInfo, putModifyRule } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Upload from '@/components/Upload/singleImage3'
@@ -73,7 +73,7 @@ export default {
   methods: {
     initData() {
       this.tempRoute = this.$route
-      ruleInfo(this.$route.params.id).then(response => {
+      getRuleInfo(this.$route.params.id).then(response => {
         this.activityRule = response.data
       })
     },
@@ -85,7 +85,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.createUser = this.$store.state.user.username
-          modifyRule(this.activityRule).then(() => {
+          putModifyRule(this.activityRule).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'

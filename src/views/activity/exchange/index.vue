@@ -32,7 +32,7 @@
 
       <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.deleteStatus" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.serverStatus" type="danger">禁用</el-tag>
           <el-tag v-else type="success">启用</el-tag>
         </template>
       </el-table-column>
@@ -54,7 +54,7 @@
           <!-- 编辑-->
           <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
           <!-- 启用-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.serverStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
           <!-- 禁用-->
           <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
           <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/exchange/rule/'+scope.row.id">
@@ -133,11 +133,6 @@ export default {
 
       return parseTime(beginTime, '{y}-{m}-{d}') + ' 至 ' + parseTime(endTime, '{y}-{m}-{d}')
     },
-    restForm() {
-      this.formData.id = undefined
-      this.formData.activityName = undefined
-      this.formData.activityImg = undefined
-    },
     handleCreate() {
       this.formData = {}
       const _this = this.$refs['dataForm']
@@ -146,14 +141,17 @@ export default {
     },
     handleUpdate(row) {
       this.formData = Object.assign({}, row)
+      this.formData.timeRange = []
+      this.formData.timeRange.push(row.beginTime)
+      this.formData.timeRange.push(row.endTime)
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDisable(id, deleteStatus) {
+    handleDisable(id, serverStatus) {
       const params = {
         id: id,
-        deleteStatus: deleteStatus,
+        serverStatus: serverStatus,
         updateUser: this.$store.state.user.username
       }
       modifyExchange(params).then(() => {

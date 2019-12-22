@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('activity.fightGroup.activityName')" v-model="listQuery.activityName" style="width: 200px;" class="filter-item" />
+      <el-input v-model="listQuery.activityName" placeholder="活动名称" style="width: 200px;" class="filter-item" />
       <el-date-picker
         :default-time="['00:00:00', '23:59:59']"
         v-model="listQuery.timeRange"
@@ -11,8 +11,8 @@
         start-placeholder="开始日期"
         end-placeholder="结束日期"
         class="filter-item"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-waves v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button v-waves v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
 
     <el-table
@@ -41,14 +41,14 @@
 
       <el-table-column label="状态" width="100" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.deleteStatus" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.serverStatus" type="danger">禁用</el-tag>
           <el-tag v-else type="success">启用</el-tag>
         </template>
       </el-table-column>
 
       <el-table-column label="创建时间" width="200" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
 
@@ -63,7 +63,7 @@
           <!-- 编辑-->
           <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
           <!-- 启用-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.serverStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
           <!-- 禁用-->
           <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
           <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/assembly/rule/'+scope.row.id">
@@ -123,7 +123,7 @@ export default {
       fetchList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
-
+        console.log(this.list)
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
@@ -141,21 +141,17 @@ export default {
 
       return parseTime(beginTime, '{y}-{m}-{d}') + ' 至 ' + parseTime(endTime, '{y}-{m}-{d}')
     },
-    restForm() {
-      this.formData.id = undefined
-      this.formData.activityName = undefined
-      this.formData.activityImg = undefined
-      this.formData.timeRange = undefined
-    },
     handleCreate() {
-      this.restForm()
+      this.formData = {}
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
     },
     handleUpdate(row) {
       this.formData = Object.assign({}, row)
-      this.formData.timeRange = [this.formData.beginTime, this.formData.endTime]
+      this.formData.timeRange = []
+      this.formData.timeRange.push(row.beginTime)
+      this.formData.timeRange.push(row.endTime)
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
@@ -163,7 +159,7 @@ export default {
     handleDisable(id, deleteStatus) {
       const params = {
         id: id,
-        deleteStatus: deleteStatus,
+        serverStatus: deleteStatus,
         updateUser: this.$store.state.user.username
       }
       modify(params).then(() => {

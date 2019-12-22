@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { fetchList } from '@/api/goods/classification'
+import { postList } from '@/api/goods/classification'
 import waves from '@/directive/waves' // Waves directive
 import IForm from './form'
 
@@ -85,7 +85,7 @@ export default {
   methods: {
     getList() { // 商品分类列表
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      postList(this.listQuery).then(response => {
         this.list = response.data
 
         setTimeout(() => {

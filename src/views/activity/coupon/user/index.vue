@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { fetchUserCoupons } from '@/api/activity/activity'
+import { postUserCoupons } from '@/api/activity/activity'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -115,7 +115,7 @@ export default {
   methods: {
     getCouponList() {
       this.listLoading = true
-      fetchUserCoupons(this.listQuery).then(response => {
+      postUserCoupons(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 

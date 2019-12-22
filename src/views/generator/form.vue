@@ -39,26 +39,16 @@ export default {
     list: {
       type: Array,
       default: () => []
-    },
-    tableName: {
-      type: String,
-      default: ''
-    },
-
-    tableSchema: {
-      type: String,
-      default: ''
     }
   },
   data() {
     return {
       listLoading: false,
       dialogFormVisible: false,
-      titleTxt: null
+      tableName: null,
+      tableSchema: null,
+      titleTxt: '代码配置'
     }
-  },
-  created() {
-    this.titleTxt = '代码配置 ' + this.tableSchema + ' -> ' + this.tableName
   },
   methods: {
     handleSubmit() {

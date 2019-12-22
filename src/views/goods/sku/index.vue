@@ -86,8 +86,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchGoodsList } from '@/api/goods/goods'
-import { fetchList } from '@/api/goods/classification'
+import { postGoodsList } from '@/api/goods/goods'
+import { postList } from '@/api/goods/classification'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -130,7 +130,7 @@ export default {
   methods: {
     getGoodsList() { // 商品列表
       this.listLoading = true
-      fetchGoodsList(this.listQuery).then(response => {
+      postGoodsList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -142,7 +142,7 @@ export default {
       })
     },
     getClassification() {
-      fetchList({}).then(response => {
+      postList({}).then(response => {
         this.classifications = response.data
       })
     },

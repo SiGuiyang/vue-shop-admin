@@ -15,8 +15,7 @@
       :data="list"
       stripe
       fit
-      highlight-current-row
-      style="width: 100%;">
+      highlight-current-row>
       <el-table-column label="模块" width="120" align="center">
         <template slot-scope="scope">
           <span>{{ getModuleName(scope.row.module) }}</span>

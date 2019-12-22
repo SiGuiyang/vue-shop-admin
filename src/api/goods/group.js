@@ -3,7 +3,7 @@ import service from '@/utils/request'
 /**
  * 商品品牌列表
  */
-export function getList(data) {
+export function postList(data) {
   return service({
     url: '/admin/goods/brand/group/list',
     method: 'post',
@@ -14,7 +14,7 @@ export function getList(data) {
 /**
  * 新增商品品牌组
  */
-export function create(data) {
+export function postCreate(data) {
   return service({
     url: '/admin/goods/brand/group/create',
     method: 'post',
@@ -25,7 +25,7 @@ export function create(data) {
 /**
  * 修改商品品牌组
  */
-export function modify(data) {
+export function putModify(data) {
   return service({
     url: '/admin/goods/brand/group/modify',
     method: 'put',
@@ -36,7 +36,7 @@ export function modify(data) {
 /**
  * 获取所有的品牌组
  */
-export function listAll() {
+export function postListAll() {
   return service({
     url: '/admin/goods/brand/group/listAll',
     method: 'post'

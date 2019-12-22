@@ -32,7 +32,7 @@
       </el-table-column>
       <el-table-column label="状态" align="center" width="120">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用' : '启用' }}</el-tag>
+          <el-tag :type="scope.row.serverStatus | statusFilter">{{ scope.row.serverStatus ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="订单满减金额" align="center" width="200">
@@ -50,11 +50,6 @@
           <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="说明" align="center" width="260">
-        <template slot-scope="scope">
-          <span>{{ scope.row.description }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="创建人" align="center" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.updateUser }}</span>
@@ -68,7 +63,7 @@
       <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" width="160" fixed="right" align="center">
         <template slot-scope="scope">
           <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.serverStatus" type="success" size="mini" @click="handleDisable(scope.row.id,false)">启用</el-button>
           <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="mini" @click="handleDisable(scope.row.id,true)">禁用</el-button>
         </template>
       </el-table-column>
@@ -82,7 +77,7 @@
 </template>
 
 <script>
-import { fetchList, modifyTemplate } from '@/api/activity/couponTemplate'
+import { postList, putModifyTemplate } from '@/api/activity/couponTemplate'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -128,7 +123,7 @@ export default {
   methods: {
     getCouponTemplateList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      postList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         setTimeout(() => {
@@ -186,13 +181,13 @@ export default {
       _this.dialogFormVisible = true
       console.log(this.formData)
     },
-    handleDisable(id, deleteStatus) {
+    handleDisable(id, serverStatus) {
       const params = {
         id: id,
         updateUser: this.$store.state.user.username,
-        deleteStatus: deleteStatus
+        serverStatus: serverStatus
       }
-      modifyTemplate(params).then(() => {
+      putModifyTemplate(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

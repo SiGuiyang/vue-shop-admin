@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 用户优惠券
-export function fetchUserCoupons(data) {
+export function postUserCoupons(data) {
   return service({
     url: '/admin/activity/coupon/list',
     method: 'post',
@@ -10,7 +10,7 @@ export function fetchUserCoupons(data) {
 }
 
 // 获取可用的优惠券模板
-export function fetchEnableCouponTemplate() {
+export function postEnableCouponTemplate() {
   return service({
     url: '/admin/activity/coupon/template/enable',
     method: 'post'
@@ -18,8 +18,9 @@ export function fetchEnableCouponTemplate() {
 }
 
 // 修改新增优惠券
-export function modifyUserCoupons(data) {
+export function putModifyUserCoupons(data) {
   return service({
-    url: '/admin/activity/coupon/modify'
+    url: '/admin/activity/coupon/modify',
+    method: 'put'
   })
 }

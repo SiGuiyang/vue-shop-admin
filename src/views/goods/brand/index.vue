@@ -61,8 +61,8 @@
 </template>
 
 <script>
-import { getList, modify } from '@/api/goods/brand'
-import { listAll } from '@/api/goods/group'
+import { postList, putModify } from '@/api/goods/brand'
+import { postListAll } from '@/api/goods/group'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 import IForm from './form'
@@ -105,7 +105,7 @@ export default {
   methods: {
     getList() { // 商品品牌列表
       this.listLoading = true
-      getList(this.listQuery).then(response => {
+      postList(this.listQuery).then(response => {
         this.list = response.data
 
         setTimeout(() => {
@@ -116,7 +116,7 @@ export default {
       })
     },
     getBrandGroupList() {
-      listAll().then((response) => {
+      postListAll().then((response) => {
         this.brandGroup = response.data
       })
     },
@@ -155,7 +155,7 @@ export default {
         deleteStatus: true,
         updateUser: this.$store.state.user.username
       }
-      modify(params).then(() => {
+      putModify(params).then(() => {
         this.$notify({
           title: '成功',
           message: '删除成功',

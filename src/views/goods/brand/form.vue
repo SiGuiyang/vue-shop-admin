@@ -28,7 +28,7 @@
   </el-dialog>
 </template>
 <script>
-import { create, modify } from '@/api/goods/brand'
+import { postCreate, putModify } from '@/api/goods/brand'
 import Upload from '@/components/Upload/singleImage3'
 export default {
   components: { Upload },
@@ -112,7 +112,7 @@ export default {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
-      create(tempData).then(() => {
+      postCreate(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',
@@ -126,7 +126,7 @@ export default {
     updateData() {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
-      modify(tempData).then(() => {
+      putModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',

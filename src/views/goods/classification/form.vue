@@ -28,7 +28,7 @@
   </el-dialog>
 </template>
 <script>
-import { modify } from '@/api/goods/classification'
+import { putModify } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
 import VTreeSelect from 'vue-treeselect'
 
@@ -65,7 +65,7 @@ export default {
     updateData() {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
-      modify(tempData).then(() => {
+      putModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$message({
           type: 'success',

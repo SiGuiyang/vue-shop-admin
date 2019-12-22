@@ -54,7 +54,7 @@
       </el-table-column>
       <el-table-column :label="$t('activity.banner.status')" class-name="status-col" width="120" align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.deleteStatus" type="danger">禁用</el-tag>
+          <el-tag v-if="scope.row.bannerStatus" type="danger">禁用</el-tag>
           <el-tag v-else type="success">启用</el-tag>
         </template>
       </el-table-column>
@@ -72,7 +72,7 @@
       <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" width="160" align="center">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDisable(scope.row.id, false)">启用</el-button>
+          <el-button v-if="scope.row.bannerStatus" type="success" size="mini" @click="handleDisable(scope.row.id, false)">启用</el-button>
           <el-button v-else type="danger" size="mini" @click="handleDisable(scope.row.id, true)">禁用</el-button>
         </template>
       </el-table-column>
@@ -137,8 +137,7 @@ export default {
         shareSubtitle: undefined,
         shareIcon: '',
         shareChannel: undefined,
-        createUser: undefined,
-        deleteStatus: false
+        createUser: undefined
       }
     }
   },
@@ -199,7 +198,6 @@ export default {
       this.formData.shareIcon = undefined
       this.formData.shareChannel = undefined
       this.formData.createUser = undefined
-      this.formData.deleteStatus = false
     },
     handleUpdate(row) {
       this.formData = Object.assign({}, row) // copy obj
@@ -207,11 +205,11 @@ export default {
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDisable(id, deleteStatus) {
+    handleDisable(id, bannerStatus) {
       const params = {
         id: id,
         updateUser: this.$store.state.user.username,
-        deleteStatus: deleteStatus
+        bannerStatus: bannerStatus
       }
       modify(params).then(() => {
         this.$message({

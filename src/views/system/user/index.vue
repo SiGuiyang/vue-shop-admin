@@ -5,14 +5,13 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
-
     <el-table
       v-loading="listLoading"
       :data="list"
       stripe
       fit
       highlight-current-row
-      style="width: 100%;">
+      @row-click="tableSelectRows">
       <el-table-column label="手机号码" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
@@ -88,6 +87,7 @@ export default {
         pageSize: 10,
         phone: undefined
       },
+      tableSelectData: {},
       statusOptions: ['published', 'draft', 'deleted'],
       formData: {
         avatar: undefined,
@@ -107,6 +107,9 @@ export default {
     this.getUserList()
   },
   methods: {
+    tableSelectRows(row, event, column) {
+      this.tableSelectData = row
+    },
     getUserList() {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {

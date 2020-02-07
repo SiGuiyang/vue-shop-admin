@@ -13,9 +13,9 @@
         <template v-if="item.type === 'grid'">
           <el-row
             :key="item.key"
-            :gutter="item.options.gutter ? item.options.gutter : 0"
-            :justify="item.options.justify"
-            :align="item.options.align"
+            :gutter="item.gutter ? item.gutter : 0"
+            :justify="item.justify"
+            :align="item.align"
             type="flex"
           >
             <el-col v-for="(col, colIndex) in item.columns" :key="colIndex" :span="col.span">
@@ -79,7 +79,7 @@ export default {
     data: {
       deep: true,
       handler(val) {
-        this.generateModle(val.list)
+        this.generateModel(val.list)
       }
     },
     value: {

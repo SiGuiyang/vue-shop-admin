@@ -6,7 +6,7 @@
         <el-option v-for="(item,index) in bannerTypeOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
+      <el-button v-permission="'PAGER_ACTIVITY_BANNER_CREATE'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
     </div>
 
     <el-table
@@ -58,7 +58,6 @@
           <el-tag v-else type="success">启用</el-tag>
         </template>
       </el-table-column>
-
       <el-table-column :label="$t('activity.banner.createUser')" width="140" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
@@ -71,9 +70,9 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" width="160" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-if="scope.row.bannerStatus" type="success" size="mini" @click="handleDisable(scope.row.id, false)">启用</el-button>
-          <el-button v-else type="danger" size="mini" @click="handleDisable(scope.row.id, true)">禁用</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'" v-if="scope.row.bannerStatus" type="success" size="mini" @click="handleDisable(scope.row.id, false)">启用</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'" v-else type="danger" size="mini" @click="handleDisable(scope.row.id, true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>

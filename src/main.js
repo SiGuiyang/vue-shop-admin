@@ -1,5 +1,6 @@
 import Vue from 'vue'
 
+import Particles from 'vue-particles'
 import Cookies from 'js-cookie'
 
 import 'normalize.css/normalize.css' // A modern alternative to CSS resets
@@ -26,6 +27,7 @@ import 'v-contextmenu/dist/index.css'
 
 Vue.use(contentmenu)
 Vue.use(FormMaking)
+Vue.use(Particles)
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium', // set element-ui default size

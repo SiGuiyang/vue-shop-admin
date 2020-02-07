@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取系统配置项
 export function fetchList(data) {
   return service({
-    url: '/admin/config/list',
+    url: '/admin/config/page',
     method: 'post',
     data
   })

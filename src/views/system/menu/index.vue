@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'PAGER_SYSTEM_MENU_CREATE'" v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -20,7 +20,7 @@
       </el-table-column>
       <el-table-column label="图标" prop="icon" width="100" align="center">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" style="height: 45px;width: 16px;" />
+          <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
       <el-table-column label="请求地址" prop="path" width="200" align="center">
@@ -45,8 +45,8 @@
       </el-table-column>
       <el-table-column label="操作" prop="operation" width="200" align="center" fixed="right">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="handleModify(scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'" size="mini" type="primary" @click="handleModify(scope.row)">编辑</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'" size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,13 +57,12 @@
 
 <script>
 import { fetchList, del } from '@/api/menu'
-import treeTable from '@/components/TreeTable'
 import IForm from './form'
 import permission from '@/directive/permission'
 import waves from '@/directive/waves' // Waves directive
 export default {
   directives: { waves, permission },
-  components: { treeTable, IForm },
+  components: { IForm },
   data() {
     return {
       menuData: null,

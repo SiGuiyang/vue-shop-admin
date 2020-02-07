@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
 import Constants from '@/utils/constants'
@@ -50,13 +50,7 @@ service.interceptors.response.use(
     const res = error.response
     if (res.status === 401 || res.status === 504 || res.status === 503 || res.status === 502) {
       store.dispatch('LogOut').then(() => {
-        MessageBox({
-          message: '登陆过期',
-          type: 'error',
-          title: '提示'
-        }).then(() => {
-          router.push({ path: '/' })
-        })
+        router.push({ path: '/' })
       })
     }
     return Promise.reject(error)

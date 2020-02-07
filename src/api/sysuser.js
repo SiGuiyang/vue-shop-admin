@@ -10,10 +10,19 @@ export function fetchList(data) {
 }
 
 // 修改系统用户
-export function modify(data) {
+export function postCreate(data) {
+  return service({
+    url: '/admin/system/user/create',
+    method: 'post',
+    data
+  })
+}
+
+// 新增系统用户
+export function putModify(data) {
   return service({
     url: '/admin/system/user/modify',
-    method: 'post',
+    method: 'put',
     data
   })
 }

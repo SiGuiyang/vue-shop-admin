@@ -6,9 +6,6 @@
         <el-form-item label="角色名称" prop="roleName">
           <el-input v-model="formData.roleName" placeholder="请设置"/>
         </el-form-item>
-        <el-form-item label="角色编码" prop="roleCode">
-          <el-input v-model="formData.roleCode" placeholder="请设置"/>
-        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
@@ -37,8 +34,7 @@ export default {
         create: '新建'
       },
       rules: {
-        roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }],
-        roleCode: [{ required: true, message: '角色代码不能为空', trigger: 'blur' }]
+        roleName: [{ required: true, message: '角色名称不能为空', trigger: 'blur' }]
       }
     }
   },

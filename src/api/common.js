@@ -26,3 +26,12 @@ export function getServiceUrl(data) {
     data
   })
 }
+
+// 获取动态表单
+export function getForm(data) {
+  return service({
+    url: '/admin/dynamic/form/get',
+    method: 'get',
+    params: data
+  })
+}

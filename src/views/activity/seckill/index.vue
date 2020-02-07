@@ -88,6 +88,7 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 import IForm from './form'
 
 export default {
+  name: 'SeckillManage',
   components: { Pagination, IForm },
   directives: { waves, permission },
   data() {

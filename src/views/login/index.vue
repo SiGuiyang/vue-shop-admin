@@ -1,6 +1,12 @@
 <template>
   <div class="login-container">
-
+    <vue-particles
+      color="#fff"
+      shape-type="circle"
+      lines-color="#fff"
+      hover-mode="grab"
+      click-mode="push"
+      class="star"/>
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
 
       <div class="title-container">
@@ -35,8 +41,8 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-      <el-button :loading="loading" type="primary" style="width: 50%;" @click.native.prevent="handlePasswordLogin">密码登陆</el-button>
-      <el-button :loading="authLoading" type="success" style="width: 46%;" @click.native.prevent="handleAuthLogin">授权码登陆</el-button>
+      <el-button :loading="loading" type="success" style="width: 100%;" @click.native.prevent="handlePasswordLogin">密码登陆</el-button>
+      <!--<el-button :loading="authLoading" type="success" style="width: 46%;" @click.native.prevent="handleAuthLogin">授权码登陆</el-button>-->
     </el-form>
   </div>
 </template>
@@ -182,6 +188,10 @@ export default {
       border-radius: 5px;
       color: #454545;
     }
+    .star {
+      width: 100%;
+      height: 100%;
+    }
   }
 </style>
 
@@ -197,6 +207,7 @@ $light_gray:#eee;
   background-color: $bg;
   .login-form {
     position: absolute;
+    top: 0;
     left: 0;
     right: 0;
     width: 520px;

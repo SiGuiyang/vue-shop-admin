@@ -4,7 +4,7 @@ import service from '@/utils/request'
 export function getDynamicData(requestUrl, data) {
   return service({
     url: requestUrl,
-    method: 'post',
+    method: 'get',
     params: data
   })
 }

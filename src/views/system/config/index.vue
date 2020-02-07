@@ -6,7 +6,7 @@
         <el-option v-for="(item,index) in moduleTypeOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'PAGER_SYSTEM_CONFIG_CREATE'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
 
     <el-table
@@ -53,9 +53,9 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" fixed="right" width="160" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDelete(scope.row, false)">启用</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="mini" @click="handleDelete(scope.row, true)">禁用</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDelete(scope.row, false)">启用</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'" v-else type="danger" size="mini" @click="handleDelete(scope.row, true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,7 +71,7 @@ import { fetchList, modifyConfig } from '@/api/config'
 import waves from '@/directive/waves'
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import IForm from './form'
+import IForm from './form2'
 
 export default {
   name: 'ConfigManage',
@@ -141,6 +141,7 @@ export default {
       _this.dialogFormVisible = true
       _this.configNameDisabled = false
       _this.configTypeDisabled = false
+      _this.handleInit()
       this.formData = {
         configName: undefined,
         configValue: undefined,

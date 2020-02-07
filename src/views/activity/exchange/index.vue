@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="listQuery.activityName" placeholder="活动名称" style="width: 200px;" class="filter-item" />
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button v-waves v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-waves v-permission="'PAGER_ACTIVITY_EXCHANGE_CREATE'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
 
     <el-table
@@ -52,20 +52,20 @@
       <el-table-column label="操作" width="240" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
           <!-- 启用-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.serverStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'" v-if="scope.row.serverStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
           <!-- 禁用-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
           <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/exchange/rule/'+scope.row.id">
             <!-- 满赠规则-->
             <el-button v-waves type="success" size="small">规则</el-button>
           </router-link>
-          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/exchange/goods/'+scope.row.id">
-            <!-- 满赠规则-->
+          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_GOODS'" :to="'/activity/exchange/goods/'+scope.row.id">
+            <!-- 满赠商品-->
             <el-button v-waves type="warning" size="small">满赠商品</el-button>
           </router-link>
-          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/exchange/record/'+scope.row.id">
+          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_RECORD'" :to="'/activity/exchange/record/'+scope.row.id">
             <!-- 购买记录-->
             <el-button v-waves type="primary" size="small">购买记录</el-button>
           </router-link>
@@ -88,6 +88,7 @@ import Pagination from '@/components/Pagination' // Secondary package based on e
 import IForm from './form'
 
 export default {
+  name: 'ExchangeManage',
   components: { Pagination, IForm },
   directives: { waves, permission },
   data() {

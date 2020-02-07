@@ -36,17 +36,8 @@ export function fetchRoleClassification(data) {
   })
 }
 
-// 获取系统所欲菜单
-export function fetchPermissions(data) {
-  return service({
-    url: '/admin/permission',
-    method: 'post',
-    data
-  })
-}
-
 // 查看某个系统角色所具有的权限
-export function fetchRolePermission(data) {
+export function postRolePermission(data) {
   return service({
     url: '/admin/role/menu/' + data.roleId,
     method: 'post'
@@ -56,8 +47,16 @@ export function fetchRolePermission(data) {
 // 菜单授权
 export function grantAuthorization(data) {
   return service({
-    url: '/admin/permission',
+    url: '/admin/grant',
     method: 'post',
     data
+  })
+}
+
+// 非路由级权限，按钮级权限
+export function getPermission(data) {
+  return service({
+    url: '/admin/permission/' + data.id,
+    method: 'get'
   })
 }

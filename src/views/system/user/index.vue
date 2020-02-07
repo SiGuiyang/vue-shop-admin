@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input v-model="listQuery.phone" placeholder="手机号码" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'PAGER_SYSTEM_USER_CREATE'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -44,9 +44,9 @@
       </el-table-column>
       <el-table-column label="操作" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDelete(scope.row, false)">启用</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="mini" @click="handleDelete(scope.row, true)">禁用</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_USER_MODIFY'" type="primary" size="mini" @click="handleModify(scope.row)">编辑</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_USER_MODIFY'" v-if="scope.row.deleteStatus" type="success" size="mini" @click="handleDelete(scope.row, false)">启用</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_USER_MODIFY'" v-else type="danger" size="mini" @click="handleDelete(scope.row, true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>

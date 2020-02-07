@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { modify } from '@/api/sysuser'
+import { postCreate, putModify } from '@/api/sysuser'
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
@@ -112,8 +112,7 @@ export default {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
           this.formData.loginCode = this.formData.username
-          this.formData.event = 'add'
-          modify(this.formData).then(() => {
+          postCreate(this.formData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',
@@ -130,8 +129,8 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const formDataData = Object.assign({}, this.formData)
-          formDataData.event = 'modify'
-          modify(formDataData).then(() => {
+          formDataData.createUser = this.$store.state.user.username
+          putModify(formDataData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',

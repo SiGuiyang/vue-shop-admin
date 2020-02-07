@@ -6,8 +6,8 @@
         <el-option v-for="(item,index) in templateTypeOptions" :key="index" :label="item.value" :value="item.key"/>
       </el-select>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('table.add') }}</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" :disabled="reissueDisabled" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleSend">{{ $t('table.reissueCoupon') }}</el-button>
+      <el-button v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_CREATE'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'PAGER_ACTIVITY_COUPON_PUBLISH'" :disabled="reissueDisabled" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleSend">补发优惠券</el-button>
     </div>
 
     <el-table
@@ -62,9 +62,9 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" width="160" fixed="right" align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('table.edit') }}</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.serverStatus" type="success" size="mini" @click="handleDisable(scope.row.id,false)">启用</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="danger" size="mini" @click="handleDisable(scope.row.id,true)">禁用</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_MODIFY'" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_MODIFY'" v-if="scope.row.serverStatus" type="success" size="mini" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_MODIFY'" v-else type="danger" size="mini" @click="handleDisable(scope.row.id,true)">禁用</el-button>
         </template>
       </el-table-column>
     </el-table>

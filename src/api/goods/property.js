@@ -1,33 +1,33 @@
 import service from '@/utils/request'
 
 /**
- * 商品品牌列表
+ * spu列表
  */
 export function postList(data) {
   return service({
-    url: '/goods/brand/page',
+    url: '/goods/property/page',
     method: 'post',
     data
   })
 }
 
 /**
- * 新增品牌
+ * 新增spu
  */
 export function postCreate(data) {
   return service({
-    url: '/goods/brand/create',
+    url: '/goods/property/create',
     method: 'post',
     data
   })
 }
 
 /**
- * 修改品牌
+ * 修改spu
  */
 export function putModify(data) {
   return service({
-    url: '/goods/brand/modify',
+    url: '/goods/property/modify',
     method: 'put',
     data
   })

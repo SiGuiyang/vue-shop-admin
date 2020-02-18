@@ -5,7 +5,7 @@ import service from '@/utils/request'
  */
 export function postList(data) {
   return service({
-    url: '/admin/goods/brand/group/list',
+    url: '/goods/brand/group/page',
     method: 'post',
     data
   })
@@ -16,7 +16,7 @@ export function postList(data) {
  */
 export function postCreate(data) {
   return service({
-    url: '/admin/goods/brand/group/create',
+    url: '/goods/brand/group/create',
     method: 'post',
     data
   })
@@ -27,7 +27,7 @@ export function postCreate(data) {
  */
 export function putModify(data) {
   return service({
-    url: '/admin/goods/brand/group/modify',
+    url: '/goods/brand/group/modify',
     method: 'put',
     data
   })
@@ -36,9 +36,10 @@ export function putModify(data) {
 /**
  * 获取所有的品牌组
  */
-export function postListAll() {
+export function getList(data) {
   return service({
-    url: '/admin/goods/brand/group/listAll',
-    method: 'post'
+    url: '/goods/brand/group/list',
+    method: 'get',
+    params: data
   })
 }

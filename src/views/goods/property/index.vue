@@ -1,16 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.brandName" placeholder="品牌名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-date-picker
-        :default-time="['00:00:00', '23:59:59']"
-        v-model="listQuery.timeRange"
-        type="datetimerange"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        class="filter-item"/>
+      <el-input v-model="listQuery.propertyName" placeholder="属性名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
@@ -23,27 +14,22 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="品牌名称" width="160" align="center">
+      <el-table-column label="属性名称" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.brandName }}</span>
+          <span>{{ scope.row.propertyName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="所属品牌组" width="160" align="center">
+      <el-table-column label="所属属性组" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.brandGroupName }}</span>
+          <span>{{ scope.row.propertyGroupName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="品牌图标" width="240" align="center">
-        <template slot-scope="scope">
-          <span><img :src="scope.row.icon"></span>
-        </template>
-      </el-table-column>
-      <el-table-column label="创建时间" width="200" align="center">
+      <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人" width="200" align="center">
+      <el-table-column label="修改人" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
@@ -55,13 +41,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
-    <i-form ref="dataForm" :form-data="formData" :brand-group="brandGroup"/>
+    <pagination v-show="total>listQuery.pageSize" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+    <i-form ref="dataForm" :form-data="formData"/>
   </div>
 </template>
 
 <script>
-import { postList, putModify } from '@/api/goods/brand'
+import { postList, putModify } from '@/api/goods/property'
 import { postListAll } from '@/api/goods/group'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
@@ -79,20 +65,15 @@ export default {
       listLoading: false,
       listQuery: {
         page: 1,
-        pageSize: 20,
-        brandName: undefined,
-        timeRange: undefined
+        pageSize: 10,
+        propertyName: undefined
       },
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
-      brandGroup: [],
       formData: {
         id: undefined,
-        brandGroupId: undefined,
-        sequence: undefined,
-        brandName: undefined,
-        brandCode: undefined,
-        icon: undefined,
+        groupId: undefined,
+        propertyName: undefined,
         createUser: undefined,
         updateUser: undefined
       }
@@ -107,6 +88,7 @@ export default {
       this.listLoading = true
       postList(this.listQuery).then(response => {
         this.list = response.data
+        this.total = response.total
 
         setTimeout(() => {
           this.listLoading = false
@@ -127,13 +109,8 @@ export default {
     },
     restForm() {
       this.formData.id = undefined
-      this.formData.brandName = undefined
-      this.formData.icon = undefined
-      this.formData.createUser = undefined
-      this.formData.brandGroupId = undefined
-      this.formData.sequence = undefined
-      this.formData.brandCode = undefined
-      this.formData.icon = undefined
+      this.formData.propertyName = undefined
+      this.formData.groupId = undefined
       this.formData.createUser = undefined
       this.formData.updateUser = undefined
     },

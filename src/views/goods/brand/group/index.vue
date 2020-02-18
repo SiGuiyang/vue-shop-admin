@@ -2,16 +2,7 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.brandGroupName" placeholder="品牌组名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-date-picker
-        :default-time="['00:00:00', '23:59:59']"
-        v-model="listQuery.timeRange"
-        type="datetimerange"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        class="filter-item"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
 

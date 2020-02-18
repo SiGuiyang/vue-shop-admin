@@ -1,24 +1,19 @@
 <template>
   <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="60%" @opened="handleOpen">
     <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px">
-      <el-form-item label="品牌名称" prop="brandName">
-        <el-input v-model="formData.brandName" placeholder="请设置"/>
-      </el-form-item>
-      <el-form-item label="编号" prop="brandCode">
-        <el-input v-model="formData.brandCode" placeholder="请设置"/>
-      </el-form-item>
-      <el-form-item label="序号" prop="sequence">
-        <el-input v-model="formData.sequence" placeholder="请设置"/>
+      <el-form-item label="属性名称" prop="propertyName">
+        <el-input v-model="formData.propertyName" placeholder="请设置"/>
       </el-form-item>
       <el-form-item
-        label="所属品牌组"
-        prop="brandGroupId">
-        <el-cascader v-model="formData.brandGroupId" :props="props" :options="brandGroupList"/>
-      </el-form-item>
-      <el-form-item label="图标" prop="icon">
-        <div style="margin-bottom: 20px;">
-          <Upload v-model="formData.icon" />
-        </div>
+        label="所属属性组"
+        prop="groupId">
+        <el-select v-model="formData.groupId">
+          <el-option
+            v-for="group in groupList"
+            :key="group.id"
+            :label="group.propertyGroupName"
+            :value="group.id"/>
+        </el-select>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -28,10 +23,9 @@
   </el-dialog>
 </template>
 <script>
-import { postCreate, putModify } from '@/api/goods/brand'
-import Upload from '@/components/Upload/singleImage3'
+import { postCreate, putModify } from '@/api/goods/property'
+import { getList } from '@/api/goods/propertyGroup'
 export default {
-  components: { Upload },
   props: {
     formData: {
       type: Object,
@@ -48,65 +42,18 @@ export default {
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
       rules: {
-        brandName: [{ required: true, message: '品牌不能为空', trigger: 'blur' }],
-        brandCode: [{ required: true, message: '编号不能为空', trigger: 'blur' }],
-        sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-            if (/^[1-9]\d*|0$/.test(value)) {
-              callback()
-            } else {
-              callback(new Error('序号不正确'))
-            }
-          }, trigger: 'change'
-          }
-        ],
-        brandGroupId: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
-        icon: [{ required: true, message: '图片不能为空', trigger: 'blur' }]
+        propertyName: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }],
+        groupId: [{ required: true, message: '属性组不能为空', trigger: 'blur' }]
       },
-      brandGroupList: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则',
-          children: [{
-            value: 'yizhi',
-            label: '一致'
-          }, {
-            value: 'fankui',
-            label: '反馈'
-          }, {
-            value: 'xiaolv',
-            label: '效率'
-          }, {
-            value: 'kekong',
-            label: '可控'
-          }]
-        }, {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }],
-      props: {
-        multiple: true,
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const { level } = node
-          console.log(level)
-        }
-      }
+      groupList: []
     }
   },
   methods: {
     handleOpen() {
       this.$refs['dataForm'].clearValidate()
+      getList({}).then((response) => {
+        this.groupList = response.data
+      })
     },
     createData() {
       const tempData = Object.assign({}, this.formData)

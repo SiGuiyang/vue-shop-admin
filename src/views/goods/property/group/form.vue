@@ -1,11 +1,8 @@
 <template>
   <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="50%" @opened="handleOpen">
     <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px">
-      <el-form-item label="品牌组名称" prop="brandGroupName">
-        <el-input v-model="formData.brandGroupName" placeholder="请设置"/>
-      </el-form-item>
-      <el-form-item label="序号" prop="sequence">
-        <el-input v-model="formData.sequence" placeholder="请设置"/>
+      <el-form-item label="属性组名称" prop="propertyGroupName">
+        <el-input v-model="formData.propertyGroupName" placeholder="请设置"/>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -15,7 +12,7 @@
   </el-dialog>
 </template>
 <script>
-import { postCreate, putModify } from '@/api/goods/group'
+import { postCreate, putModify } from '@/api/goods/propertyGroup'
 
 export default {
   props: {
@@ -30,17 +27,7 @@ export default {
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
       rules: {
-        brandGroupName: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
-        sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-            if (/^[1-9]\d*|0$/.test(value)) {
-              callback()
-            } else {
-              callback(new Error('序号不正确'))
-            }
-          }, trigger: 'change'
-          }
-        ]
+        propertyGroupName: [{ required: true, message: '属性组名称不能为空', trigger: 'blur' }]
       }
     }
   },

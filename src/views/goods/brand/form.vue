@@ -13,7 +13,13 @@
       <el-form-item
         label="所属品牌组"
         prop="brandGroupId">
-        <el-cascader v-model="formData.brandGroupId" :props="props" :options="brandGroupList"/>
+        <el-select v-model="formData.brandGroupId">
+          <el-option
+            v-for="group in groupList"
+            :key="group.id"
+            :label="group.brandGroupName"
+            :value="group.id" />
+        </el-select>
       </el-form-item>
       <el-form-item label="图标" prop="icon">
         <div style="margin-bottom: 20px;">
@@ -29,6 +35,7 @@
 </template>
 <script>
 import { postCreate, putModify } from '@/api/goods/brand'
+import { getList } from '@/api/goods/group'
 import Upload from '@/components/Upload/singleImage3'
 export default {
   components: { Upload },
@@ -36,10 +43,6 @@ export default {
     formData: {
       type: Object,
       default: () => ({})
-    },
-    brandGroup: {
-      type: Array,
-      default: () => ([])
     }
   },
   data() {
@@ -49,7 +52,6 @@ export default {
       dialogFormTitle: '编辑',
       rules: {
         brandName: [{ required: true, message: '品牌不能为空', trigger: 'blur' }],
-        brandCode: [{ required: true, message: '编号不能为空', trigger: 'blur' }],
         sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' },
           { validator: (rule, value, callback) => {
             if (/^[1-9]\d*|0$/.test(value)) {
@@ -63,50 +65,15 @@ export default {
         brandGroupId: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
         icon: [{ required: true, message: '图片不能为空', trigger: 'blur' }]
       },
-      brandGroupList: [{
-        value: 'zhinan',
-        label: '指南',
-        children: [{
-          value: 'shejiyuanze',
-          label: '设计原则',
-          children: [{
-            value: 'yizhi',
-            label: '一致'
-          }, {
-            value: 'fankui',
-            label: '反馈'
-          }, {
-            value: 'xiaolv',
-            label: '效率'
-          }, {
-            value: 'kekong',
-            label: '可控'
-          }]
-        }, {
-          value: 'daohang',
-          label: '导航',
-          children: [{
-            value: 'cexiangdaohang',
-            label: '侧向导航'
-          }, {
-            value: 'dingbudaohang',
-            label: '顶部导航'
-          }]
-        }]
-      }],
-      props: {
-        multiple: true,
-        lazy: true,
-        lazyLoad(node, resolve) {
-          const { level } = node
-          console.log(level)
-        }
-      }
+      groupList: []
     }
   },
   methods: {
     handleOpen() {
       this.$refs['dataForm'].clearValidate()
+      getList({}).then((response) => {
+        this.groupList = response.data
+      })
     },
     createData() {
       const tempData = Object.assign({}, this.formData)

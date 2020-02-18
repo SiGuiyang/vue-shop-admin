@@ -1,8 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('goods.classificationName')" v-model="listQuery.classificationName" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-input v-model="listQuery.spuName" placeholder="spu名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+
     </div>
 
     <el-table
@@ -13,34 +15,35 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column :label="$t('table.id')" prop="id" align="center" width="65">
+      <el-table-column label="spu名称" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <el-tag>{{ scope.row.spuName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.classificationName')" width="160" align="center">
+      <el-table-column label="序号" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.className }}</span>
+          <span>{{ scope.row.sequence }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.classificationImg')" width="240" align="center">
+      <el-table-column label="spu图标" align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.icon"></span>
+          <span><img :src="scope.row.spuImage"></span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('goods.createTime')" width="200" align="center">
+      <el-table-column label="创建时间" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.operationUser')" width="200" align="center">
+      <el-table-column label="修改人" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" class-name="small-padding fixed-width" fixed="right" align="center">
+      <el-table-column label="操作" class-name="small-padding fixed-width" fixed="right" align="center">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleQuery(scope.row)">{{ $t('table.edit') }}</el-button>
+          <el-button type="primary" size="mini" @click="handleQuery(scope.row)">编辑</el-button>
+          <el-button type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -49,7 +52,7 @@
 </template>
 
 <script>
-import { postList } from '@/api/goods/classification'
+import { postList } from '@/api/goods/spu'
 import waves from '@/directive/waves' // Waves directive
 import IForm from './form'
 
@@ -63,15 +66,20 @@ export default {
       list: null,
       listLoading: false,
       listQuery: {
-        className: undefined
+        spuName: undefined,
+        page: 1,
+        pageSize: 10
       },
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
       formData: {
         id: undefined,
-        className: undefined,
-        icon: undefined,
-        createUser: undefined
+        classId: undefined,
+        sequence: undefined,
+        spuName: undefined,
+        spuImage: undefined,
+        createUser: undefined,
+        updateUser: undefined
       },
       rules: {
         className: [{ required: true, message: '分类名称不能为空', trigger: 'blur' }],
@@ -100,7 +108,27 @@ export default {
 
       this.getList()
     },
+    restForm() {
+      this.formData.id = undefined
+      this.formData.classId = undefined
+      this.formData.spuName = undefined
+      this.formData.spuImage = undefined
+      this.formData.sequence = undefined
+      this.formData.createUser = undefined
+      this.formData.updateUser = undefined
+    },
+    handleCreate() { // 创建
+      const _this = this.$refs['dataForm']
+      _this.dialogStatus = 'create'
+      _this.dialogFormVisible = true
+      this.restForm()
+    },
     handleQuery(row) { // 查看分类中的商品
+      this.formData = Object.assign({}, row) // copy obj
+      const _this = this.$refs['dataForm']
+      _this.dialogFormVisible = true
+    },
+    handleDelete(row) {
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogFormVisible = true

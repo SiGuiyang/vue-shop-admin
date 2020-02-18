@@ -1,17 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.brandGroupName" placeholder="品牌组名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-date-picker
-        :default-time="['00:00:00', '23:59:59']"
-        v-model="listQuery.timeRange"
-        type="datetimerange"
-        value-format="yyyy-MM-dd HH:mm:ss"
-        range-separator="至"
-        start-placeholder="开始日期"
-        end-placeholder="结束日期"
-        class="filter-item"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-input v-model="listQuery.propertyGroupName" placeholder="属性组名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
     </div>
 
@@ -23,14 +14,9 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="品牌组名称" align="center">
+      <el-table-column label="属性组名称" align="center">
         <template slot-scope="scope">
-          <el-tag>{{ scope.row.brandGroupName }}</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column label="序号" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.sequence }}</span>
+          <el-tag>{{ scope.row.propertyGroupName }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="创建时间" align="center">
@@ -50,13 +36,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+    <pagination v-show="total>listQuery.pageSize" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
     <i-form ref="dataForm" :form-data="formData" />
   </div>
 </template>
 
 <script>
-import { postList, putModify } from '@/api/goods/group'
+import { postList, putModify } from '@/api/goods/propertyGroup'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 import IForm from './form'
@@ -74,15 +60,13 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 10,
-        brandGroupName: undefined,
-        timeRange: undefined
+        propertyGroupName: undefined
       },
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
       formData: {
         id: undefined,
-        sequence: 0,
-        brandGroupName: undefined,
+        propertyGroupName: undefined,
         createUser: undefined,
         updateUser: undefined
       }
@@ -111,8 +95,7 @@ export default {
     },
     restForm() {
       this.formData.id = undefined
-      this.formData.brandGroupName = undefined
-      this.formData.sequence = 0
+      this.formData.propertyGroupName = undefined
       this.formData.createUser = undefined
       this.formData.updateUser = undefined
     },

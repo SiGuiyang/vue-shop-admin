@@ -28,10 +28,10 @@ export function putModify(data) {
 }
 
 // 商品分类树形结构
-export function postTree(data) {
+export function getClassificationTree(data) {
   return service({
     url: '/admin/goods/classification/tree',
-    method: 'post',
-    data
+    method: 'get',
+    params: data
   })
 }

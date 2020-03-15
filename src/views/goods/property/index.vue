@@ -48,13 +48,12 @@
 
 <script>
 import { postList, putModify } from '@/api/goods/property'
-import { postListAll } from '@/api/goods/group'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 import IForm from './form'
 
 export default {
-  name: 'Classification',
+  name: 'GoodsProperty',
   components: { IForm, Pagination },
   directives: { waves },
   data() {
@@ -81,7 +80,6 @@ export default {
   },
   created() {
     this.getList()
-    this.getBrandGroupList()
   },
   methods: {
     getList() { // 商品品牌列表
@@ -95,11 +93,6 @@ export default {
         }, 1.5 * 1000)
       }).catch(() => {
         this.listLoading = false
-      })
-    },
-    getBrandGroupList() {
-      postListAll().then((response) => {
-        this.brandGroup = response.data
       })
     },
     handleFilter() { // 搜索

@@ -5,7 +5,7 @@
         <el-input v-model="formData.className" placeholder="请设置"/>
       </el-form-item>
       <el-form-item label="二级分类名称" prop="classId">
-        <el-cascader :options="goodsClassification" :props="goodsClassificationProps" v-model="formData.classId" show-all-levels="false"/>
+        <el-cascader :options="goodsClassification" :props="goodsClassificationProps" v-model="formData.classId"/>
       </el-form-item>
       <el-form-item label="序号" prop="sequence">
         <el-input-number :min="min" :max="max" v-model="sequence" label="序号"/>
@@ -24,7 +24,7 @@
 </template>
 <script>
 import { putModify } from '@/api/goods/spu'
-import { postTree } from '@/api/goods/classification'
+import { getClassificationTree } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
@@ -53,12 +53,10 @@ export default {
       }
     }
   },
-  created() {
-    this.handleClassificationTree()
-  },
   methods: {
     handleOpen() {
       this.$refs['dataForm'].clearValidate()
+      this.handleClassificationTree()
     },
     updateData() {
       const tempData = Object.assign({}, this.formData)
@@ -73,7 +71,7 @@ export default {
       })
     },
     handleClassificationTree() {
-      postTree({}).then((response) => {
+      getClassificationTree().then((response) => {
         this.goodsClassification = response.data
         console.log(this.goodsClassification)
       })

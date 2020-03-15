@@ -16,7 +16,7 @@
       stripe
       fit
       highlight-current-row>
-      <el-table-column label="模块" width="120" align="center">
+      <el-table-column label="模块" width="120" align="left">
         <template slot-scope="scope">
           <span>{{ getModuleName(scope.row.module) }}</span>
         </template>

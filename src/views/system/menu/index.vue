@@ -13,7 +13,7 @@
       fit
       highlight-current-row
       style="width: 100%;">
-      <el-table-column label="菜单名称" prop="icon" width="200" align="center">
+      <el-table-column label="菜单名称" prop="icon" width="200" align="left">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.name }}</el-tag>
         </template>

@@ -13,7 +13,7 @@
       stripe
       fit
       highlight-current-row>
-      <el-table-column label="角色名称" align="center">
+      <el-table-column label="角色名称" align="left">
         <template slot-scope="scope">
           <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
           <el-tag>{{ scope.row.roleName }}</el-tag>

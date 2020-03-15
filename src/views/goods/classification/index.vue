@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { postList, postTree } from '@/api/goods/classification'
+import { postList, getClassificationTree } from '@/api/goods/classification'
 import { bannerListAll } from '@/api/activity/banner'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -108,7 +108,7 @@ export default {
       })
     },
     getTreeList() { // 分类树形列表
-      postTree().then((response) => {
+      getClassificationTree().then((response) => {
         this.treeList = response.data
       })
     },

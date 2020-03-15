@@ -12,7 +12,7 @@
       fit
       highlight-current-row
       @row-click="tableSelectRows">
-      <el-table-column label="手机号码" align="center">
+      <el-table-column label="手机号码" align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
         </template>

@@ -1,23 +1,38 @@
 <template>
   <div class="dndList">
-    <div :style="{width:width1}" class="dndList-list">
+    <div :style="{width:width1}"
+         class="dndList-list">
       <h3>{{ list1Title }}</h3>
-      <draggable :list="list1" :options="{group:'article'}" class="dragArea">
-        <div v-for="element in list1" :key="element.id" class="list-complete-item">
+      <draggable :list="list1"
+                 :options="{group:'article'}"
+                 class="dragArea">
+        <div v-for="element in list1"
+             :key="element.id"
+             class="list-complete-item">
           <div class="list-complete-item-handle">[{{ element.author }}] {{ element.title }}</div>
           <div style="position:absolute;right:0px;">
-            <span style="float: right ;margin-top: -20px;margin-right:5px;" @click="deleteEle(element)">
-              <i style="color:#ff4949" class="el-icon-delete"/>
+            <span style="float: right ;margin-top: -20px;margin-right:5px;"
+                  @click="deleteEle(element)">
+              <i style="color:#ff4949"
+                 class="el-icon-delete" />
             </span>
           </div>
         </div>
       </draggable>
     </div>
-    <div :style="{width:width2}" class="dndList-list">
+    <div :style="{width:width2}"
+         class="dndList-list">
       <h3>{{ list2Title }}</h3>
-      <draggable :list="filterList2" :options="{group:'article'}" class="dragArea">
-        <div v-for="element in filterList2" :key="element.id" class="list-complete-item">
-          <div class="list-complete-item-handle2" @click="pushEle(element)"> [{{ element.author }}] {{ element.title }}</div>
+      <draggable :list="filterList2"
+                 :options="{group:'article'}"
+                 class="dragArea">
+        <div v-for="element in filterList2"
+             :key="element.id"
+             class="list-complete-item">
+          <div class="list-complete-item-handle2"
+               @click="pushEle(element)"> [{{ element.author }}] {{ element.title
+               }}
+          </div>
         </div>
       </draggable>
     </div>
@@ -33,13 +48,13 @@ export default {
   props: {
     list1: {
       type: Array,
-      default() {
+      default () {
         return []
       }
     },
     list2: {
       type: Array,
-      default() {
+      default () {
         return []
       }
     },
@@ -61,7 +76,7 @@ export default {
     }
   },
   computed: {
-    filterList2() {
+    filterList2 () {
       return this.list2.filter(v => {
         if (this.isNotInList1(v)) {
           return v
@@ -71,13 +86,13 @@ export default {
     }
   },
   methods: {
-    isNotInList1(v) {
+    isNotInList1 (v) {
       return this.list1.every(k => v.id !== k.id)
     },
-    isNotInList2(v) {
+    isNotInList2 (v) {
       return this.list2.every(k => v.id !== k.id)
     },
-    deleteEle(ele) {
+    deleteEle (ele) {
       for (const item of this.list1) {
         if (item.id === ele.id) {
           const index = this.list1.indexOf(item)
@@ -89,7 +104,7 @@ export default {
         this.list2.unshift(ele)
       }
     },
-    pushEle(ele) {
+    pushEle (ele) {
       this.list1.push(ele)
     }
   }
@@ -100,17 +115,21 @@ export default {
 .dndList {
   background: #fff;
   padding-bottom: 40px;
+
   &:after {
     content: "";
     display: table;
     clear: both;
   }
+
   .dndList-list {
     float: left;
     padding-bottom: 30px;
+
     &:first-of-type {
       margin-right: 2%;
     }
+
     .dragArea {
       margin-top: 15px;
       min-height: 50px;
@@ -144,11 +163,11 @@ export default {
 }
 
 .list-complete-item.sortable-chosen {
-  background: #4AB7BD;
+  background: #4ab7bd;
 }
 
 .list-complete-item.sortable-ghost {
-  background: #30B08F;
+  background: #30b08f;
 }
 
 .list-complete-enter,

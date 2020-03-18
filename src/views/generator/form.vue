@@ -1,38 +1,45 @@
 <template>
-  <el-dialog :visible.sync="dialogFormVisible" :title="titleTxt" width="70%">
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      stripe
-      fit
-      highlight-current-row
-      style="width: 100%;">
-      <el-table-column label="列名称" align="center">
+  <el-dialog :visible.sync="dialogFormVisible"
+             :title="titleTxt"
+             width="70%">
+    <el-table v-loading="listLoading"
+              :data="list"
+              stripe
+              fit
+              highlight-current-row
+              style="width: 100%;">
+      <el-table-column label="列名称"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.columnName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="列类型" align="center">
+      <el-table-column label="列类型"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.dataType }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="列注释" align="center">
+      <el-table-column label="列注释"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.columnComment }}</span>
         </template>
       </el-table-column>
     </el-table>
 
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button type="primary" @click="handleSubmit()">{{ $t('table.confirm') }}</el-button>
+    <div slot="footer"
+         class="dialog-footer">
+      <el-button @click="dialogFormVisible = false">取消</el-button>
+      <el-button type="primary"
+                 @click="handleSubmit()">确认</el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import { generatorCode } from '@/api/generator'
+
 export default {
   name: 'Form',
   props: {
@@ -41,7 +48,7 @@ export default {
       default: () => []
     }
   },
-  data() {
+  data () {
     return {
       listLoading: false,
       dialogFormVisible: false,
@@ -51,7 +58,7 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
+    handleSubmit () {
       const params = { tableSchema: this.tableSchema, tableName: this.tableName }
       generatorCode(params).then(() => {
         this.$notify({

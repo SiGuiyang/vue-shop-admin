@@ -1,38 +1,78 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleBatchCreate">批量拉黑</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'"
+                 class="filter-item"
+                 style="margin-left: 10px;"
+                 type="primary"
+                 icon="el-icon-edit"
+                 @click="handleCreate">添加
+      </el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'"
+                 class="filter-item"
+                 style="margin-left: 10px;"
+                 type="primary"
+                 icon="el-icon-edit"
+                 @click="handleBatchCreate">批量拉黑
+      </el-button>
     </div>
     <!--表格渲染-->
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      stripe
-      fit
-      highlight-current-row
-      style="width: 100%;">
-      <el-table-column prop="phone" label="手机号码"/>
-      <el-table-column prop="createTime" label="创建时间"/>
-      <el-table-column prop="deleteStatus" label="状态">
+    <el-table v-loading="listLoading"
+              :data="list"
+              stripe
+              fit
+              highlight-current-row
+              style="width: 100%;">
+      <el-table-column prop="phone"
+                       label="手机号码" />
+      <el-table-column prop="createTime"
+                       label="创建时间" />
+      <el-table-column prop="deleteStatus"
+                       label="状态">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.deleteStatus" type="success">已移除</el-tag>
-          <el-tag v-else type="danger">黑名单</el-tag>
+          <el-tag v-if="scope.row.deleteStatus"
+                  type="success">已移除</el-tag>
+          <el-tag v-else
+                  type="danger">黑名单</el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="createUser" label="创建人"/>
-      <el-table-column label="操作" width="180" fixed="right" class-name="small-padding fixed-width" align="center">
+      <el-table-column prop="createUser"
+                       label="创建人" />
+      <el-table-column label="操作"
+                       width="180"
+                       fixed="right"
+                       class-name="small-padding fixed-width"
+                       align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleModify(scope.row)">编辑</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-if="scope.row.deleteStatus" type="danger" size="mini" @click="handleBlack(scope.row.id, false)">拉入</el-button>
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" v-else type="success" size="mini" @click="handleBlack(scope.row.id, true)">移除</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'"
+                     type="primary"
+                     size="mini"
+                     @click="handleModify(scope.row)">编辑
+          </el-button>
+          <el-button v-if="scope.row.deleteStatus"
+                     v-permission="'ROLE_SUPER_ADMIN'"
+                     type="danger"
+                     size="mini"
+                     @click="handleBlack(scope.row.id, false)">拉入
+          </el-button>
+          <el-button v-else
+                     v-permission="'ROLE_SUPER_ADMIN'"
+                     type="success"
+                     size="mini"
+                     @click="handleBlack(scope.row.id, true)">移除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
     <!--分页组件-->
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
-    <i-form ref="dataForm" :form-data="formData"/>
-    <i-send ref="dataSend"/>
+    <pagination v-show="total>0"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getList" />
+    <i-form ref="dataForm"
+            :form-data="formData" />
+    <i-send ref="dataSend" />
   </div>
 </template>
 
@@ -45,10 +85,11 @@ import IForm from './form'
 import ISend from './send'
 import { getToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
+
 export default {
   components: { Pagination, IForm, ISend },
   directives: { waves, permission },
-  data() {
+  data () {
     return {
       list: null,
       total: 0,
@@ -61,15 +102,15 @@ export default {
     }
   },
   computed: {
-    actionURL() {
+    actionURL () {
       return process.env.BASE_API + '/admin/upload?access_token=' + getToken(Constants.access_token)
     }
   },
-  created() {
+  created () {
     this.getList()
   },
   methods: {
-    getList() {
+    getList () {
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data
@@ -82,30 +123,30 @@ export default {
         this.listLoading = false
       })
     },
-    handleFilter() {
+    handleFilter () {
       this.listQuery.page = 1
       this.getList()
     },
-    handleUploadSuccess(respnse) {
+    handleUploadSuccess (respnse) {
       this.publishCoupon.file = respnse.data.url
     },
-    handleCreate() {
+    handleCreate () {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
       this.formData = {}
     },
-    handleBatchCreate() {
+    handleBatchCreate () {
       const _this = this.$refs['dataSend']
       _this.sendFormVisible = true
     },
-    handleModify(row) {
+    handleModify (row) {
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDelete(id) {
+    handleDelete (id) {
       del(id).then(() => {
         this.$message({
           type: 'success',
@@ -114,7 +155,7 @@ export default {
         this.getList()
       })
     },
-    handleBlack(id, deleteStatus) {
+    handleBlack (id, deleteStatus) {
       modify({ id: id, deleteStatus: deleteStatus }).then(() => {
         this.$message({
           type: 'success',
@@ -128,5 +169,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

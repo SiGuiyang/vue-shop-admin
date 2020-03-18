@@ -1,8 +1,7 @@
 <template>
   <div class="chart-container">
-    <chart
-      height="100%"
-      width="100%"/>
+    <chart height="100%"
+           width="100%" />
   </div>
 </template>
 
@@ -16,10 +15,10 @@ export default {
 </script>
 
 <style scoped>
-  .chart-container {
-    position: relative;
-    width: 100%;
-    height: calc(100vh - 84px);
-  }
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 84px);
+}
 </style>
 

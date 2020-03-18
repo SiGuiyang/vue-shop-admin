@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'IntegralManage',
-  data() {
+  data () {
     return {}
   },
   methods: {}
@@ -15,5 +15,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

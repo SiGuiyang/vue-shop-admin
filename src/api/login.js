@@ -6,7 +6,7 @@ import Config from '@/utils/config'
  * @param username 用户名
  * @param password 密码
  */
-export function loginByUsername(username, password) {
+export function loginByUsername (username, password) {
   const data = {
     username,
     password,
@@ -23,7 +23,7 @@ export function loginByUsername(username, password) {
   })
 }
 
-export function logout(data) {
+export function logout (data) {
   return request({
     url: '/admin/logout',
     method: 'post',
@@ -31,7 +31,7 @@ export function logout(data) {
   })
 }
 
-export function getUserInfo(sysCode) {
+export function getUserInfo (sysCode) {
   const data = {
     sysCode
   }

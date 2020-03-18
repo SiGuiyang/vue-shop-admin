@@ -3,7 +3,7 @@ import service from '@/utils/request'
 /**
  * spu列表
  */
-export function postList(data) {
+export function postList (data) {
   return service({
     url: '/goods/property/page',
     method: 'post',
@@ -14,7 +14,7 @@ export function postList(data) {
 /**
  * 新增spu
  */
-export function postCreate(data) {
+export function postCreate (data) {
   return service({
     url: '/goods/property/create',
     method: 'post',
@@ -25,7 +25,7 @@ export function postCreate(data) {
 /**
  * 修改spu
  */
-export function putModify(data) {
+export function putModify (data) {
   return service({
     url: '/goods/property/modify',
     method: 'put',

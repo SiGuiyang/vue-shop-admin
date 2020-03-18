@@ -8,7 +8,7 @@ import waves from '@/directive/waves' // Waves directive
 export default {
   name: 'Seller',
   directives: { waves },
-  data() {
+  data () {
     return {
       tableKey: 0,
       list: null,
@@ -35,20 +35,20 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.getList()
     this.getBrandGroupList()
   },
   methods: {
-    getList() { // 商品品牌列表
+    getList () { // 商品品牌列表
       this.listLoading = true
     },
-    handleFilter() { // 搜索
+    handleFilter () { // 搜索
       this.listQuery.page = 1
       console.log(this.listQuery)
       this.getList()
     },
-    restForm() {
+    restForm () {
       this.formData.id = undefined
       this.formData.brandName = undefined
       this.formData.icon = undefined
@@ -60,19 +60,19 @@ export default {
       this.formData.createUser = undefined
       this.formData.updateUser = undefined
     },
-    handleCreate() { // 创建
+    handleCreate () { // 创建
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
       this.restForm()
     },
-    handleModify(row) { // 编辑弹框
+    handleModify (row) { // 编辑弹框
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDelete(id) { // 删除
+    handleDelete (id) { // 删除
     }
   }
 }

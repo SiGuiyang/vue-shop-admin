@@ -1,16 +1,29 @@
 <template>
-  <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="50%" @opened="handleOpen">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px">
-      <el-form-item label="品牌组名称" prop="brandGroupName">
-        <el-input v-model="formData.brandGroupName" placeholder="请设置"/>
+  <el-dialog :title="dialogFormTitle"
+             :visible.sync="dialogFormVisible"
+             width="50%"
+             @opened="handleOpen">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="formData"
+             label-position="left"
+             label-width="100px">
+      <el-form-item label="品牌组名称"
+                    prop="brandGroupName">
+        <el-input v-model="formData.brandGroupName"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="序号" prop="sequence">
-        <el-input v-model="formData.sequence" placeholder="请设置"/>
+      <el-form-item label="序号"
+                    prop="sequence">
+        <el-input v-model="formData.sequence"
+                  placeholder="请设置" />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer"
+         class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+      <el-button type="primary"
+                 @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -24,7 +37,7 @@ export default {
       default: () => ({})
     }
   },
-  data() {
+  data () {
     return {
       dialogStatus: 'create',
       dialogFormVisible: false,
@@ -32,23 +45,24 @@ export default {
       rules: {
         brandGroupName: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
         sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-            if (/^[1-9]\d*|0$/.test(value)) {
-              callback()
-            } else {
-              callback(new Error('序号不正确'))
-            }
-          }, trigger: 'change'
+          {
+            validator: (rule, value, callback) => {
+              if (/^[1-9]\d*|0$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('序号不正确'))
+              }
+            }, trigger: 'change'
           }
         ]
       }
     }
   },
   methods: {
-    handleOpen() {
+    handleOpen () {
       this.$refs['dataForm'].clearValidate()
     },
-    createData() {
+    createData () {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
@@ -64,7 +78,7 @@ export default {
         this.$parent.getList()
       })
     },
-    updateData() {
+    updateData () {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
       putModify(tempData).then(() => {

@@ -1,8 +1,13 @@
 <template>
-  <div :class="{fullscreen:fullscreen}" class="tinymce-container editor-container">
-    <textarea :id="tinymceId" class="tinymce-textarea"/>
+  <div :class="{fullscreen:fullscreen}"
+       class="tinymce-container editor-container">
+    <textarea :id="tinymceId"
+              class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
-      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK"/>
+      <editorImage color="#1890ff"
+                   class="editor-upload-btn"
+                   @successCBK="imageSuccessCBK"
+      />
     </div>
   </div>
 </template>
@@ -18,7 +23,7 @@ export default {
   props: {
     id: {
       type: String,
-      default: function() {
+      default: function () {
         return 'vue-tinymce-' + +new Date() + ((Math.random() * 1000).toFixed(0) + '')
       }
     },
@@ -29,7 +34,7 @@ export default {
     toolbar: {
       type: Array,
       required: false,
-      default() {
+      default () {
         return []
       }
     },
@@ -43,7 +48,7 @@ export default {
       default: 360
     }
   },
-  data() {
+  data () {
     return {
       hasChange: false,
       hasInit: false,
@@ -56,36 +61,36 @@ export default {
     }
   },
   computed: {
-    language() {
+    language () {
       return this.languageTypeList[this.$store.getters.language]
     }
   },
   watch: {
-    value(val) {
+    value (val) {
       if (!this.hasChange && this.hasInit) {
         this.$nextTick(() =>
           window.tinymce.get(this.tinymceId).setContent(val || ''))
       }
     },
-    language() {
+    language () {
       this.destroyTinymce()
       this.$nextTick(() => this.initTinymce())
     }
   },
-  mounted() {
+  mounted () {
     this.initTinymce()
   },
-  activated() {
+  activated () {
     this.initTinymce()
   },
-  deactivated() {
+  deactivated () {
     this.destroyTinymce()
   },
-  destroyed() {
+  destroyed () {
     this.destroyTinymce()
   },
   methods: {
-    initTinymce() {
+    initTinymce () {
       const _this = this
       window.tinymce.init({
         language: this.language,
@@ -116,7 +121,7 @@ export default {
             this.$emit('input', editor.getContent())
           })
         },
-        setup(editor) {
+        setup (editor) {
           editor.on('FullscreenStateChanged', (e) => {
             _this.fullscreen = e.state
           })
@@ -156,18 +161,18 @@ export default {
         // },
       })
     },
-    destroyTinymce() {
+    destroyTinymce () {
       if (window.tinymce.get(this.tinymceId)) {
         window.tinymce.get(this.tinymceId).destroy()
       }
     },
-    setContent(value) {
+    setContent (value) {
       window.tinymce.get(this.tinymceId).setContent(value)
     },
-    getContent() {
+    getContent () {
       window.tinymce.get(this.tinymceId).getContent()
     },
-    imageSuccessCBK(arr) {
+    imageSuccessCBK (arr) {
       const _this = this
       arr.forEach(v => {
         window.tinymce.get(_this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`)
@@ -181,23 +186,28 @@ export default {
 .tinymce-container {
   position: relative;
 }
-.tinymce-container>>>.mce-fullscreen {
+
+.tinymce-container >>> .mce-fullscreen {
   z-index: 10000;
 }
+
 .tinymce-textarea {
   visibility: hidden;
   z-index: -1;
 }
+
 .editor-custom-btn-container {
   position: absolute;
   right: 4px;
   top: 4px;
   /*z-index: 2005;*/
 }
+
 .fullscreen .editor-custom-btn-container {
   z-index: 10000;
   position: fixed;
 }
+
 .editor-upload-btn {
   display: inline-block;
 }

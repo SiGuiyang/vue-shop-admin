@@ -7,7 +7,7 @@
 <script>
 
 export default {
-  data() {
+  data () {
     return {
       list: null,
       total: 0,

@@ -1,19 +1,37 @@
 <template>
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="60%">
-    <el-form ref="dataForm" :rules="rules" :model="activityRule" label-position="left" label-width="120px">
-      <el-form-item label="活动名称" prop="activityName" size="medium">
-        <el-input v-model="activityRule.activityName" disabled placeholder="请设置"/>
+  <el-dialog :title="textMap[dialogStatus]"
+             :visible.sync="dialogFormVisible"
+             width="60%">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="activityRule"
+             label-position="left"
+             label-width="120px">
+      <el-form-item label="活动名称"
+                    prop="activityName"
+                    size="medium">
+        <el-input v-model="activityRule.activityName"
+                  disabled
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="规则名称" prop="ruleName">
-        <el-input v-model="activityRule.ruleName" placeholder="请设置"/>
+      <el-form-item label="规则名称"
+                    prop="ruleName">
+        <el-input v-model="activityRule.ruleName"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="最低限额" prop="orderAmount">
-        <el-input v-model="activityRule.orderAmount" placeholder="请设置"/>
+      <el-form-item label="最低限额"
+                    prop="orderAmount">
+        <el-input v-model="activityRule.orderAmount"
+                  placeholder="请设置" />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer"
+         class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" @click="dialogStatus === 'create'? createData(): updateData()">确认</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'"
+                 type="primary"
+                 @click="dialogStatus === 'create'? createData(): updateData()">确认
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -32,7 +50,7 @@ export default {
       default: () => ({})
     }
   },
-  data() {
+  data () {
     return {
       textMap: {
         update: '编辑',
@@ -57,7 +75,7 @@ export default {
     }
   },
   methods: {
-    createData() {
+    createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.createUser = this.$store.state.user.username
@@ -73,7 +91,7 @@ export default {
         }
       })
     },
-    updateData() {
+    updateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.updateUser = this.$store.state.user.username

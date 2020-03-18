@@ -1,12 +1,12 @@
 import { debounce } from '@/utils'
 
 export default {
-  data() {
+  data () {
     return {
       sidebarElm: null
     }
   },
-  mounted() {
+  mounted () {
     this.__resizeHandler = debounce(() => {
       if (this.chart) {
         this.chart.resize()
@@ -17,13 +17,13 @@ export default {
     this.sidebarElm = document.getElementsByClassName('sidebar-container')[0]
     this.sidebarElm && this.sidebarElm.addEventListener('transitionend', this.sidebarResizeHandler)
   },
-  beforeDestroy() {
+  beforeDestroy () {
     window.removeEventListener('resize', this.__resizeHandler)
 
     this.sidebarElm && this.sidebarElm.removeEventListener('transitionend', this.sidebarResizeHandler)
   },
   methods: {
-    sidebarResizeHandler(e) {
+    sidebarResizeHandler (e) {
       if (e.propertyName === 'width') {
         this.__resizeHandler()
       }

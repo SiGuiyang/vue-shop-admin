@@ -1,21 +1,33 @@
 <template>
   <div class="createPost-container">
-    <el-form ref="postForm" :model="postForm" :rules="rules" class="form-container">
+    <el-form ref="postForm"
+             :model="postForm"
+             :rules="rules"
+             class="form-container">
 
       <sticky :class-name="'sub-navbar '+postForm.status">
         <CommentDropdown v-model="postForm.comment_disabled" />
         <PlatformDropdown v-model="postForm.platforms" />
         <SourceUrlDropdown v-model="postForm.source_uri" />
-        <el-button v-loading="loading" style="margin-left: 10px;" type="success" @click="submitForm">发布
+        <el-button v-loading="loading"
+                   style="margin-left: 10px;"
+                   type="success"
+                   @click="submitForm">发布
         </el-button>
-        <el-button v-loading="loading" type="warning" @click="draftForm">草稿</el-button>
+        <el-button v-loading="loading"
+                   type="warning"
+                   @click="draftForm">草稿</el-button>
       </sticky>
 
       <div class="createPost-main-container">
         <el-row>
           <el-col :span="24">
-            <el-form-item style="margin-bottom: 40px;" prop="title">
-              <MDinput v-model="postForm.title" :maxlength="100" name="name" required>
+            <el-form-item style="margin-bottom: 40px;"
+                          prop="title">
+              <MDinput v-model="postForm.title"
+                       :maxlength="100"
+                       name="name"
+                       required>
                 标题
               </MDinput>
             </el-form-item>
@@ -23,28 +35,43 @@
             <div class="postInfo-container">
               <el-row>
                 <el-col :span="8">
-                  <el-form-item label-width="45px" label="作者:" class="postInfo-container-item">
-                    <el-select v-model="postForm.author" :remote-method="getRemoteUserList" filterable remote placeholder="搜索用户">
-                      <el-option v-for="(item,index) in userListOptions" :key="item+index" :label="item" :value="item"/>
+                  <el-form-item label-width="45px"
+                                label="作者:"
+                                class="postInfo-container-item">
+                    <el-select v-model="postForm.author"
+                               :remote-method="getRemoteUserList"
+                               filterable
+                               remote
+                               placeholder="搜索用户">
+                      <el-option v-for="(item,index) in userListOptions"
+                                 :key="item+index"
+                                 :label="item"
+                                 :value="item" />
                     </el-select>
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="10">
-                  <el-form-item label-width="80px" label="发布时间:" class="postInfo-container-item">
-                    <el-date-picker v-model="postForm.display_time" type="datetime" format="yyyy-MM-dd HH:mm:ss" placeholder="选择日期时间"/>
+                  <el-form-item label-width="80px"
+                                label="发布时间:"
+                                class="postInfo-container-item">
+                    <el-date-picker v-model="postForm.display_time"
+                                    type="datetime"
+                                    format="yyyy-MM-dd HH:mm:ss"
+                                    placeholder="选择日期时间" />
                   </el-form-item>
                 </el-col>
 
                 <el-col :span="6">
-                  <el-form-item label-width="60px" label="重要性:" class="postInfo-container-item">
-                    <el-rate
-                      v-model="postForm.importance"
-                      :max="3"
-                      :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
-                      :low-threshold="1"
-                      :high-threshold="3"
-                      style="margin-top:8px;"/>
+                  <el-form-item label-width="60px"
+                                label="重要性:"
+                                class="postInfo-container-item">
+                    <el-rate v-model="postForm.importance"
+                             :max="3"
+                             :colors="['#99A9BF', '#F7BA2A', '#FF9900']"
+                             :low-threshold="1"
+                             :high-threshold="3"
+                             style="margin-top:8px;" />
                   </el-form-item>
                 </el-col>
               </el-row>
@@ -52,13 +79,23 @@
           </el-col>
         </el-row>
 
-        <el-form-item style="margin-bottom: 40px;" label-width="45px" label="摘要:">
-          <el-input :rows="1" v-model="postForm.content_short" type="textarea" class="article-textarea" autosize placeholder="请输入内容"/>
-          <span v-show="contentShortLength" class="word-counter">{{ contentShortLength }}字</span>
+        <el-form-item style="margin-bottom: 40px;"
+                      label-width="45px"
+                      label="摘要:">
+          <el-input v-model="postForm.content_short"
+                    :rows="1"
+                    type="textarea"
+                    class="article-textarea"
+                    autosize
+                    placeholder="请输入内容" />
+          <span v-show="contentShortLength"
+                class="word-counter">{{ contentShortLength }}字</span>
         </el-form-item>
 
         <div class="editor-container">
-          <Tinymce ref="editor" :height="400" v-model="postForm.content" />
+          <Tinymce ref="editor"
+                   v-model="postForm.content"
+                   :height="400" />
         </div>
 
         <div style="margin-bottom: 20px;">
@@ -103,7 +140,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     const validateRequire = (rule, value, callback) => {
       if (value === '') {
         this.$message({
@@ -144,14 +181,14 @@ export default {
     }
   },
   computed: {
-    contentShortLength() {
+    contentShortLength () {
       return this.postForm.content_short.length
     },
-    lang() {
+    lang () {
       return this.$store.getters.language
     }
   },
-  created() {
+  created () {
     if (this.isEdit) {
       const id = this.$route.params && this.$route.params.id
       this.fetchData(id)
@@ -164,7 +201,7 @@ export default {
     this.tempRoute = Object.assign({}, this.$route)
   },
   methods: {
-    fetchData(id) {
+    fetchData (id) {
       fetchArticle(id).then(response => {
         this.postForm = response.data
         // Just for test
@@ -177,12 +214,12 @@ export default {
         console.log(err)
       })
     },
-    setTagsViewTitle() {
+    setTagsViewTitle () {
       const title = this.lang === 'zh' ? '编辑文章' : 'Edit Article'
       const route = Object.assign({}, this.tempRoute, { title: `${title}-${this.postForm.id}` })
       this.$store.dispatch('updateVisitedView', route)
     },
-    submitForm() {
+    submitForm () {
       this.postForm.display_time = parseInt(this.display_time / 1000)
       console.log(this.postForm)
       this.$refs.postForm.validate(valid => {
@@ -202,7 +239,7 @@ export default {
         }
       })
     },
-    draftForm() {
+    draftForm () {
       if (this.postForm.content.length === 0 || this.postForm.title.length === 0) {
         this.$message({
           message: '请填写必要的标题和内容',
@@ -218,7 +255,7 @@ export default {
       })
       this.postForm.status = 'draft'
     },
-    getRemoteUserList(query) {
+    getRemoteUserList (query) {
       userSearch(query).then(response => {
         if (!response.data.items) return
         this.userListOptions = response.data.items.map(v => v.name)
@@ -230,30 +267,38 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "src/styles/mixin.scss";
+
 .createPost-container {
   position: relative;
+
   .createPost-main-container {
     padding: 40px 45px 20px 50px;
+
     .postInfo-container {
       position: relative;
       @include clearfix;
       margin-bottom: 10px;
+
       .postInfo-container-item {
         float: left;
       }
     }
+
     .editor-container {
       min-height: 500px;
       margin: 0 0 30px;
+
       .editor-upload-btn-container {
         text-align: right;
         margin-right: 10px;
+
         .editor-upload-btn {
           display: inline-block;
         }
       }
     }
   }
+
   .word-counter {
     width: 40px;
     position: absolute;

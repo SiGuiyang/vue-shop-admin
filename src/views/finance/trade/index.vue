@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'Trade',
-  data() {
+  data () {
     return {}
   },
   methods: {}

@@ -1,10 +1,10 @@
 <template>
   <div class="dashboard-editor-container">
 
-    <panel-group @handleSetLineChartData="handleSetLineChartData"/>
+    <panel-group @handleSetLineChartData="handleSetLineChartData" />
 
     <el-row style="background:#fff;padding:16px 16px 0;margin-bottom:32px;">
-      <line-chart :chart-data="lineChartData"/>
+      <line-chart :chart-data="lineChartData" />
     </el-row>
   </div>
 </template>
@@ -26,13 +26,13 @@ export default {
     PanelGroup,
     LineChart
   },
-  data() {
+  data () {
     return {
       lineChartData: lineChartData
     }
   },
   methods: {
-    handleSetLineChartData(type) {
+    handleSetLineChartData (type) {
       const params = {}
       params.type = type
       getCycleStatistics(params).then(response => {
@@ -47,6 +47,7 @@ export default {
 .dashboard-editor-container {
   padding: 32px;
   background-color: rgb(240, 242, 245);
+
   .chart-wrapper {
     background: #fff;
     padding: 16px 16px 0;

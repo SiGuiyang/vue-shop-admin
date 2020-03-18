@@ -10,7 +10,10 @@
       </el-form-item>
 
       <el-form-item label="表单标签宽度">
-        <el-input-number v-model="data.labelWidth" :min="0" :max="200" :step="10"/>
+        <el-input-number v-model="data.labelWidth"
+                         :min="0"
+                         :max="200"
+                         :step="10" />
       </el-form-item>
 
       <el-form-item label="组件尺寸">

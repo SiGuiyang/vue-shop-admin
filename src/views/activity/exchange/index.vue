@@ -1,81 +1,142 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.activityName" placeholder="活动名称" style="width: 200px;" class="filter-item" />
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button v-waves v-permission="'PAGER_ACTIVITY_EXCHANGE_CREATE'" class="filter-item" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-input v-model="listQuery.activityName"
+                placeholder="活动名称"
+                style="width: 200px;"
+                class="filter-item" />
+      <el-button v-waves
+                 class="filter-item"
+                 type="primary"
+                 icon="el-icon-search"
+                 @click="handleFilter">搜索</el-button>
+      <el-button v-waves
+                 v-permission="'PAGER_ACTIVITY_EXCHANGE_CREATE'"
+                 class="filter-item"
+                 type="primary"
+                 icon="el-icon-edit"
+                 @click="handleCreate">添加
+      </el-button>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :key="tableKey"
-      :data="list"
-      stripe
-      fit
-      highlight-current-row
-      style="width: 100%;">
-      <el-table-column label="活动名称" width="200" align="center">
+    <el-table :key="tableKey"
+              v-loading="listLoading"
+              :data="list"
+              stripe
+              fit
+              highlight-current-row
+              style="width: 100%;">
+      <el-table-column label="活动名称"
+                       width="200"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.activityName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="活动图片" width="340" align="center">
+      <el-table-column label="活动图片"
+                       width="340"
+                       align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.activityImg" width="300" height="200"></span>
+          <span><img :src="scope.row.activityImg"
+                     alt=""
+                     width="300"
+                     height="200"></span>
         </template>
       </el-table-column>
-      <el-table-column label="活动时间" width="300" align="center">
+      <el-table-column label="活动时间"
+                       width="300"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ getActivityTime(scope.row) }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="状态" width="100" align="center">
+      <el-table-column label="状态"
+                       width="100"
+                       align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.serverStatus" type="danger">禁用</el-tag>
-          <el-tag v-else type="success">启用</el-tag>
+          <el-tag v-if="scope.row.serverStatus"
+                  type="danger">禁用</el-tag>
+          <el-tag v-else
+                  type="success">启用</el-tag>
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间" width="200" align="center">
+      <el-table-column label="创建时间"
+                       width="200"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="更新人" width="200" align="center">
+      <el-table-column label="更新人"
+                       width="200"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="操作" width="240" fixed="right" class-name="small-padding fixed-width" align="center">
+      <el-table-column label="操作"
+                       width="240"
+                       fixed="right"
+                       class-name="small-padding fixed-width"
+                       align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'" type="primary" size="small" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'"
+                     type="primary"
+                     size="small"
+                     @click="handleUpdate(scope.row)">编辑
+          </el-button>
           <!-- 启用-->
-          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'" v-if="scope.row.serverStatus" type="success" size="small" @click="handleDisable(scope.row.id,false)">启用</el-button>
+          <el-button v-if="scope.row.serverStatus"
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'"
+                     type="success"
+                     size="small"
+                     @click="handleDisable(scope.row.id,false)">启用
+          </el-button>
           <!-- 禁用-->
-          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE'" v-else type="danger" size="small" @click="handleDisable(scope.row.id,true)">禁用</el-button>
-          <router-link v-permission="'ROLE_SUPER_ADMIN'" :to="'/activity/exchange/rule/'+scope.row.id">
+          <el-button v-else
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE'"
+                     type="danger"
+                     size="small"
+                     @click="handleDisable(scope.row.id,true)">禁用
+          </el-button>
+          <router-link v-permission="'ROLE_SUPER_ADMIN'"
+                       :to="'/activity/exchange/rule/'+scope.row.id">
             <!-- 满赠规则-->
-            <el-button v-waves type="success" size="small">规则</el-button>
+            <el-button v-waves
+                       type="success"
+                       size="small">规则</el-button>
           </router-link>
-          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_GOODS'" :to="'/activity/exchange/goods/'+scope.row.id">
+          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_GOODS'"
+                       :to="'/activity/exchange/goods/'+scope.row.id">
             <!-- 满赠商品-->
-            <el-button v-waves type="warning" size="small">满赠商品</el-button>
+            <el-button v-waves
+                       type="warning"
+                       size="small">满赠商品</el-button>
           </router-link>
-          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_RECORD'" :to="'/activity/exchange/record/'+scope.row.id">
+          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_RECORD'"
+                       :to="'/activity/exchange/record/'+scope.row.id">
             <!-- 购买记录-->
-            <el-button v-waves type="primary" size="small">购买记录</el-button>
+            <el-button v-waves
+                       type="primary"
+                       size="small">购买记录</el-button>
           </router-link>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+    <pagination v-show="total>0"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getList" />
 
-    <i-form ref="dataForm" :form-data="formData" />
+    <i-form ref="dataForm"
+            :form-data="formData" />
   </div>
 </template>
 
@@ -91,7 +152,7 @@ export default {
   name: 'ExchangeManage',
   components: { Pagination, IForm },
   directives: { waves, permission },
-  data() {
+  data () {
     return {
       tableKey: 0,
       list: null,
@@ -107,11 +168,11 @@ export default {
       formData: {}
     }
   },
-  created() {
+  created () {
     this.getList()
   },
   methods: {
-    getList() { // 活动列表
+    getList () { // 活动列表
       this.listLoading = true
       fetchList(this.listQuery).then(response => {
         this.list = response.data
@@ -124,23 +185,23 @@ export default {
         this.listLoading = false
       })
     },
-    handleFilter() { // 搜索
+    handleFilter () { // 搜索
       this.listQuery.page = 1
       this.getList()
     },
-    getActivityTime(row) {
+    getActivityTime (row) {
       const beginTime = row.beginTime
       const endTime = row.endTime
 
       return parseTime(beginTime, '{y}-{m}-{d}') + ' 至 ' + parseTime(endTime, '{y}-{m}-{d}')
     },
-    handleCreate() {
+    handleCreate () {
       this.formData = {}
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
     },
-    handleUpdate(row) {
+    handleUpdate (row) {
       this.formData = Object.assign({}, row)
       this.formData.timeRange = []
       this.formData.timeRange.push(row.beginTime)
@@ -149,7 +210,7 @@ export default {
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDisable(id, serverStatus) {
+    handleDisable (id, serverStatus) {
       const params = {
         id: id,
         serverStatus: serverStatus,

@@ -1,15 +1,16 @@
 import service from '@/utils/request'
 
 // 获取table data
-export function postList(data) {
+export function postList (data) {
   return service({
     url: '/admin/menu/list',
     method: 'post',
     data
   })
 }
+
 // 新增
-export function postAddTemplate(data) {
+export function postAddTemplate (data) {
   return service({
     url: 'admin/menu',
     method: 'post',
@@ -18,7 +19,7 @@ export function postAddTemplate(data) {
 }
 
 // 修改
-export function putModifyTemplate(data) {
+export function putModifyTemplate (data) {
   return service({
     url: 'admin/menu',
     method: 'put',
@@ -27,7 +28,7 @@ export function putModifyTemplate(data) {
 }
 
 // 删除
-export function deleteTemplate(id) {
+export function deleteTemplate (id) {
   return service({
     url: 'admin/menu/' + id,
     method: 'delete'
@@ -35,7 +36,7 @@ export function deleteTemplate(id) {
 }
 
 // 发送优惠券
-export function postPublishCoupon(data) {
+export function postPublishCoupon (data) {
   return service({
     url: '/admin/publish/coupon',
     method: 'post',

@@ -1,15 +1,26 @@
 <template>
   <div>
     <!-- 新增编辑 -->
-    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @open="handleOpen">
-      <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px" width="50%">
-        <el-form-item label="角色名称" prop="roleName">
-          <el-input v-model="formData.roleName" placeholder="请设置"/>
+    <el-dialog :title="textMap[dialogStatus]"
+               :visible.sync="dialogFormVisible"
+               @open="handleOpen">
+      <el-form ref="dataForm"
+               :rules="rules"
+               :model="formData"
+               label-position="left"
+               label-width="100px"
+               width="50%">
+        <el-form-item label="角色名称"
+                      prop="roleName">
+          <el-input v-model="formData.roleName"
+                    placeholder="请设置" />
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer"
+           class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+        <el-button type="primary"
+                   @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
       </div>
     </el-dialog>
   </div>
@@ -17,6 +28,7 @@
 
 <script>
 import { addRole, modifyRole } from '@/api/role'
+
 export default {
   name: 'Form',
   props: {
@@ -25,7 +37,7 @@ export default {
       default: () => ({})
     }
   },
-  data() {
+  data () {
     return {
       dialogFormVisible: false,
       dialogStatus: '',
@@ -39,12 +51,12 @@ export default {
     }
   },
   methods: {
-    handleOpen() {
+    handleOpen () {
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    createData() {
+    createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
@@ -62,7 +74,7 @@ export default {
       })
     },
 
-    updateData() {
+    updateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
@@ -84,5 +96,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

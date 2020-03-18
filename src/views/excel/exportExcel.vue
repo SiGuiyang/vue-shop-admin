@@ -6,11 +6,23 @@
       <FilenameOption v-model="filename" />
       <AutoWidthOption v-model="autoWidth" />
       <BookTypeOption v-model="bookType" />
-      <el-button :loading="downloadLoading" style="margin:0 0 20px 20px;" type="primary" icon="document" @click="handleDownload">{{ $t('excel.export') }} Excel</el-button>
+      <el-button :loading="downloadLoading"
+                 style="margin:0 0 20px 20px;"
+                 type="primary"
+                 icon="document"
+                 @click="handleDownload">{{ $t('excel.export') }} Excel
+      </el-button>
     </div>
 
-    <el-table v-loading="listLoading" :data="list" element-loading-text="拼命加载中" border fit highlight-current-row>
-      <el-table-column align="center" label="Id" width="95">
+    <el-table v-loading="listLoading"
+              :data="list"
+              element-loading-text="拼命加载中"
+              border
+              fit
+              highlight-current-row>
+      <el-table-column align="center"
+                       label="Id"
+                       width="95">
         <template slot-scope="scope">
           {{ scope.$index }}
         </template>
@@ -20,19 +32,25 @@
           {{ scope.row.title }}
         </template>
       </el-table-column>
-      <el-table-column label="Author" width="110" align="center">
+      <el-table-column label="Author"
+                       width="110"
+                       align="center">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.author }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="Readings" width="115" align="center">
+      <el-table-column label="Readings"
+                       width="115"
+                       align="center">
         <template slot-scope="scope">
           {{ scope.row.pageviews }}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="Date" width="220">
+      <el-table-column align="center"
+                       label="Date"
+                       width="220">
         <template slot-scope="scope">
-          <i class="el-icon-time"/>
+          <i class="el-icon-time" />
           <span>{{ scope.row.timestamp | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
@@ -52,7 +70,7 @@ import BookTypeOption from './components/BookTypeOption'
 export default {
   name: 'ExportExcel',
   components: { FilenameOption, AutoWidthOption, BookTypeOption },
-  data() {
+  data () {
     return {
       list: null,
       listLoading: true,
@@ -62,18 +80,18 @@ export default {
       bookType: 'xlsx'
     }
   },
-  created() {
+  created () {
     this.fetchData()
   },
   methods: {
-    fetchData() {
+    fetchData () {
       this.listLoading = true
       fetchList().then(response => {
         this.list = response.data.items
         this.listLoading = false
       })
     },
-    handleDownload() {
+    handleDownload () {
       this.downloadLoading = true
       import('@/vendor/Export2Excel').then(excel => {
         const tHeader = ['Id', 'Title', 'Author', 'Readings', 'Date']
@@ -90,7 +108,7 @@ export default {
         this.downloadLoading = false
       })
     },
-    formatJson(filterVal, jsonData) {
+    formatJson (filterVal, jsonData) {
       return jsonData.map(v => filterVal.map(j => {
         if (j === 'timestamp') {
           return parseTime(v[j])

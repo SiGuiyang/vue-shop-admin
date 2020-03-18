@@ -2,26 +2,29 @@
   <el-container>
     <el-aside class="p-aside">
       <h3>路由权限</h3>
-      <el-tree
-        ref="tree"
-        :data="routers"
-        :default-expanded-keys="routerPermission"
-        :default-checked-keys="routerPermission"
-        :check-strictly="checkStrictly"
-        :props="defaultProps"
-        show-checkbox
-        node-key="id"
-        highlight-current
-        @node-click="handleNodeClick"
-        @check-change="handleCheckChange"/>
+      <el-tree ref="tree"
+               :data="routers"
+               :default-expanded-keys="routerPermission"
+               :default-checked-keys="routerPermission"
+               :check-strictly="checkStrictly"
+               :props="defaultProps"
+               show-checkbox
+               node-key="id"
+               highlight-current
+               @node-click="handleNodeClick"
+               @check-change="handleCheckChange" />
     </el-aside>
     <el-main>
       <div class="p-main-header">
         <h3>按钮权限</h3>
-        <el-button type="success" icon="el-icon-check" @click="handlePermission">提交</el-button>
+        <el-button type="success"
+                   icon="el-icon-check"
+                   @click="handlePermission">提交</el-button>
       </div>
       <el-checkbox-group v-model="checkBtn">
-        <el-checkbox v-for="btn in btns" :label="btn.id" :key="btn.id">{{ btn.name }}</el-checkbox>
+        <el-checkbox v-for="btn in btns"
+                     :key="btn.id"
+                     :label="btn.id">{{ btn.name }}</el-checkbox>
       </el-checkbox-group>
     </el-main>
   </el-container>
@@ -29,9 +32,10 @@
 
 <script>
 import { grantAuthorization, postRolePermission, getPermission } from '@/api/role'
+
 export default {
   name: 'IPermission',
-  data() {
+  data () {
     return {
       checkStrictly: true,
       routers: [],
@@ -46,13 +50,13 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     const roleId = this.$route.params.id
     this.selectedRoleId = roleId
     this.initPermission(roleId)
   },
   methods: {
-    initPermission(roleId) {
+    initPermission (roleId) {
       // 获取菜单列表
       postRolePermission({ roleId: roleId }).then(response => {
         this.routers = response.data.routers
@@ -60,7 +64,7 @@ export default {
         this.checkBtn = response.data.btnPermission
       })
     },
-    handlePermission() {
+    handlePermission () {
       const data = []
       const checked = this.$refs.tree.getCheckedKeys() // 获取全选择中的节点
       const halfChecked = this.$refs.tree.getHalfCheckedKeys() // 获取半选中的节点
@@ -80,12 +84,12 @@ export default {
         })
       })
     },
-    handleNodeClick(data) {
+    handleNodeClick (data) {
       getPermission(data).then(res => {
         this.btns = res.data
       })
     },
-    handleCheckChange(data) {
+    handleCheckChange (data) {
       getPermission(data).then(res => {
         this.btns = res.data
       })
@@ -95,12 +99,13 @@ export default {
 </script>
 
 <style scoped>
-  .p-aside {
-    margin: 20px;
-  }
-  .p-main-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+.p-aside {
+  margin: 20px;
+}
+
+.p-main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 </style>

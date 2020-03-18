@@ -1,68 +1,53 @@
 <template>
-  <el-dialog
-    :title="textMap[dialogStatus]"
-    :visible.sync="dialogFormVisible">
-    <el-form
-      ref="dataForm"
-      :rules="rules"
-      :model="formData"
-      label-position="left"
-      label-width="100px"
-      width="50%">
-      <el-form-item
-        label="手机号码"
-        prop="phone">
-        <el-input
-          v-model="formData.phone"
-          placeholder="请设置"/>
+  <el-dialog :title="textMap[dialogStatus]"
+             :visible.sync="dialogFormVisible">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="formData"
+             label-position="left"
+             label-width="100px"
+             width="50%">
+      <el-form-item label="手机号码"
+                    prop="phone">
+        <el-input v-model="formData.phone"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item
-        label="姓名"
-        prop="username">
-        <el-input
-          v-model="formData.username"
-          placeholder="请设置"/>
+      <el-form-item label="姓名"
+                    prop="username">
+        <el-input v-model="formData.username"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item
-        label="密码"
-        prop="password">
-        <el-input
-          v-model="formData.password"
-          :disabled="passwordDisabled"
-          type="password"
-          placeholder="请设置"/>
+      <el-form-item label="密码"
+                    prop="password">
+        <el-input v-model="formData.password"
+                  :disabled="passwordDisabled"
+                  type="password"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item
-        label="拥有角色"
-        prop="roleIds">
-        <el-select
-          v-model="formData.roleIds"
-          class="filter-item"
-          multiple
-          placeholder="请选择">
-          <el-option
-            v-for="(item,index) in roleCodeOptions"
-            :key="index"
-            :label="item.roleName"
-            :value="item.id"/>
+      <el-form-item label="拥有角色"
+                    prop="roleIds">
+        <el-select v-model="formData.roleIds"
+                   class="filter-item"
+                   multiple
+                   placeholder="请选择">
+          <el-option v-for="(item,index) in roleCodeOptions"
+                     :key="index"
+                     :label="item.roleName"
+                     :value="item.id" />
         </el-select>
       </el-form-item>
-      <el-form-item
-        label="头像"
-        prop="avatar">
+      <el-form-item label="头像"
+                    prop="avatar">
         <div style="margin-bottom: 20px;">
-          <Upload v-model="formData.avatar"/>
+          <Upload v-model="formData.avatar" />
         </div>
       </el-form-item>
     </el-form>
-    <div
-      slot="footer"
-      class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button
-        type="primary"
-        @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">{{ $t('table.confirm') }}
-      </el-button>
+    <div slot="footer"
+         class="dialog-footer">
+      <el-button @click="dialogFormVisible = false">取消</el-button>
+      <el-button type="primary"
+                 @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -87,7 +72,7 @@ export default {
       default: () => ([])
     }
   },
-  data() {
+  data () {
     return {
       dialogFormVisible: false,
       dialogPvVisible: false,
@@ -107,7 +92,7 @@ export default {
     }
   },
   methods: {
-    handleCreateData() {
+    handleCreateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
@@ -125,7 +110,7 @@ export default {
         }
       })
     },
-    handleUpdateData() {
+    handleUpdateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const formDataData = Object.assign({}, this.formData)

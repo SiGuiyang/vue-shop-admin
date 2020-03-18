@@ -4,7 +4,7 @@ import Config from '@/utils/config'
 /**
  * 获取访问的token
  */
-export function getRemoteAccessToken(data) {
+export function getRemoteAccessToken (data) {
   return service({
     auth: {
       username: Config.client_id,
@@ -19,7 +19,7 @@ export function getRemoteAccessToken(data) {
 /**
  * 检验token是否过期
  */
-export function checkRemoteAccessToken(data) {
+export function checkRemoteAccessToken (data) {
   return service({
     auth: {
       username: 'client4',

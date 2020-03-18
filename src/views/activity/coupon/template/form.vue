@@ -1,33 +1,61 @@
 <template>
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="50%">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="120px">
-      <el-form-item :label="$t('activity.coupon.templateName')" prop="templateName">
-        <el-input v-model="formData.templateName" placeholder="请设置"/>
+  <el-dialog :title="textMap[dialogStatus]"
+             :visible.sync="dialogFormVisible"
+             width="50%">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="formData"
+             label-position="left"
+             label-width="120px">
+      <el-form-item :label="$t('activity.coupon.templateName')"
+                    prop="templateName">
+        <el-input v-model="formData.templateName"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.templateType')" prop="templateType">
-        <el-select v-model="formData.templateType" class="filter-item" placeholder="请选择" @change="handleChangeType">
-          <el-option v-for="(item,index) in templateTypeOptions" :key="index" :label="item.value" :value="item.key"/>
+      <el-form-item :label="$t('activity.coupon.templateType')"
+                    prop="templateType">
+        <el-select v-model="formData.templateType"
+                   class="filter-item"
+                   placeholder="请选择"
+                   @change="handleChangeType">
+          <el-option v-for="(item,index) in templateTypeOptions"
+                     :key="index"
+                     :label="item.value"
+                     :value="item.key" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.orderAmount')" prop="orderAmount">
-        <el-input v-model.number="formData.orderAmount" placeholder="请设置"/>
+      <el-form-item :label="$t('activity.coupon.orderAmount')"
+                    prop="orderAmount">
+        <el-input v-model.number="formData.orderAmount"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item v-if="!discountVisible" :label="$t('activity.coupon.couponAmount')" prop="couponAmount">
-        <el-input v-model.number="formData.couponAmount" placeholder="请设置"/>
+      <el-form-item v-if="!discountVisible"
+                    :label="$t('activity.coupon.couponAmount')"
+                    prop="couponAmount">
+        <el-input v-model.number="formData.couponAmount"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item
-        v-if="discountVisible"
-        :label="$t('activity.coupon.discountStrength')"
-        prop="discountStrength">
-        <el-input v-model.number="formData.discountStrength" placeholder="请设置"/>
+      <el-form-item v-if="discountVisible"
+                    :label="$t('activity.coupon.discountStrength')"
+                    prop="discountStrength">
+        <el-input v-model.number="formData.discountStrength"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.description')" prop="description">
-        <el-input :autosize="{ minRows: 4, maxRows: 8}" v-model="formData.description" type="textarea" placeholder="请添加说明"/>
+      <el-form-item :label="$t('activity.coupon.description')"
+                    prop="description">
+        <el-input v-model="formData.description"
+                  :autosize="{ minRows: 4, maxRows: 8}"
+                  type="textarea"
+                  placeholder="请添加说明" />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+    <div slot="footer"
+         class="dialog-footer">
+      <el-button @click="dialogFormVisible = false">取消</el-button>
+      <el-button v-permission="'ROLE_SUPER_ADMIN'"
+                 type="primary"
+                 @click="dialogStatus==='create'?createData():updateData()">确认
+      </el-button>
     </div>
   </el-dialog>
 </template>
@@ -49,7 +77,7 @@ export default {
       default: () => ([])
     }
   },
-  data() {
+  data () {
     return {
       textMap: {
         update: '编辑',
@@ -63,23 +91,25 @@ export default {
         templateType: [{ required: true, message: '模版类型不能为空', trigger: 'blur' }],
         description: [{ required: true, message: '优惠券说明不能为空', trigger: 'blur' }],
         orderAmount: [{ type: 'number', required: true, message: '订单金额只能是整数', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-            if (/^[1-9]\d*$/.test(value)) {
-              callback()
-            } else {
-              callback(new Error('订单金额只能是整数'))
-            }
-          }, trigger: 'change'
+          {
+            validator: (rule, value, callback) => {
+              if (/^[1-9]\d*$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('订单金额只能是整数'))
+              }
+            }, trigger: 'change'
           }
         ],
         couponAmount: [{ type: 'number', required: true, message: '满减金额只能是整数', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-            if (/^[1-9]\d*$/.test(value)) {
-              callback()
-            } else {
-              callback(new Error('满减金额只能是整数'))
-            }
-          }, trigger: 'change'
+          {
+            validator: (rule, value, callback) => {
+              if (/^[1-9]\d*$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('满减金额只能是整数'))
+              }
+            }, trigger: 'change'
           }
         ],
         discountStrength: [{ type: 'number', required: true, message: '折扣力度不能为空', trigger: 'blur' },
@@ -97,7 +127,7 @@ export default {
     }
   },
   methods: {
-    createData() {
+    createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
@@ -114,7 +144,7 @@ export default {
         }
       })
     },
-    updateData() {
+    updateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
@@ -131,7 +161,7 @@ export default {
         }
       })
     },
-    handleChangeType(val) {
+    handleChangeType (val) {
       this.discountVisible = val === 2
     }
   }
@@ -139,5 +169,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

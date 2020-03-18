@@ -1,8 +1,20 @@
 <template>
   <div class="components-container board">
-    <Kanban :key="1" :list="list1" :options="options" class="kanban todo" header-text="Todo"/>
-    <Kanban :key="2" :list="list2" :options="options" class="kanban working" header-text="Working"/>
-    <Kanban :key="3" :list="list3" :options="options" class="kanban done" header-text="Done"/>
+    <Kanban :key="1"
+            :list="list1"
+            :options="options"
+            class="kanban todo"
+            header-text="Todo" />
+    <Kanban :key="2"
+            :list="list2"
+            :options="options"
+            class="kanban working"
+            header-text="Working" />
+    <Kanban :key="3"
+            :list="list3"
+            :options="options"
+            class="kanban done"
+            header-text="Done" />
   </div>
 </template>
 <script>
@@ -13,7 +25,7 @@ export default {
   components: {
     Kanban
   },
-  data() {
+  data () {
     return {
       options: {
         group: 'mission'
@@ -47,17 +59,20 @@ export default {
   flex-direction: row;
   align-items: flex-start;
 }
+
 .kanban {
   &.todo {
     .board-column-header {
-      background: #4A9FF9;
+      background: #4a9ff9;
     }
   }
+
   &.working {
     .board-column-header {
       background: #f9944a;
     }
   }
+
   &.done {
     .board-column-header {
       background: #2ac06d;

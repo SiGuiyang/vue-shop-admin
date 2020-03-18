@@ -26,7 +26,7 @@ const serviceConst = {
     }
   },
   actions: {
-    FetchCommonEnumInfo({ commit }) {
+    FetchCommonEnumInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         fetchCommonEnumInfo({}).then(response => { // 订单状态
           commit('SET_ORDER_STATUS_OPTIONS', response.data.orderStatus)

@@ -13,7 +13,7 @@ NProgress.configure({ showSpinner: false })// NProgress Configuration
 const whiteList = ['/login', '/404', '/401', '*', '/dashboard'] // whitelist
 
 // permission judge function
-function hasPermission(permissions, to) {
+function hasPermission (permissions, to) {
   const perm = to.meta.permission
   if (whiteList.indexOf(to.path) !== -1) {
     return true

@@ -1,46 +1,40 @@
 <template>
   <div>
-    <el-form
-      ref="generateForm"
-      :size="data.config.size"
-      :model="models"
-      :rules="rules"
-      :label-position="data.config.labelPosition"
-      :label-width="data.config.labelWidth + 'px'"
-      label-suffix=":"
-    >
+    <el-form ref="generateForm"
+             :size="data.config.size"
+             :model="models"
+             :rules="rules"
+             :label-position="data.config.labelPosition"
+             :label-width="data.config.labelWidth + 'px'"
+             label-suffix=":">
       <template v-for="item in data.widgets">
         <template v-if="item.type === 'grid'">
-          <el-row
-            :key="item.key"
-            :gutter="item.gutter ? item.gutter : 0"
-            :justify="item.justify"
-            :align="item.align"
-            type="flex"
-          >
-            <el-col v-for="(col, colIndex) in item.columns" :key="colIndex" :span="col.span">
+          <el-row :key="item.key"
+                  :gutter="item.gutter ? item.gutter : 0"
+                  :justify="item.justify"
+                  :align="item.align"
+                  type="flex">
+            <el-col v-for="(col, colIndex) in item.columns"
+                    :key="colIndex"
+                    :span="col.span">
               <template v-for="citem in col.list">
-                <generate-form-item
-                  :key="citem.key"
-                  :models.sync="models"
-                  :remote="remote"
-                  :rules="rules"
-                  :widget="citem"
-                  @input-change="onInputChange"
-                />
+                <generate-form-item :key="citem.key"
+                                    :models.sync="models"
+                                    :remote="remote"
+                                    :rules="rules"
+                                    :widget="citem"
+                                    @input-change="onInputChange" />
               </template>
             </el-col>
           </el-row>
         </template>
         <template v-else>
-          <generate-form-item
-            :key="item.key"
-            :models.sync="models"
-            :rules="rules"
-            :widget="item"
-            :remote="remote"
-            @input-change="onInputChange"
-          />
+          <generate-form-item :key="item.key"
+                              :models.sync="models"
+                              :rules="rules"
+                              :widget="item"
+                              :remote="remote"
+                              @input-change="onInputChange" />
         </template>
       </template>
     </el-form>
@@ -69,7 +63,7 @@ export default {
       default: () => ({})
     }
   },
-  data() {
+  data () {
     return {
       models: {},
       rules: {}
@@ -78,22 +72,22 @@ export default {
   watch: {
     data: {
       deep: true,
-      handler(val) {
+      handler (val) {
         this.generateModel(val.list)
       }
     },
     value: {
       deep: true,
-      handler(val) {
+      handler (val) {
         this.models = { ...this.models, ...val }
       }
     }
   },
-  created() {
+  created () {
     this.generateModel(this.data.widgets)
   },
   methods: {
-    generateModel(genList) {
+    generateModel (genList) {
       for (let i = 0; i < genList.length; i++) {
         if (genList[i].type === 'grid') {
           genList[i].columns.forEach(item => {
@@ -126,11 +120,11 @@ export default {
         }
       }
     },
-    evil(fn) {
+    evil (fn) {
       const Fn = Function
       return Fn
     },
-    getData() {
+    getData () {
       return new Promise((resolve, reject) => {
         this.$refs.generateForm.validate(valid => {
           console.log(this.models)
@@ -142,13 +136,13 @@ export default {
         })
       })
     },
-    reset() {
+    reset () {
       this.$refs.generateForm.resetFields()
     },
-    onInputChange(value, field) {
+    onInputChange (value, field) {
       this.$emit('on-change', field, value, this.models)
     },
-    refresh() {
+    refresh () {
 
     }
   }

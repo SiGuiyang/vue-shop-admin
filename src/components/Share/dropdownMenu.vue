@@ -1,9 +1,15 @@
 <template>
-  <div :class="{active:isActive}" class="share-dropdown-menu">
+  <div :class="{active:isActive}"
+       class="share-dropdown-menu">
     <div class="share-dropdown-menu-wrapper">
-      <span class="share-dropdown-menu-title" @click.self="clickTitle">{{ title }}</span>
-      <div v-for="(item,index) of items" :key="index" class="share-dropdown-menu-item">
-        <a v-if="item.href" :href="item.href" target="_blank">{{ item.title }}</a>
+      <span class="share-dropdown-menu-title"
+            @click.self="clickTitle">{{ title }}</span>
+      <div v-for="(item,index) of items"
+           :key="index"
+           class="share-dropdown-menu-item">
+        <a v-if="item.href"
+           :href="item.href"
+           target="_blank">{{ item.title }}</a>
         <span v-else>{{ item.title }}</span>
       </div>
     </div>
@@ -15,7 +21,7 @@ export default {
   props: {
     items: {
       type: Array,
-      default: function() {
+      default: function () {
         return []
       }
     },
@@ -24,26 +30,27 @@ export default {
       default: 'vue'
     }
   },
-  data() {
+  data () {
     return {
       isActive: false
     }
   },
   methods: {
-    clickTitle() {
+    clickTitle () {
       this.isActive = !this.isActive
     }
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss" >
+<style rel="stylesheet/scss" lang="scss">
 $n: 8; //和items.length 相同
-$t: .1s;
+$t: 0.1s;
 .share-dropdown-menu {
   width: 250px;
   position: relative;
   z-index: 1;
+
   &-title {
     width: 100%;
     display: block;
@@ -55,11 +62,13 @@ $t: .1s;
     font-size: 20px;
     text-align: center;
     z-index: 2;
-    transform: translate3d(0,0,0);
+    transform: translate3d(0, 0, 0);
   }
+
   &-wrapper {
     position: relative;
   }
+
   &-item {
     text-align: center;
     position: absolute;
@@ -71,27 +80,31 @@ $t: .1s;
     font-size: 20px;
     opacity: 1;
     transition: transform 0.28s ease;
+
     &:hover {
       background: black;
       color: white;
     }
+
     @for $i from 1 through $n {
       &:nth-of-type(#{$i}) {
         z-index: -1;
-        transition-delay: $i*$t;
+        transition-delay: $i * $t;
         transform: translate3d(0, -60px, 0);
       }
     }
   }
+
   &.active {
     .share-dropdown-menu-wrapper {
       z-index: 1;
     }
+
     .share-dropdown-menu-item {
       @for $i from 1 through $n {
         &:nth-of-type(#{$i}) {
-         transition-delay: ($n - $i)*$t;
-          transform: translate3d(0, ($i - 1)*60px, 0);
+          transition-delay: ($n - $i) * $t;
+          transform: translate3d(0, ($i - 1) * 60px, 0);
         }
       }
     }

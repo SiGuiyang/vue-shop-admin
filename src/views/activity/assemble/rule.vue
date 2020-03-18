@@ -1,22 +1,41 @@
 <template>
   <div class="app-container">
-    <el-form ref="dataForm" :rules="rules" :model="activityRule" label-position="left" label-width="120px">
-      <el-form-item label="活动名称" prop="activityName" size="medium">
-        <el-input v-model="activityRule.activityName" disabled placeholder="请设置"/>
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="activityRule"
+             label-position="left"
+             label-width="120px">
+      <el-form-item label="活动名称"
+                    prop="activityName"
+                    size="medium">
+        <el-input v-model="activityRule.activityName"
+                  disabled
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="每人限购数量" prop="purchaseLimit">
-        <el-input v-model="activityRule.purchaseLimit" placeholder="请设置"/>
+      <el-form-item label="每人限购数量"
+                    prop="purchaseLimit">
+        <el-input v-model="activityRule.purchaseLimit"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="成团人数" prop="assembleCount">
-        <el-input v-model="activityRule.assembleCount" placeholder="请设置"/>
+      <el-form-item label="成团人数"
+                    prop="assembleCount">
+        <el-input v-model="activityRule.assembleCount"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="说明" prop="description">
-        <el-input v-model="activityRule.description" placeholder="请设置" type="textarea"/>
+      <el-form-item label="说明"
+                    prop="description">
+        <el-input v-model="activityRule.description"
+                  placeholder="请设置"
+                  type="textarea" />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer"
+         class="dialog-footer">
       <el-button @click="goBack()">取消</el-button>
-      <el-button v-permission="'PAGER_ACTIVITY_ASSEMBLY_RULE_CREATE'" type="primary" @click="createData()">确认</el-button>
+      <el-button v-permission="'PAGER_ACTIVITY_ASSEMBLY_RULE_CREATE'"
+                 type="primary"
+                 @click="createData()">确认
+      </el-button>
     </div>
   </div>
 </template>
@@ -25,13 +44,11 @@
 import { getRuleInfo, putModifyRule } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
-import Upload from '@/components/Upload/singleImage3'
 
 export default {
   name: 'FightGroupActivity',
-  components: { Upload },
   directives: { waves, permission },
-  data() {
+  data () {
     return {
       activityRule: {
         id: undefined,
@@ -67,21 +84,21 @@ export default {
       tempRoute: {}
     }
   },
-  created() {
+  created () {
     this.initData()
   },
   methods: {
-    initData() {
+    initData () {
       this.tempRoute = this.$route
       getRuleInfo(this.$route.params.id).then(response => {
         this.activityRule = response.data
       })
     },
-    goBack() {
+    goBack () {
       window.history.go(-1) // 回退上一级路由
       this.$store.dispatch('delVisitedView', this.tempRoute) // 关闭当前路由
     },
-    createData() {
+    createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.activityRule.createUser = this.$store.state.user.username

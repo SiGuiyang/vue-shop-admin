@@ -19,7 +19,7 @@ const token = {
     }
   },
   actions: {
-    GetAccessToken({ commit, state }, code) {
+    GetAccessToken ({ commit, state }, code) {
       return new Promise((resolve, reject) => {
         console.log(code)
         const params = {}
@@ -38,7 +38,7 @@ const token = {
         })
       })
     },
-    GetCheckAccessToken({ commit, state }) {
+    GetCheckAccessToken ({ commit, state }) {
       return new Promise(resolve => {
         const params = {}
         params.token = getToken(Constants.access_token)

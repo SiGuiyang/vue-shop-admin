@@ -1,21 +1,24 @@
 <template>
   <div class="tags-view-container">
-    <scroll-pane ref="scrollPane" class="tags-view-wrapper">
-      <router-link
-        v-for="tag in visitedViews"
-        ref="tag"
-        :class="isActive(tag)?'active':''"
-        :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
-        :key="tag.path"
-        tag="span"
-        class="tags-view-item"
-        @click.middle.native="closeSelectedTag(tag)"
-        @contextmenu.prevent.native="openMenu(tag,$event)">
+    <scroll-pane ref="scrollPane"
+                 class="tags-view-wrapper">
+      <router-link v-for="tag in visitedViews"
+                   ref="tag"
+                   :key="tag.path"
+                   :class="isActive(tag)?'active':''"
+                   :to="{ path: tag.path, query: tag.query, fullPath: tag.fullPath }"
+                   tag="span"
+                   class="tags-view-item"
+                   @click.middle.native="closeSelectedTag(tag)"
+                   @contextmenu.prevent.native="openMenu(tag,$event)">
         {{ tag.meta.title }}
-        <span class="el-icon-close" @click.prevent.stop="closeSelectedTag(tag)" />
+        <span class="el-icon-close"
+              @click.prevent.stop="closeSelectedTag(tag)" />
       </router-link>
     </scroll-pane>
-    <ul v-show="visible" :style="{left:left+'px',top:top+'px'}" class="contextmenu">
+    <ul v-show="visible"
+        :style="{left:left+'px',top:top+'px'}"
+        class="contextmenu">
       <li @click="refreshSelectedTag(selectedTag)">{{ $t('tagsView.refresh') }}</li>
       <li @click="closeSelectedTag(selectedTag)">{{ $t('tagsView.close') }}</li>
       <li @click="closeOthersTags">{{ $t('tagsView.closeOthers') }}</li>
@@ -30,7 +33,7 @@ import { generateTitle } from '@/utils/i18n'
 
 export default {
   components: { ScrollPane },
-  data() {
+  data () {
     return {
       visible: false,
       top: 0,
@@ -39,16 +42,16 @@ export default {
     }
   },
   computed: {
-    visitedViews() {
+    visitedViews () {
       return this.$store.state.tagsView.visitedViews
     }
   },
   watch: {
-    $route() {
+    $route () {
       this.addViewTags()
       this.moveToCurrentTag()
     },
-    visible(value) {
+    visible (value) {
       if (value) {
         document.body.addEventListener('click', this.closeMenu)
       } else {
@@ -56,22 +59,22 @@ export default {
       }
     }
   },
-  mounted() {
+  mounted () {
     this.addViewTags()
   },
   methods: {
     generateTitle, // generateTitle by vue-i18n
-    isActive(route) {
+    isActive (route) {
       return route.path === this.$route.path
     },
-    addViewTags() {
+    addViewTags () {
       const { meta } = this.$route
       if (meta) {
         this.$store.dispatch('addView', this.$route)
       }
       return false
     },
-    moveToCurrentTag() {
+    moveToCurrentTag () {
       const tags = this.$refs.tag
       this.$nextTick(() => {
         for (const tag of tags) {
@@ -88,7 +91,7 @@ export default {
         }
       })
     },
-    refreshSelectedTag(view) {
+    refreshSelectedTag (view) {
       this.$store.dispatch('delCachedView', view).then(() => {
         const { fullPath } = view
         this.$nextTick(() => {
@@ -98,7 +101,7 @@ export default {
         })
       })
     },
-    closeSelectedTag(view) {
+    closeSelectedTag (view) {
       this.$store.dispatch('delView', view).then(({ visitedViews }) => {
         if (this.isActive(view)) {
           const latestView = visitedViews.slice(-1)[0]
@@ -110,17 +113,17 @@ export default {
         }
       })
     },
-    closeOthersTags() {
+    closeOthersTags () {
       this.$router.push(this.selectedTag)
       this.$store.dispatch('delOthersViews', this.selectedTag).then(() => {
         this.moveToCurrentTag()
       })
     },
-    closeAllTags() {
+    closeAllTags () {
       this.$store.dispatch('delAllViews')
       this.$router.push('/')
     },
-    openMenu(tag, e) {
+    openMenu (tag, e) {
       const menuMinWidth = 105
       const offsetLeft = this.$el.getBoundingClientRect().left // container margin left
       const offsetWidth = this.$el.offsetWidth // container width
@@ -137,7 +140,7 @@ export default {
       this.visible = true
       this.selectedTag = tag
     },
-    closeMenu() {
+    closeMenu () {
       this.visible = false
     }
   }
@@ -150,7 +153,8 @@ export default {
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #d8dce5;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.12), 0 0 3px 0 rgba(0, 0, 0, 0.04);
+
   .tags-view-wrapper {
     .tags-view-item {
       display: inline-block;
@@ -165,18 +169,22 @@ export default {
       font-size: 12px;
       margin-left: 5px;
       margin-top: 4px;
+
       &:first-of-type {
         margin-left: 15px;
       }
+
       &:last-of-type {
         margin-right: 15px;
       }
+
       &.active {
         background-color: #42b983;
         color: #fff;
         border-color: #42b983;
+
         &::before {
-          content: '';
+          content: "";
           background: #fff;
           display: inline-block;
           width: 8px;
@@ -188,6 +196,7 @@ export default {
       }
     }
   }
+
   .contextmenu {
     margin: 0;
     background: #fff;
@@ -199,11 +208,13 @@ export default {
     font-size: 12px;
     font-weight: 400;
     color: #333;
-    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, .3);
+    box-shadow: 2px 2px 3px 0 rgba(0, 0, 0, 0.3);
+
     li {
       margin: 0;
       padding: 7px 16px;
       cursor: pointer;
+
       &:hover {
         background: #eee;
       }
@@ -222,13 +233,15 @@ export default {
       vertical-align: 2px;
       border-radius: 50%;
       text-align: center;
-      transition: all .3s cubic-bezier(.645, .045, .355, 1);
+      transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
       transform-origin: 100% 50%;
+
       &:before {
-        transform: scale(.6);
+        transform: scale(0.6);
         display: inline-block;
         vertical-align: -3px;
       }
+
       &:hover {
         background-color: #b4bccc;
         color: #fff;

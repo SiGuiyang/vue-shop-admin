@@ -7,13 +7,10 @@
 <script>
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import IForm from './form'
 
 export default {
-  components: { Pagination, IForm },
   directives: { waves, permission },
-  data() {
+  data () {
     return {
       tableKey: 0,
       list: null,
@@ -43,13 +40,15 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .card-panel-col{
-    margin-top: 32px;
-  }
-  .icon-money {
-    color: #f4516c;
-  }
-  .common-color {
-    color: #40c9c6;
-  }
+.card-panel-col {
+  margin-top: 32px;
+}
+
+.icon-money {
+  color: #f4516c;
+}
+
+.common-color {
+  color: #40c9c6;
+}
 </style>

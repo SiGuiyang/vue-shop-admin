@@ -1,30 +1,40 @@
 <template>
-  <el-dialog :title="dialogFormTitle" :visible.sync="dialogFormVisible" width="60%" @opened="handleOpen">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px">
-      <el-form-item label="属性名称" prop="propertyName">
-        <el-input v-model="formData.propertyName" placeholder="请设置"/>
+  <el-dialog :title="dialogFormTitle"
+             :visible.sync="dialogFormVisible"
+             width="60%"
+             @opened="handleOpen">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="formData"
+             label-position="left"
+             label-width="100px">
+      <el-form-item label="属性名称"
+                    prop="propertyName">
+        <el-input v-model="formData.propertyName"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item
-        label="所属属性组"
-        prop="groupId">
+      <el-form-item label="所属属性组"
+                    prop="groupId">
         <el-select v-model="formData.groupId">
-          <el-option
-            v-for="group in groupList"
-            :key="group.id"
-            :label="group.propertyGroupName"
-            :value="group.id"/>
+          <el-option v-for="group in groupList"
+                     :key="group.id"
+                     :label="group.propertyGroupName"
+                     :value="group.id" />
         </el-select>
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer"
+         class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
+      <el-button type="primary"
+                 @click="dialogStatus==='create'?createData():updateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
 import { postCreate, putModify } from '@/api/goods/property'
 import { getList } from '@/api/goods/propertyGroup'
+
 export default {
   props: {
     formData: {
@@ -36,7 +46,7 @@ export default {
       default: () => ([])
     }
   },
-  data() {
+  data () {
     return {
       dialogStatus: undefined,
       dialogFormVisible: false,
@@ -49,13 +59,13 @@ export default {
     }
   },
   methods: {
-    handleOpen() {
+    handleOpen () {
       this.$refs['dataForm'].clearValidate()
       getList({}).then((response) => {
         this.groupList = response.data
       })
     },
-    createData() {
+    createData () {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
@@ -70,7 +80,7 @@ export default {
         this.$parent.getList()
       })
     },
-    updateData() {
+    updateData () {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
       putModify(tempData).then(() => {

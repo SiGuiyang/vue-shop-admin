@@ -31,6 +31,7 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
+    debugger
     const res = response.data
     if (res.code === 1000 || res.code === 3000) {
       Message({
@@ -41,6 +42,13 @@ service.interceptors.response.use(
       return Promise.reject(res.msg)
     } else if (res.code === 5000) {
       router.push('/401')
+      return Promise.reject(res.msg)
+    } else if (res.code === 404) {
+      Message({
+        message: res.msg,
+        type: 'error',
+        duration: 5 * 1000
+      })
       return Promise.reject(res.msg)
     } else {
       return response.data

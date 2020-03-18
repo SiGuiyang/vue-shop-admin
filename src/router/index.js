@@ -4,16 +4,16 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /**
-* hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
-* redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
-* name:'router-name'             the name is used by <keep-alive> (must set!!!)
-* meta : {
+ * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
+ * redirect: noredirect           if `redirect:noredirect` will no redirect in the breadcrumb
+ * name:'router-name'             the name is used by <keep-alive> (must set!!!)
+ * meta : {
     title: 'title'               the name show in submenu and breadcrumb (recommend set)
     icon: 'svg-name'             the icon show in the sidebar,
     noCache: true                if true ,the page will no be cached(default is false)
     permission: []               permission
   }
-**/
+ **/
 export const constantRouterMap = [
   {
     path: '/login',

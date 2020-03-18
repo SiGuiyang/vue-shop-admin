@@ -37,7 +37,7 @@ const user = {
 
   actions: {
     // 用户名登录
-    LoginByUsername({ commit }, userInfo) {
+    LoginByUsername ({ commit }, userInfo) {
       const username = userInfo.phone.trim()
       const password = userInfo.password.trim()
       return new Promise((resolve, reject) => {
@@ -51,7 +51,7 @@ const user = {
     },
 
     // 获取用户信息
-    GetUserInfo({ commit }) {
+    GetUserInfo ({ commit }) {
       return new Promise((resolve, reject) => {
         getUserInfo().then(response => {
           if (!response.data) { // 由于mockjs 不支持自定义状态码只能这样hack
@@ -74,7 +74,7 @@ const user = {
       })
     },
     // 登出
-    LogOut({ commit }) {
+    LogOut ({ commit }) {
       return new Promise((resolve) => {
         commit('SET_PERMISSIONS', [])
         removeToken(Constants.access_token)

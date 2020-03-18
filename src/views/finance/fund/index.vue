@@ -7,7 +7,7 @@
 <script>
 export default {
   name: 'Fund',
-  data() {
+  data () {
     return {}
   },
   methods: {}

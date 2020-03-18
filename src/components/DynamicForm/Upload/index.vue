@@ -1,84 +1,81 @@
 <template>
-  <div :id="uploadId" class="p-upload-container">
-    <draggable
-      :no-transition-on-drag="true"
-      v-model="fileList"
-      v-bind="{group: uploadId, ghostClass: 'ghost', animation: 200}"
-      class="drag-img-list">
-      <div
-        v-for="(item) in fileList"
-        :key="item.fieldKey"
-        :id="item.fieldKey"
-        :style="{width: width+'px', height: height+'px'}"
-        :class="{uploading: item.status ==='uploading', 'is-success': item.status ==='success', 'is-disabled': disabled}"
-        class="upload-file" >
-        <img :src="item.url" alt=""><img>
-        <el-progress
-          v-if="item.status === 'uploading'"
-          :width="miniWidth*0.9"
-          :percentage="item.percent"
-          class="upload-progress"
-          type="circle"/>
-        <label v-if="item.status === 'success'" class="item-status">
-          <el-button type="success" size="mini" icon="el-icon-check"/>
+  <div :id="uploadId"
+       class="p-upload-container">
+    <draggable v-model="fileList"
+               :no-transition-on-drag="true"
+               v-bind="{group: uploadId, ghostClass: 'ghost', animation: 200}"
+               class="drag-img-list">
+      <div v-for="(item) in fileList"
+           :id="item.fieldKey"
+           :key="item.fieldKey"
+           :style="{width: width+'px', height: height+'px'}"
+           :class="{uploading: item.status ==='uploading', 'is-success': item.status ==='success', 'is-disabled': disabled}"
+           class="upload-file">
+        <img :src="item.url"
+             alt="">
+        <el-progress v-if="item.status === 'uploading'"
+                     :width="miniWidth*0.9"
+                     :percentage="item.percent"
+                     class="upload-progress"
+                     type="circle" />
+        <label v-if="item.status === 'success'"
+               class="item-status">
+          <el-button type="success"
+                     size="mini"
+                     icon="el-icon-check" />
         </label>
-        <div v-if="!disabled" :style="{height: miniWidth / 4 + 'px'}" class="upload-action">
-          <el-button
-            :style="{'font-size': miniWidth/8+'px'}"
-            icon="el-icon-view"
-            type="success"
-            size="mini"
-            title="预览"
-            @click="handlePreviewFile(item.fieldKey)"/>
-          <el-button
-            v-if="isEdit"
-            :style="{'font-size': miniWidth/8+'px'}"
-            icon="el-icon-view"
-            type="success"
-            size="mini"
-            title="替换"
-            @click="handleEdit(item.fieldKey)"/>
-          <el-button
-            v-if="isDelete && fileList.length > min"
-            :style="{'font-size': miniWidth/8+'px'}"
-            icon="el-icon-view"
-            type="success"
-            size="mini"
-            title="删除"
-            @click="handleRemove(item.fieldKey)"/>
+        <div v-if="!disabled"
+             :style="{height: miniWidth / 4 + 'px'}"
+             class="upload-action">
+          <el-button :style="{'font-size': miniWidth/8+'px'}"
+                     icon="el-icon-view"
+                     type="success"
+                     size="mini"
+                     title="预览"
+                     @click="handlePreviewFile(item.fieldKey)" />
+          <el-button v-if="isEdit"
+                     :style="{'font-size': miniWidth/8+'px'}"
+                     icon="el-icon-view"
+                     type="success"
+                     size="mini"
+                     title="替换"
+                     @click="handleEdit(item.fieldKey)" />
+          <el-button v-if="isDelete && fileList.length > min"
+                     :style="{'font-size': miniWidth/8+'px'}"
+                     icon="el-icon-view"
+                     type="success"
+                     size="mini"
+                     title="删除"
+                     @click="handleRemove(item.fieldKey)" />
         </div>
       </div>
     </draggable>
 
-    <div
-      v-show="(!isQiniu || (isQiniu && token)) && fileList.length < length"
-      :class="{'is-disabled': disabled}"
-      :style="{width: width+'px', height: height+'px'}"
-      class="el-upload el-upload--picture-card"
-      @click.self="handleAdd">
-      <i
-        :style="{fontSize:miniWidth/4+'px',marginTop: (-miniWidth/8)+'px', marginLeft: (-miniWidth/8)+'px'}"
-        class="el-icon-plus"
-        @click.self="handleAdd"/>
-      <input
-        v-if="multiple"
-        ref="uploadInput"
-        :style="{width: 0, height: 0}"
-        class="el-upload__input upload-input"
-        accept="image/*"
-        name="file"
-        type="file"
-        multiple
-        @change="handleChange">
-      <input
-        v-else
-        ref="uploadInput"
-        :style="{width:0, height: 0}"
-        class="el-upload__input upload-input"
-        accept="image/*"
-        type="file"
-        name="file"
-        @change="handleChange">
+    <div v-show="(!isQiniu || (isQiniu && token)) && fileList.length < length"
+         :class="{'is-disabled': disabled}"
+         :style="{width: width+'px', height: height+'px'}"
+         class="el-upload el-upload--picture-card"
+         @click.self="handleAdd">
+      <i :style="{fontSize:miniWidth/4+'px',marginTop: (-miniWidth/8)+'px', marginLeft: (-miniWidth/8)+'px'}"
+         class="el-icon-plus"
+         @click.self="handleAdd" />
+      <input v-if="multiple"
+             ref="uploadInput"
+             :style="{width: 0, height: 0}"
+             class="el-upload__input upload-input"
+             accept="image/*"
+             name="file"
+             type="file"
+             multiple
+             @change="handleChange">
+      <input v-else
+             ref="uploadInput"
+             :style="{width:0, height: 0}"
+             class="el-upload__input upload-input"
+             accept="image/*"
+             type="file"
+             name="file"
+             @change="handleChange">
     </div>
   </div>
 </template>
@@ -151,7 +148,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       fileList: this.value.map(item => {
         return {
@@ -168,15 +165,15 @@ export default {
     }
   },
   computed: {
-    miniWidth() {
+    miniWidth () {
       return this.width > this.height ? this.height : this.width
     }
   },
-  mounted() {
+  mounted () {
     this.$emit('input', this.fileList)
   },
   methods: {
-    handleChange() {
+    handleChange () {
       const files = this.$refs.uploadInput.files
 
       for (let i = 0; i < files.length; i++) {
@@ -214,7 +211,7 @@ export default {
       }
       this.$refs.uploadInput.value = []
     },
-    uploadAction(res, file, key) {
+    uploadAction (res, file, key) {
       console.log(this.fileList.findIndex(item => item.key === key))
       const xhr = new XMLHttpRequest()
 
@@ -257,7 +254,7 @@ export default {
         }
       }
     },
-    uploadAction2(res, file, key) {
+    uploadAction2 (res, file, key) {
       const _this = this
       const observable = qiniu.upload(file, key, this.token, {
         fname: key,
@@ -267,17 +264,17 @@ export default {
         region: qiniu.region.z2
       })
       observable.subscribe({
-        next(res) {
+        next (res) {
           _this.$set(_this.fileList[_this.fileList.findIndex(item => item.key === key)], 'percent', parseInt(res.total.percent))
         },
-        error(s) {
+        error (s) {
           _this.$set(_this.fileList, _this.fileList.findIndex(item => item.key === key), {
             ..._this.fileList[_this.fileList.findIndex(item => item.key === key)],
             status: 'error'
           })
           _this.fileList.splice(_this.fileList.findIndex(item => item.key === key), 1)
         },
-        complete(res) {
+        complete (res) {
           _this.$set(_this.fileList, _this.fileList.findIndex(item => item.key === key), {
             ..._this.fileList[_this.fileList.findIndex(item => item.key === key)],
             url: _this.domain + res.key,
@@ -293,24 +290,24 @@ export default {
         }
       })
     },
-    handleRemove(key) {
+    handleRemove (key) {
       this.fileList.splice(this.fileList.findIndex(item => item.key === key), 1)
     },
-    handleEdit(key) {
+    handleEdit (key) {
       this.editIndex = this.fileList.findIndex(item => item.key === key)
 
       this.$refs.uploadInput.click()
     },
-    handleMeitu(key) {
+    handleMeitu (key) {
       this.$emit('on-meitu', this.fileList.findIndex(item => item.key === key))
     },
-    handleAdd() {
+    handleAdd () {
       if (!this.disabled) {
         this.editIndex = -1
         this.$refs.uploadInput.click()
       }
     },
-    handlePreviewFile(key) {
+    handlePreviewFile (key) {
       this.viewer && this.viewer.destroy()
       this.uploadId = 'upload_' + new Date().getTime()
 

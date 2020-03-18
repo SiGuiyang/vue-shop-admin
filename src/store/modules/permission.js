@@ -12,7 +12,7 @@ const permission = {
     }
   },
   actions: {
-    GenerateRoutes({ commit }, data) {
+    GenerateRoutes ({ commit }, data) {
       return new Promise(resolve => {
         const { routers } = data
         const accessedRouters = filterAsyncRouter(routers)
@@ -27,7 +27,7 @@ const permission = {
  * 递归过滤异步路由表，返回符合用户角色权限的路由表
  * @param routes asyncRouterMap
  */
-function filterAsyncRouter(routes) {
+function filterAsyncRouter (routes) {
   const res = []
 
   routes.forEach(route => {

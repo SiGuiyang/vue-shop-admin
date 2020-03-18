@@ -1,44 +1,79 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.roleName" placeholder="角色名称" style="width: 200px;" class="filter-item" @keyup.enter.native="handleFilter"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <el-button v-permission="'PAGER_SYSTEM_ROLE_CREATE'" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-input v-model="listQuery.roleName"
+                placeholder="角色名称"
+                style="width: 200px;"
+                class="filter-item"
+                @keyup.enter.native="handleFilter" />
+      <el-button v-waves
+                 class="filter-item"
+                 type="primary"
+                 icon="el-icon-search"
+                 @click="handleFilter">搜索
+      </el-button>
+      <el-button v-permission="'PAGER_SYSTEM_ROLE_CREATE'"
+                 class="filter-item"
+                 style="margin-left: 10px;"
+                 type="primary"
+                 icon="el-icon-edit"
+                 @click="handleCreate">新增
+      </el-button>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :key="tableKey"
-      :data="list"
-      stripe
-      fit
-      highlight-current-row>
-      <el-table-column label="角色名称" align="left">
+    <el-table :key="tableKey"
+              v-loading="listLoading"
+              :data="list"
+              stripe
+              fit
+              highlight-current-row>
+      <el-table-column label="角色名称"
+                       align="left">
         <template slot-scope="scope">
-          <span class="link-type" @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
+          <span class="link-type"
+                @click="handleUpdate(scope.row)">{{ scope.row.title }}</span>
           <el-tag>{{ scope.row.roleName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建人" align="center">
+      <el-table-column label="创建人"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" align="center">
+      <el-table-column label="创建时间"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" fixed="right" width="220" align="center">
+      <el-table-column label="操作"
+                       class-name="small-padding fixed-width"
+                       fixed="right"
+                       width="220"
+                       align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'PAGER_SYSTEM_ROLE_MODIFY'" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="'PAGER_SYSTEM_ROLE_PERMISSION'" type="warning" size="mini" @click="handlePermission(scope.row)">授权</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_ROLE_MODIFY'"
+                     type="primary"
+                     size="mini"
+                     @click="handleUpdate(scope.row)">编辑
+          </el-button>
+          <el-button v-permission="'PAGER_SYSTEM_ROLE_PERMISSION'"
+                     type="warning"
+                     size="mini"
+                     @click="handlePermission(scope.row)">授权
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>listQuery.pageSize" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getRoleList" />
-    <i-form ref="dataForm" :form-data="formData" />
+    <pagination v-show="total>listQuery.pageSize"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getRoleList" />
+    <i-form ref="dataForm"
+            :form-data="formData" />
   </div>
 </template>
 
@@ -48,11 +83,12 @@ import waves from '@/directive/waves'
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import IForm from './form'
+
 export default {
   components: { Pagination, IForm },
   directives: { waves, permission },
   filters: {
-    statusFilter(status) {
+    statusFilter (status) {
       const statusMap = {
         false: 'success',
         true: 'danger'
@@ -60,7 +96,7 @@ export default {
       return statusMap[status]
     }
   },
-  data() {
+  data () {
     return {
       tableKey: 0,
       list: null,
@@ -82,11 +118,11 @@ export default {
       hadPermission: []
     }
   },
-  created() {
+  created () {
     this.getRoleList()
   },
   methods: {
-    getRoleList() {
+    getRoleList () {
       this.listLoading = true
       fetchRoleList(this.listQuery).then(response => {
         this.list = response.data
@@ -100,23 +136,23 @@ export default {
         this.listLoading = false
       })
     },
-    handleFilter() {
+    handleFilter () {
       this.listQuery.page = 1
       this.getRoleList()
     },
-    handleCreate() {
+    handleCreate () {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
       this.formData = {}
     },
-    handleUpdate(row) {
+    handleUpdate (row) {
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handlePermission(row) {
+    handlePermission (row) {
       this.$router.push({ path: '/system/permission/' + row.id })
     }
 

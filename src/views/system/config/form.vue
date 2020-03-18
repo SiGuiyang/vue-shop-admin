@@ -1,33 +1,61 @@
 <template>
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" @open="handleOpen">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px" width="50%">
-      <el-form-item label="配置项名称" prop="configName">
-        <el-input :disabled="configNameDisabled" v-model="formData.configName" placeholder="请设置"/>
+  <el-dialog :title="textMap[dialogStatus]"
+             :visible.sync="dialogFormVisible"
+             @open="handleOpen">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="formData"
+             label-position="left"
+             label-width="100px"
+             width="50%">
+      <el-form-item label="配置项名称"
+                    prop="configName">
+        <el-input v-model="formData.configName"
+                  :disabled="configNameDisabled"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="配置项类型" prop="configType">
-        <el-input :disabled="configTypeDisabled" v-model="formData.configType" placeholder="请设置"/>
+      <el-form-item label="配置项类型"
+                    prop="configType">
+        <el-input v-model="formData.configType"
+                  :disabled="configTypeDisabled"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="配置项值" prop="configValue">
-        <el-input v-model="formData.configValue" placeholder="请设置"/>
+      <el-form-item label="配置项值"
+                    prop="configValue">
+        <el-input v-model="formData.configValue"
+                  placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="模块" prop="module">
-        <el-select v-model="formData.module" class="filter-item" placeholder="请选择">
-          <el-option v-for="(item,index) in options" :key="index" :label="item.value" :value="item.key"/>
+      <el-form-item label="模块"
+                    prop="module">
+        <el-select v-model="formData.module"
+                   class="filter-item"
+                   placeholder="请选择">
+          <el-option v-for="(item,index) in options"
+                     :key="index"
+                     :label="item.value"
+                     :value="item.key" />
         </el-select>
       </el-form-item>
       <el-form-item label="说明">
-        <el-input :autosize="{ minRows: 4, maxRows: 8}" v-model="formData.description" type="textarea" placeholder="请添加说明"/>
+        <el-input v-model="formData.description"
+                  :autosize="{ minRows: 4, maxRows: 8}"
+                  type="textarea"
+                  placeholder="请添加说明" />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer"
+         class="dialog-footer">
       <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}</el-button>
+      <el-button type="primary"
+                 @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}
+      </el-button>
     </div>
   </el-dialog>
 </template>
 
 <script>
 import { addConfig, modifyConfig } from '@/api/config'
+
 export default {
   name: 'Form',
   props: {
@@ -40,7 +68,7 @@ export default {
       default: () => ([])
     }
   },
-  data() {
+  data () {
     return {
       textMap: {
         update: '编辑配置',
@@ -59,12 +87,12 @@ export default {
     }
   },
   methods: {
-    handleOpen() {
+    handleOpen () {
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
       })
     },
-    createData() {
+    createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
@@ -80,7 +108,7 @@ export default {
         }
       })
     },
-    updateData() {
+    updateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
@@ -100,5 +128,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

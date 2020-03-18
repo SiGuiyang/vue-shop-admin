@@ -6,11 +6,11 @@ import GenerateForm from './GenerateForm.vue'
 import './styles/cover.scss'
 import './styles/index.scss'
 
-MakingForm.install = function(Vue) {
+MakingForm.install = function (Vue) {
   Vue.component(MakingForm.name, MakingForm)
 }
 
-GenerateForm.install = function(Vue) {
+GenerateForm.install = function (Vue) {
   Vue.component(GenerateForm.name, GenerateForm)
 }
 
@@ -19,7 +19,7 @@ const components = [
   GenerateForm
 ]
 
-const install = function(Vue) {
+const install = function (Vue) {
   components.forEach(component => {
     Vue.component(component.name, component)
   })

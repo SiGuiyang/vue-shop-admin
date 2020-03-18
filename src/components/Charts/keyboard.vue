@@ -1,5 +1,7 @@
 <template>
-  <div :class="className" :id="id" :style="{height:height,width:width}"/>
+  <div :id="id"
+       :class="className"
+       :style="{height:height,width:width}" />
 </template>
 
 <script>
@@ -26,15 +28,15 @@ export default {
       default: '200px'
     }
   },
-  data() {
+  data () {
     return {
       chart: null
     }
   },
-  mounted() {
+  mounted () {
     this.initChart()
   },
-  beforeDestroy() {
+  beforeDestroy () {
     if (!this.chart) {
       return
     }
@@ -42,7 +44,7 @@ export default {
     this.chart = null
   },
   methods: {
-    initChart() {
+    initChart () {
       this.chart = echarts.init(document.getElementById(this.id))
 
       const xAxisData = []
@@ -143,10 +145,10 @@ export default {
           }],
           animationEasing: 'elasticOut',
           animationEasingUpdate: 'elasticOut',
-          animationDelay(idx) {
+          animationDelay (idx) {
             return idx * 20
           },
-          animationDelayUpdate(idx) {
+          animationDelayUpdate (idx) {
             return idx * 20
           }
         })

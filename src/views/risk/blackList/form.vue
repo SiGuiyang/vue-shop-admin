@@ -1,13 +1,23 @@
 <template>
-  <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-    <el-form ref="dataForm" :rules="rules" :model="formData" label-position="left" label-width="100px" width="50%">
-      <el-form-item label="手机号" prop="phone">
-        <el-input v-model="formData.phone" style="width: 370px;"/>
+  <el-dialog :title="textMap[dialogStatus]"
+             :visible.sync="dialogFormVisible">
+    <el-form ref="dataForm"
+             :rules="rules"
+             :model="formData"
+             label-position="left"
+             label-width="100px"
+             width="50%">
+      <el-form-item label="手机号"
+                    prop="phone">
+        <el-input v-model="formData.phone"
+                  style="width: 370px;" />
       </el-form-item>
     </el-form>
-    <div slot="footer" class="dialog-footer">
+    <div slot="footer"
+         class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button type="primary" @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">确认</el-button>
+      <el-button type="primary"
+                 @click="dialogStatus==='create'?handleCreateData():handleUpdateData()">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -23,7 +33,7 @@ export default {
       default: () => ({})
     }
   },
-  data() {
+  data () {
     return {
       dialogFormVisible: false,
       dialogPvVisible: false,
@@ -35,20 +45,21 @@ export default {
       },
       rules: {
         phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' },
-          { validator: (rule, value, callback) => {
-            if (/^13[1-9]{9}$/.test(value)) {
-              callback()
-            } else {
-              callback(new Error('手机号码不正确'))
-            }
-          }, trigger: 'change'
+          {
+            validator: (rule, value, callback) => {
+              if (/^13[1-9]{9}$/.test(value)) {
+                callback()
+              } else {
+                callback(new Error('手机号码不正确'))
+              }
+            }, trigger: 'change'
           }
         ]
       }
     }
   },
   methods: {
-    handleCreateData() {
+    handleCreateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
@@ -67,7 +78,7 @@ export default {
         }
       })
     },
-    handleUpdateData() {
+    handleUpdateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const formDataData = Object.assign({}, this.formData)
@@ -89,5 +100,4 @@ export default {
 </script>
 
 <style scoped>
-
 </style>

@@ -1,12 +1,12 @@
 <template>
   <div style="display:inline-block;">
     <label class="radio-label">Book Type: </label>
-    <el-select v-model="bookType" style="width:120px;" >
-      <el-option
-        v-for="item in options"
-        :key="item"
-        :label="item"
-        :value="item"/>
+    <el-select v-model="bookType"
+               style="width:120px;">
+      <el-option v-for="item in options"
+                 :key="item"
+                 :label="item"
+                 :value="item" />
     </el-select>
   </div>
 </template>
@@ -19,17 +19,17 @@ export default {
       default: 'xlsx'
     }
   },
-  data() {
+  data () {
     return {
       options: ['xlsx', 'csv', 'txt']
     }
   },
   computed: {
     bookType: {
-      get() {
+      get () {
         return this.value
       },
-      set(val) {
+      set (val) {
         this.$emit('input', val)
       }
     }

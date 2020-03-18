@@ -1,72 +1,134 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('order.phone')" v-model="listQuery.phone" style="width: 200px;" class="filter-item" />
-      <el-input :placeholder="$t('order.orderCode')" v-model="listQuery.orderCode" style="width: 200px;" class="filter-item" />
-      <el-select v-model="listQuery.orderStatus" :placeholder="$t('order.orderStatus')" clearable style="width: 120px" class="filter-item">
-        <el-option v-for="(item,index) in orderStatusOptions" :key="index" :label="item.value" :value="item.key"/>
+      <el-input v-model="listQuery.phone"
+                :placeholder="$t('order.phone')"
+                style="width: 200px;"
+                class="filter-item" />
+      <el-input v-model="listQuery.orderCode"
+                :placeholder="$t('order.orderCode')"
+                style="width: 200px;"
+                class="filter-item" />
+      <el-select v-model="listQuery.orderStatus"
+                 :placeholder="$t('order.orderStatus')"
+                 clearable
+                 style="width: 120px"
+                 class="filter-item">
+        <el-option v-for="(item,index) in orderStatusOptions"
+                   :key="index"
+                   :label="item.value"
+                   :value="item.key" />
       </el-select>
-      <el-select v-model="listQuery.orderType" :placeholder="$t('order.orderType')" clearable style="width: 120px" class="filter-item">
-        <el-option v-for="(item,index) in orderTypeOptions" :key="index" :label="item.value" :value="item.type"/>
+      <el-select v-model="listQuery.orderType"
+                 :placeholder="$t('order.orderType')"
+                 clearable
+                 style="width: 120px"
+                 class="filter-item">
+        <el-option v-for="(item,index) in orderTypeOptions"
+                   :key="index"
+                   :label="item.value"
+                   :value="item.type" />
       </el-select>
-      <el-date-picker v-model="listQuery.beginTime" :placeholder="$t('time.beginTime')" format="yyyy-MM-dd HH:mm:ss" class="filter-item" type="datetime"/>
-      <el-date-picker v-model="listQuery.endTime" :placeholder="$t('time.endTime')" format="yyyy-MM-dd HH:mm:ss" class="filter-item" type="datetime"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('table.search') }}</el-button>
+      <el-date-picker v-model="listQuery.beginTime"
+                      :placeholder="$t('time.beginTime')"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      class="filter-item"
+                      type="datetime" />
+      <el-date-picker v-model="listQuery.endTime"
+                      :placeholder="$t('time.endTime')"
+                      format="yyyy-MM-dd HH:mm:ss"
+                      class="filter-item"
+                      type="datetime" />
+      <el-button v-waves
+                 class="filter-item"
+                 type="primary"
+                 icon="el-icon-search"
+                 @click="handleFilter">{{
+                   $t('table.search') }}
+      </el-button>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :key="tableKey"
-      :data="list"
-      stripe
-      fit
-      highlight-current-row
-      style="width: 100%;">
-      <el-table-column type="selection" width="65" align="center"/>>
-      <el-table-column label="手机号码" width="200" align="center">
+    <el-table :key="tableKey"
+              v-loading="listLoading"
+              :data="list"
+              stripe
+              fit
+              highlight-current-row
+              style="width: 100%;">
+      <el-table-column type="selection"
+                       width="65"
+                       align="center" />
+      <el-table-column label="手机号码"
+                       width="200"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userOrder.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="订单号" width="220" align="center">
+      <el-table-column label="订单号"
+                       width="220"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userOrder.orderCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="订单金额" width="160" align="center">
+      <el-table-column label="订单金额"
+                       width="160"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userOrder.orderAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="消费积分" width="140" align="center">
+      <el-table-column label="消费积分"
+                       width="140"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userOrder.integralAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="优惠券金额" width="140" align="center">
+      <el-table-column label="优惠券金额"
+                       width="140"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userOrder.discountAmount }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="订单状态" width="100" align="center">
+      <el-table-column label="订单状态"
+                       width="100"
+                       align="center">
         <template slot-scope="scope">
           <el-tag type="success">{{ getOrderStatus(scope.row.userOrder.orderStatus) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间" width="200" align="center">
+      <el-table-column label="创建时间"
+                       width="200"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.userOrder.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" width="100" fixed="right" class-name="small-padding fixed-width" align="center">
+      <el-table-column label="操作"
+                       width="100"
+                       fixed="right"
+                       class-name="small-padding fixed-width"
+                       align="center">
         <template slot-scope="scope">
-          <el-button v-permission="'ROLE_SUPER_ADMIN'" type="primary" size="mini" @click="handleQuery(scope.row.userOrder.id)">查看</el-button>
+          <el-button v-permission="'ROLE_SUPER_ADMIN'"
+                     type="primary"
+                     size="mini"
+                     @click="handleQuery(scope.row.userOrder.id)">查看
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getOrderList" />
-    <i-form ref="dataForm" :order-data="orderDetail" />
+    <pagination v-show="total>0"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getOrderList" />
+    <i-form ref="dataForm"
+            :order-data="orderDetail" />
   </div>
 </template>
 
@@ -82,7 +144,7 @@ export default {
   name: 'UserOrder',
   components: { Pagination, IForm },
   directives: { waves, permission },
-  data() {
+  data () {
     return {
       tableKey: 0,
       list: null,
@@ -115,23 +177,23 @@ export default {
       'orderTypeOptions'
     ])
   },
-  created() {
+  created () {
     this.getOrderList()
   },
   methods: {
-    getOrderStatus(status) {
+    getOrderStatus (status) {
       if (status === undefined || status === '' || status === null) {
         return '——'
       }
       return this.orderStatusOptions.filter(os => os.key === status)[0].value
     },
-    getOrderType(type) {
+    getOrderType (type) {
       if (type === undefined || type === '' || type === null) {
         return '——'
       }
       return this.orderTypeOptions.filter(ot => ot.type === type)[0].value
     },
-    getOrderList() { // 订单列表
+    getOrderList () { // 订单列表
       this.listLoading = true
       fetchOrderList(this.listQuery).then(response => {
         this.list = response.data
@@ -144,7 +206,7 @@ export default {
         this.listLoading = false
       })
     },
-    handleFilter() { // 搜索
+    handleFilter () { // 搜索
       this.listQuery.page = 1
       if (this.listQuery.beginTime !== undefined &&
         this.listQuery.endTime !== undefined &&
@@ -158,7 +220,7 @@ export default {
       }
       this.getOrderList()
     },
-    handleQuery(orderId) { // 查看订单详情
+    handleQuery (orderId) { // 查看订单详情
       const params = {}
       params.orderId = orderId
       const _this = this.$refs['dataForm']
@@ -181,13 +243,15 @@ export default {
 }
 </script>
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .card-panel-col{
-    margin-top: 32px;
-  }
-  .icon-money {
-    color: #f4516c;
-  }
-  .common-color {
-    color: #40c9c6;
-  }
+.card-panel-col {
+  margin-top: 32px;
+}
+
+.icon-money {
+  color: #f4516c;
+}
+
+.common-color {
+  color: #40c9c6;
+}
 </style>

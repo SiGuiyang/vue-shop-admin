@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 获取系统配置项
-export function fetchList(data) {
+export function fetchList (data) {
   return service({
     url: '/admin/config/page',
     method: 'post',
@@ -10,7 +10,7 @@ export function fetchList(data) {
 }
 
 // 新增配置项
-export function addConfig(data) {
+export function addConfig (data) {
   return service({
     url: '/admin/config',
     method: 'post',
@@ -19,7 +19,7 @@ export function addConfig(data) {
 }
 
 // 修改配置项
-export function modifyConfig(data) {
+export function modifyConfig (data) {
   return service({
     url: '/admin/config',
     method: 'put',
@@ -28,7 +28,7 @@ export function modifyConfig(data) {
 }
 
 // 修改配置项
-export function delConfig(id) {
+export function delConfig (id) {
   return service({
     url: '/admin/config/' + id,
     method: 'delete'

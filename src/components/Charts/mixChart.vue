@@ -1,5 +1,7 @@
 <template>
-  <div :class="className" :id="id" :style="{height:height,width:width}"/>
+  <div :id="id"
+       :class="className"
+       :style="{height:height,width:width}" />
 </template>
 
 <script>
@@ -26,15 +28,15 @@ export default {
       default: '200px'
     }
   },
-  data() {
+  data () {
     return {
       chart: null
     }
   },
-  mounted() {
+  mounted () {
     this.initChart()
   },
-  beforeDestroy() {
+  beforeDestroy () {
     if (!this.chart) {
       return
     }
@@ -42,9 +44,9 @@ export default {
     this.chart = null
   },
   methods: {
-    initChart() {
+    initChart () {
       this.chart = echarts.init(document.getElementById(this.id))
-      const xData = (function() {
+      const xData = (function () {
         const data = []
         for (let i = 1; i < 13; i++) {
           data.push(i + 'month')
@@ -151,7 +153,8 @@ export default {
 
           },
           textStyle: {
-            color: '#fff' },
+            color: '#fff'
+          },
           borderColor: '#90979c'
 
         }, {
@@ -176,7 +179,7 @@ export default {
                   color: '#fff'
                 },
                 position: 'insideTop',
-                formatter(p) {
+                formatter (p) {
                   return p.value > 0 ? p.value : ''
                 }
               }
@@ -209,7 +212,7 @@ export default {
               label: {
                 show: true,
                 position: 'top',
-                formatter(p) {
+                formatter (p) {
                   return p.value > 0 ? p.value : ''
                 }
               }
@@ -242,7 +245,7 @@ export default {
               label: {
                 show: true,
                 position: 'top',
-                formatter(p) {
+                formatter (p) {
                   return p.value > 0 ? p.value : ''
                 }
               }

@@ -1,15 +1,16 @@
 import service from '@/utils/request'
 
 // 获取table data
-export function fetchList(data) {
+export function fetchList (data) {
   return service({
     url: '/admin/menu/list',
     method: 'post',
     data
   })
 }
+
 // 新增
-export function add(data) {
+export function add (data) {
   return service({
     url: 'admin/menu',
     method: 'post',
@@ -18,7 +19,7 @@ export function add(data) {
 }
 
 // 修改
-export function modify(data) {
+export function modify (data) {
   return service({
     url: 'admin/menu',
     method: 'put',
@@ -27,7 +28,7 @@ export function modify(data) {
 }
 
 // 删除
-export function del(id) {
+export function del (id) {
   return service({
     url: 'admin/menu/' + id,
     method: 'delete'

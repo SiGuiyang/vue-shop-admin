@@ -4,19 +4,15 @@
       <div class="components-list">
         <template v-if="basicComponents.length">
           <div class="widget-cate">基础组件</div>
-          <draggable
-            :list="basicComponents"
-            :move="handleMove"
-            v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
-            tag="div"
-          >
+          <draggable :list="basicComponents"
+                     :move="handleMove"
+                     v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
+                     tag="div">
 
-            <el-col
-              v-for="(item, index) in basicComponents"
-              :key="index"
-              :class="{'no-put': item.type === 'divider'}"
-              class="form-edit-widget-label"
-            >
+            <el-col v-for="(item, index) in basicComponents"
+                    :key="index"
+                    :class="{'no-put': item.type === 'divider'}"
+                    class="form-edit-widget-label">
               <a>
                 <span>{{ item.name }}</span>
               </a>
@@ -26,19 +22,15 @@
 
         <template v-if="advanceComponents.length">
           <div class="widget-cate">高级字段</div>
-          <draggable
-            v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
-            :list="advanceComponents"
-            :move="handleMove"
-            tag="ul"
-          >
+          <draggable v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
+                     :list="advanceComponents"
+                     :move="handleMove"
+                     tag="ul">
 
-            <li
-              v-for="(item, index) in advanceComponents"
-              :key="index"
-              :class="{'no-put': item.type === 'table'}"
-              class="form-edit-widget-label"
-            >
+            <li v-for="(item, index) in advanceComponents"
+                :key="index"
+                :class="{'no-put': item.type === 'table'}"
+                class="form-edit-widget-label">
               <a>
                 <span>{{ item.name }}</span>
               </a>
@@ -48,18 +40,14 @@
 
         <template v-if="layoutComponents.length">
           <div class="widget-cate">布局字段</div>
-          <draggable
-            v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
-            :list="layoutComponents"
-            :move="handleMove"
-            tag="ul"
-          >
+          <draggable v-bind="{group:{ name:'people', pull:'clone',put:false},sort:false, ghostClass: 'ghost'}"
+                     :list="layoutComponents"
+                     :move="handleMove"
+                     tag="ul">
 
-            <li
-              v-for="(item, index) in layoutComponents"
-              :key="index"
-              class="form-edit-widget-label no-put"
-            >
+            <li v-for="(item, index) in layoutComponents"
+                :key="index"
+                class="form-edit-widget-label no-put">
               <a>
                 <span>{{ item.name }}</span>
               </a>
@@ -68,65 +56,78 @@
         </template>
       </div>
     </el-aside>
-    <el-container class="center-container" direction="vertical">
+    <el-container class="center-container"
+                  direction="vertical">
       <el-header class="container-bar">
-        <slot name="action"/>
-        <el-button type="danger" size="mini" icon="el-icon-delete" @click="handleClear">清空
+        <slot name="action" />
+        <el-button type="danger"
+                   size="mini"
+                   icon="el-icon-delete"
+                   @click="handleClear">清空
         </el-button>
-        <el-button type="success" size="mini" icon="el-icon-view" @click="handlePreview">预览
+        <el-button type="success"
+                   size="mini"
+                   icon="el-icon-view"
+                   @click="handlePreview">预览
         </el-button>
-        <el-button type="primary" size="mini" icon="el-icon-view" @click="handleGenerateJson">JSON预览
+        <el-button type="primary"
+                   size="mini"
+                   icon="el-icon-view"
+                   @click="handleGenerateJson">JSON预览
         </el-button>
-        <el-button size="mini" icon="el-icon-view" @click="drawer = true">表单属性
+        <el-button size="mini"
+                   icon="el-icon-view"
+                   @click="drawer = true">表单属性
         </el-button>
       </el-header>
       <el-main :class="{'widget-empty': widgetForm.widgets.length === 0}">
-        <widget-form
-          v-if="!resetJson"
-          ref="widgetForm"
-          :data="widgetForm"
-          :select.sync="widgetFormSelect"/>
+        <widget-form v-if="!resetJson"
+                     ref="widgetForm"
+                     :data="widgetForm"
+                     :select.sync="widgetFormSelect" />
       </el-main>
     </el-container>
-    <p-dialog
-      ref="jsonPreview"
-      :visible="jsonVisible"
-      :title="jsonTitle"
-      width="800px"
-      form
-      @on-close="jsonVisible = false">
-      <div id="jsonEditor" style="height: 400px;width: 100%;">{{ jsonTemplate }}</div>
+    <p-dialog ref="jsonPreview"
+              :visible="jsonVisible"
+              :title="jsonTitle"
+              width="800px"
+              form
+              @on-close="jsonVisible = false">
+      <div id="jsonEditor"
+           style="height: 400px;width: 100%;">{{ jsonTemplate }}</div>
 
       <template slot="action">
-        <el-button :data-clipboard-text="jsonCopyValue" type="success" class="json-btn" @click="handleSubmit">提 交</el-button>
+        <el-button :data-clipboard-text="jsonCopyValue"
+                   type="success"
+                   class="json-btn"
+                   @click="handleSubmit">提 交
+        </el-button>
       </template>
     </p-dialog>
-    <p-dialog
-      ref="widgetPreview"
-      :visible="previewVisible"
-      :title="previewTitle"
-      width="1000px"
-      form
-      @on-close="previewVisible = false">
-      <generate-form
-        v-if="previewVisible"
-        ref="generateForm"
-        :data="widgetForm"
-        :value="widgetModels"
-        insite="true"/>
+    <p-dialog ref="widgetPreview"
+              :visible="previewVisible"
+              :title="previewTitle"
+              width="1000px"
+              form
+              @on-close="previewVisible = false">
+      <generate-form v-if="previewVisible"
+                     ref="generateForm"
+                     :data="widgetForm"
+                     :value="widgetModels"
+                     insite="true" />
       <template slot="action">
-        <el-button type="primary" @click="handleData">获取数据</el-button>
+        <el-button type="primary"
+                   @click="handleData">获取数据</el-button>
         <el-button @click="handleReset">重置</el-button>
       </template>
     </p-dialog>
-    <el-drawer
-      :visible.sync="drawer"
-      :direction="direction"
-      :before-close="handleClose"
-      title="表单属性">
+    <el-drawer :visible.sync="drawer"
+               :direction="direction"
+               :before-close="handleClose"
+               title="表单属性">
       <el-container>
         <el-main>
-          <form-config :data="widgetForm.config"/>
+          <form-config :data="widgetForm.config" />
         </el-main>
       </el-container>
     </el-drawer>
@@ -136,18 +137,17 @@
 
 <script>
 import Draggable from 'vuedraggable'
-import WidgetConfig from './WidgetConfig'
 import FormConfig from './FormConfig'
 import WidgetForm from './WidgetForm'
 import PDialog from './PDialog'
 import GenerateForm from './GenerateForm'
 import { basicComponents, layoutComponents, advanceComponents } from './widgets.js'
 import { postDynamicData } from '@/components/DynamicForm/api/dynamicForm'
+
 export default {
   name: 'DynamicForm',
   components: {
     Draggable,
-    WidgetConfig,
     FormConfig,
     WidgetForm,
     PDialog,
@@ -175,7 +175,7 @@ export default {
       default: false
     }
   },
-  data() {
+  data () {
     return {
       basicComponents,
       layoutComponents,
@@ -212,16 +212,16 @@ export default {
     }
   },
   methods: {
-    handleClose(done) {
+    handleClose (done) {
       done()
     },
-    handleMove() {
+    handleMove () {
       return true
     },
-    handlePreview() {
+    handlePreview () {
       this.previewVisible = true
     },
-    handleData() {
+    handleData () {
       this.$refs.generateForm.getData().then(data => {
         this.$alert(data, '').catch(e => {
         })
@@ -230,10 +230,10 @@ export default {
         this.$refs.widgetPreview.end()
       })
     },
-    handleReset() {
+    handleReset () {
       this.$refs.generateForm.reset()
     },
-    handleGenerateJson() {
+    handleGenerateJson () {
       this.jsonVisible = true
       this.jsonTemplate = this.widgetForm
       this.$nextTick(() => {
@@ -243,7 +243,7 @@ export default {
         this.jsonCopyValue = JSON.stringify(this.widgetForm)
       })
     },
-    handleClear() {
+    handleClear () {
       this.widgetForm = {
         widgets: [],
         config: {
@@ -256,7 +256,7 @@ export default {
 
       this.widgetFormSelect = {}
     },
-    handleSubmit() {
+    handleSubmit () {
       this.jsonCopyValue = JSON.stringify(this.widgetForm)
       this.$prompt('请输入业务编码', '提示', {
         confirmButtonText: '确定',
@@ -284,12 +284,12 @@ export default {
 </script>
 
 <style lang="scss">
-  .widget-empty {
-    background-position: 50%;
-  }
-  .container-bar {
-    padding: 20px;
-    height: 43px;
-  }
+.widget-empty {
+  background-position: 50%;
+}
 
+.container-bar {
+  padding: 20px;
+  height: 43px;
+}
 </style>

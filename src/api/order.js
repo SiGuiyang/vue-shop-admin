@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 获取用户订单列表
-export function fetchOrderList(data) {
+export function fetchOrderList (data) {
   return service({
     url: '/admin/order/user',
     method: 'post',
@@ -10,7 +10,7 @@ export function fetchOrderList(data) {
 }
 
 // 获取用户订单详情
-export function getOrderInfo(data) {
+export function getOrderInfo (data) {
   return service({
     url: '/admin/order/user/info',
     method: 'post',
@@ -19,7 +19,7 @@ export function getOrderInfo(data) {
 }
 
 // 获取商户订单列表
-export function fetchSellerOrder(data) {
+export function fetchSellerOrder (data) {
   return service({
     url: '/admin/order/seller',
     method: 'post',
@@ -28,7 +28,7 @@ export function fetchSellerOrder(data) {
 }
 
 // 获取商户订单详情
-export function getSellerOrderInfo(data) {
+export function getSellerOrderInfo (data) {
   return service({
     url: '/admin/order/seller/info',
     method: 'post',

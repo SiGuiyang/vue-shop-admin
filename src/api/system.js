@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 获取权限列表
-export function fetchMenuList(data) {
+export function fetchMenuList (data) {
   return service({
     url: '/admin/system/menu',
     method: 'post',
@@ -10,7 +10,7 @@ export function fetchMenuList(data) {
 }
 
 // 角色授权
-export function permissionAuthorization(data) {
+export function permissionAuthorization (data) {
   return service({
     url: '/admin/system/permission',
     method: 'post',

@@ -1,11 +1,15 @@
 <template>
   <div class="components-container">
     <code>
-      Based on <a class="link-type" href="https://github.com/rowanwins/vue-dropzone"> dropzone </a>.
+      Based on <a class="link-type"
+                  href="https://github.com/rowanwins/vue-dropzone"> dropzone </a>.
       {{ $t('components.dropzoneTips') }}
     </code>
     <div class="editor-container">
-      <dropzone id="myVueDropzone" url="https://httpbin.org/post" @dropzone-removedFile="dropzoneR" @dropzone-success="dropzoneS"/>
+      <dropzone id="myVueDropzone"
+                url="https://httpbin.org/post"
+                @dropzone-removedFile="dropzoneR"
+                @dropzone-success="dropzoneS" />
     </div>
   </div>
 </template>
@@ -17,11 +21,11 @@ export default {
   name: 'DropzoneDemo',
   components: { Dropzone },
   methods: {
-    dropzoneS(file) {
+    dropzoneS (file) {
       console.log(file)
       this.$message({ message: 'Upload success', type: 'success' })
     },
-    dropzoneR(file) {
+    dropzoneR (file) {
       console.log(file)
       this.$message({ message: 'Delete success', type: 'success' })
     }

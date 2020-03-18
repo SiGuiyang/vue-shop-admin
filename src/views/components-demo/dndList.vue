@@ -1,10 +1,14 @@
 <template>
   <div class="components-container">
     <code>drag-list base on
-      <a href="https://github.com/SortableJS/Vue.Draggable" target="_blank">Vue.Draggable</a>
+      <a href="https://github.com/SortableJS/Vue.Draggable"
+         target="_blank">Vue.Draggable</a>
     </code>
     <div class="editor-container">
-      <dnd-list :list1="list1" :list2="list2" list1-title="List" list2-title="Article pool"/>
+      <dnd-list :list1="list1"
+                :list2="list2"
+                list1-title="List"
+                list2-title="Article pool" />
     </div>
   </div>
 </template>
@@ -16,17 +20,17 @@ import { fetchList } from '@/api/article'
 export default {
   name: 'DndListDemo',
   components: { DndList },
-  data() {
+  data () {
     return {
       list1: [],
       list2: []
     }
   },
-  created() {
+  created () {
     this.getData()
   },
   methods: {
-    getData() {
+    getData () {
       this.listLoading = true
       fetchList().then(response => {
         this.list1 = response.data.items.splice(0, 5)

@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 获取系统用户
-export function fetchList(data) {
+export function fetchList (data) {
   return service({
     url: '/admin/system/user',
     method: 'post',
@@ -10,7 +10,7 @@ export function fetchList(data) {
 }
 
 // 修改系统用户
-export function postCreate(data) {
+export function postCreate (data) {
   return service({
     url: '/admin/system/user/create',
     method: 'post',
@@ -19,7 +19,7 @@ export function postCreate(data) {
 }
 
 // 新增系统用户
-export function putModify(data) {
+export function putModify (data) {
   return service({
     url: '/admin/system/user/modify',
     method: 'put',
@@ -28,7 +28,7 @@ export function putModify(data) {
 }
 
 // 修改系统用户
-export function del(data) {
+export function del (data) {
   return service({
     url: '/admin/system/user/' + data.id,
     method: 'post',

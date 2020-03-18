@@ -1,52 +1,71 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.phone" type="text" placeholder="手机号码" style="width: 200px;" class="filter-item"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-input v-model="listQuery.phone"
+                type="text"
+                placeholder="手机号码"
+                style="width: 200px;"
+                class="filter-item" />
+      <el-button v-waves
+                 class="filter-item"
+                 type="primary"
+                 icon="el-icon-search"
+                 @click="handleFilter">搜索</el-button>
     </div>
 
-    <el-table
-      v-loading="listLoading"
-      :key="tableKey"
-      :data="list"
-      stripe
-      fit
-      highlight-current-row
-      style="width: 100%;">
-      <el-table-column label="用户名称" align="center">
+    <el-table :key="tableKey"
+              v-loading="listLoading"
+              :data="list"
+              stripe
+              fit
+              highlight-current-row
+              style="width: 100%;">
+      <el-table-column label="用户名称"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.username }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手机号码" align="center">
+      <el-table-column label="手机号码"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.phone }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否团长" align="center">
+      <el-table-column label="是否团长"
+                       align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.master" type="success">是</el-tag>
-          <el-tag v-else type="warning">否</el-tag>
+          <el-tag v-if="scope.row.master"
+                  type="success">是</el-tag>
+          <el-tag v-else
+                  type="warning">否</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="是否开团" align="center">
+      <el-table-column label="是否开团"
+                       align="center">
         <template slot-scope="scope">
           <el-tag type="success">{{ getStatus(scope.row.status) }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="参团时间" align="center">
+      <el-table-column label="参团时间"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="成团时间" align="center">
+      <el-table-column label="成团时间"
+                       align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.groupTime }}</span>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.pageSize" @pagination="getList" />
+    <pagination v-show="total>0"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getList" />
   </div>
 </template>
 
@@ -61,7 +80,7 @@ export default {
   components: { Pagination },
   directives: { waves, permission },
   filters: {
-    statusFilter(status) {
+    statusFilter (status) {
       const statusMap = {
         0: 'warning',
         1: 'danger',
@@ -70,7 +89,7 @@ export default {
       return statusMap[status]
     }
   },
-  data() {
+  data () {
     return {
       tableKey: 0,
       list: null,
@@ -89,12 +108,12 @@ export default {
       ]
     }
   },
-  created() {
+  created () {
     this.tempRoute = Object.assign({}, this.$route)
     this.getList()
   },
   methods: {
-    getList() { // 活动列表
+    getList () { // 活动列表
       this.listLoading = true
       this.listQuery.activityId = this.$route.params.id
       members(this.listQuery).then(response => {
@@ -109,11 +128,11 @@ export default {
         this.listLoading = false
       })
     },
-    handleFilter() { // 搜索
+    handleFilter () { // 搜索
       this.listQuery.page = 1
       this.getList()
     },
-    getStatus(status) {
+    getStatus (status) {
       return this.recordStatusOptions.filter(rso => rso.key === status)[0].value
     }
   }

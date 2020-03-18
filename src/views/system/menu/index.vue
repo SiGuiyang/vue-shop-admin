@@ -1,57 +1,95 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="'PAGER_SYSTEM_MENU_CREATE'" v-waves class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">新增</el-button>
+      <el-button v-permission="'PAGER_SYSTEM_MENU_CREATE'"
+                 v-waves
+                 class="filter-item"
+                 style="margin-left: 10px;"
+                 type="primary"
+                 icon="el-icon-edit"
+                 @click="handleCreate">新增
+      </el-button>
     </div>
-    <el-table
-      v-loading="listLoading"
-      :data="list"
-      :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-      :default-expand-all="expand"
-      row-key="id"
-      stripe
-      fit
-      highlight-current-row
-      style="width: 100%;">
-      <el-table-column label="菜单名称" prop="icon" width="200" align="left">
+    <el-table v-loading="listLoading"
+              :data="list"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              :default-expand-all="expand"
+              row-key="id"
+              stripe
+              fit
+              highlight-current-row
+              style="width: 100%;">
+      <el-table-column label="菜单名称"
+                       prop="icon"
+                       width="200"
+                       align="left">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="图标" prop="icon" width="100" align="center">
+      <el-table-column label="图标"
+                       prop="icon"
+                       width="100"
+                       align="center">
         <template slot-scope="scope">
           <svg-icon :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column label="请求地址" prop="path" width="200" align="center">
+      <el-table-column label="请求地址"
+                       prop="path"
+                       width="200"
+                       align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.path }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="组建路径" prop="component" width="280" align="center">
+      <el-table-column label="组建路径"
+                       prop="component"
+                       width="280"
+                       align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.component }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" prop="sequence" width="100" align="center">
+      <el-table-column label="排序"
+                       prop="sequence"
+                       width="100"
+                       align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.sequence }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="隐藏" prop="hidden" width="100" align="center">
+      <el-table-column label="隐藏"
+                       prop="hidden"
+                       width="100"
+                       align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.hidden ? '是' : '否' }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" prop="operation" width="200" align="center" fixed="right">
+      <el-table-column label="操作"
+                       prop="operation"
+                       width="200"
+                       align="center"
+                       fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'" size="mini" type="primary" @click="handleModify(scope.row)">编辑</el-button>
-          <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'" size="mini" type="danger" @click="handleDelete(scope.row)">删除</el-button>
+          <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'"
+                     size="mini"
+                     type="primary"
+                     @click="handleModify(scope.row)">编辑
+          </el-button>
+          <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'"
+                     size="mini"
+                     type="danger"
+                     @click="handleDelete(scope.row)">删除
+          </el-button>
         </template>
       </el-table-column>
     </el-table>
     <!--</tree-table>-->
-    <i-form ref="dataForm" :form-data="formData" :menus="menuData"/>
+    <i-form ref="dataForm"
+            :form-data="formData"
+            :menus="menuData" />
   </div>
 </template>
 
@@ -63,7 +101,7 @@ import waves from '@/directive/waves' // Waves directive
 export default {
   directives: { waves, permission },
   components: { IForm },
-  data() {
+  data () {
     return {
       menuData: null,
       selectItem: null,
@@ -84,11 +122,11 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.getList()
   },
   methods: {
-    getList() {
+    getList () {
       this.listLoading = true
       fetchList({}).then(response => {
         this.list = response.data
@@ -98,7 +136,7 @@ export default {
         this.listLoading = false
       })
     },
-    handleCreate() {
+    handleCreate () {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
@@ -114,13 +152,13 @@ export default {
         children: undefined
       }
     },
-    handleModify(row) {
+    handleModify (row) {
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDelete(row) {
+    handleDelete (row) {
       if (row.parentId === undefined || row.parentId === '' || row.parentId === null) {
         this.$confirm('此操作将永久删除关联下级菜单, 是否继续?', '提示', {
           confirmButtonText: '确定',

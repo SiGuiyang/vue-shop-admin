@@ -24,7 +24,7 @@ module.exports = {
   publicPath: '/',
   outputDir: 'vue-shop-admin',
   assetsDir: 'static',
-  lintOnSave: process.env.NODE_ENV === 'development',
+  lintOnSave: process.env.ENV === 'development',
   productionSourceMap: false,
   devServer: {
     port: port,
@@ -34,20 +34,11 @@ module.exports = {
       errors: true
     },
     proxy: {
-      // change xxx-api/login => mock/login
-      // detail: https://cli.vuejs.org/config/#devserver-proxy
-      // [process.env.BASE_API]: {
-      //   target: 'http://127.0.0.1:8099/api',
-      //   changeOrigin: true,
-      //   pathRewrite: {
-      //     ['^' + process.env.BASE_API]: '/'
-      //   }
-      // }
       '/api': {
         target: 'http://127.0.0.1:8099',
         changeOrigin: true,
         pathRewrite: {
-          '^/api': '/'
+          '^/api': ''
         }
       }
     }

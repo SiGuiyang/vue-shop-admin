@@ -6,9 +6,9 @@
                           :key="item.path">
         <template v-if="item.meta.title">
           <span v-if="item.redirect==='noredirect'|| index===levelList.length-1"
-                class="no-redirect">{{ generateTitle(item.meta.title) }}</span>
+                class="no-redirect">{{ item.meta.title }}</span>
           <a v-else
-             @click.prevent="handleLink(item)">{{ generateTitle(item.meta.title) }}</a>
+             @click.prevent="handleLink(item)">{{ item.meta.title }}</a>
         </template>
       </el-breadcrumb-item>
     </transition-group>

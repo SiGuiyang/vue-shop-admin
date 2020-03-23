@@ -10,13 +10,13 @@
       <template v-if="device!=='mobile'">
         <error-log class="errLog-container right-menu-item" />
 
-        <el-tooltip :content="$t('navbar.screenfull')"
+        <el-tooltip content="全屏"
                     effect="dark"
                     placement="bottom">
           <screenfull class="screenfull right-menu-item" />
         </el-tooltip>
 
-        <el-tooltip :content="$t('navbar.theme')"
+        <el-tooltip content="换肤"
                     effect="dark"
                     placement="bottom">
           <theme-picker class="theme-switch right-menu-item" />
@@ -37,18 +37,18 @@
               {{ username }}
             </el-dropdown-item>
             <el-dropdown-item divided>
-              {{ $t('navbar.dashboard') }}
+              首页
             </el-dropdown-item>
           </router-link>
           <a target="_blank"
              href="https://github.com/SiGuiyang/vue-shop-admin/">
             <el-dropdown-item>
-              {{ $t('navbar.github') }}
+              项目地址
             </el-dropdown-item>
           </a>
           <el-dropdown-item divided>
             <span style="display:block;"
-                  @click="logout">{{ $t('navbar.logOut') }}</span>
+                  @click="logout">注销</span>
           </el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>

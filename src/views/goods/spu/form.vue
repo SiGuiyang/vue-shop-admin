@@ -17,7 +17,9 @@
                     prop="classId">
         <el-cascader v-model="formData.classId"
                      :options="goodsClassification"
-                     :props="goodsClassificationProps" />
+                     :props="goodsClassificationProps"
+                     :show-all-levels="false"
+                     placeholder="请设置" />
       </el-form-item>
       <el-form-item label="序号"
                     prop="sequence">
@@ -37,13 +39,13 @@
          class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
       <el-button type="primary"
-                 @click="updateData()">确定</el-button>
+                 @click="dialogStatus==='create'?createData():updateData()">确定</el-button>
     </div>
   </el-dialog>
 </template>
 <script>
-import { putModify } from '@/api/goods/spu'
-import { getClassificationTree } from '@/api/goods/classification'
+import { postCreate, putModify } from '@/api/goods/spu'
+import { postClassificationTree } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
@@ -58,6 +60,7 @@ export default {
     return {
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
+      dialogStatus: 'create',
       min: 0,
       max: 100,
       sequence: 0,
@@ -77,9 +80,22 @@ export default {
       this.$refs['dataForm'].clearValidate()
       this.handleClassificationTree()
     },
-    updateData () {
+    createData () {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
+      tempData.updateUser = this.$store.state.user.username
+      postCreate(tempData).then(() => {
+        this.dialogFormVisible = false
+        this.$message({
+          type: 'success',
+          message: '操作成功'
+        })
+        this.$parent.getList()
+      })
+    },
+    updateData () {
+      const tempData = Object.assign({}, this.formData)
+      tempData.updateUser = this.$store.state.user.username
       putModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$message({
@@ -90,7 +106,7 @@ export default {
       })
     },
     handleClassificationTree () {
-      getClassificationTree().then((response) => {
+      postClassificationTree().then((response) => {
         this.goodsClassification = response.data
         console.log(this.goodsClassification)
       })

@@ -8,7 +8,7 @@
              :model="formData"
              label-position="left"
              label-width="100px">
-      <el-form-item :label="$t('goods.classificationName')"
+      <el-form-item label="分类名称"
                     prop="className">
         <el-input v-model="formData.className"
                   placeholder="请设置" />

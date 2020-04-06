@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
 import { getToken } from '@/utils/auth'
 import router from '@/router'
 import Constants from '@/utils/constants'
@@ -31,7 +31,6 @@ service.interceptors.request.use(
 // response interceptor
 service.interceptors.response.use(
   response => {
-    debugger
     const res = response.data
     if (res.code === 1000 || res.code === 3000) {
       Message({
@@ -56,9 +55,17 @@ service.interceptors.response.use(
   },
   error => {
     const res = error.response
+    console.log(res)
     if (res.status === 401 || res.status === 504 || res.status === 503 || res.status === 502) {
-      store.dispatch('LogOut').then(() => {
-        router.push({ path: '/' })
+      MessageBox({
+        title: '提示',
+        message: '服务正在升级中。。。请稍后重试！！！',
+        confirmButtonText: '确定',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('LogOut').then(() => {
+          router.push({ path: '/' })
+        })
       })
     }
     return Promise.reject(error)

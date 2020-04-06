@@ -14,8 +14,13 @@
                   placeholder="请设置" />
       </el-form-item>
       <el-form-item label="所属属性组"
-                    prop="groupId">
-        <el-select v-model="formData.groupId">
+                    prop="propertyGroupId">
+        <el-select v-model="formData.propertyGroupId"
+                   remote
+                   reserve-keyword
+                   :remote-method="handleGroup"
+                   :loading="loading"
+                   placeholder="请选择">
           <el-option v-for="group in groupList"
                      :key="group.id"
                      :label="group.propertyGroupName"
@@ -48,6 +53,7 @@ export default {
   },
   data () {
     return {
+      loading: false,
       dialogStatus: undefined,
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
@@ -64,6 +70,20 @@ export default {
       getList({}).then((response) => {
         this.groupList = response.data
       })
+    },
+    handleGroup (data) {
+      if (data !== '') {
+        this.loading = true
+        setTimeout(() => {
+          this.loading = false
+          const param = { propertyGroupName: data }
+          getList(param).then((response) => {
+            this.groupList = response.data
+          })
+        }, 200)
+      } else {
+        this.options = []
+      }
     },
     createData () {
       const tempData = Object.assign({}, this.formData)

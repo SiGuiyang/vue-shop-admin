@@ -8,44 +8,44 @@
              :model="formData"
              label-position="left"
              label-width="140px">
-      <el-form-item :label="$t('activity.banner.title')"
+      <el-form-item label="标题"
                     prop="title">
         <el-input v-model="formData.title"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.bannerUrl')"
+      <el-form-item label="banner图片"
                     prop="bannerUrl">
         <div style="margin-bottom: 20px;">
           <Upload v-model="formData.bannerUrl" />
         </div>
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.shareIcon')"
+      <el-form-item label="分享小图标"
                     prop="shareIcon">
         <div style="margin-bottom: 20px;">
           <Upload v-model="formData.shareIcon" />
         </div>
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.bannerClickUrl')"
+      <el-form-item label="点击链接"
                     prop="bannerClickUrl">
         <el-input v-model="formData.bannerClickUrl"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.shareUrl')"
+      <el-form-item label="分享地址"
                     prop="shareUrl">
         <el-input v-model="formData.shareUrl"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.shareTitle')"
+      <el-form-item label="分享标题"
                     prop="shareTitle">
         <el-input v-model="formData.shareTitle"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.shareSubtitle')"
+      <el-form-item label="分享副标题"
                     prop="shareSubtitle">
         <el-input v-model="formData.shareSubtitle"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.bannerType')"
+      <el-form-item label="类型"
                     prop="bannerType">
         <el-select v-model="formData.bannerType"
                    class="filter-item"
@@ -56,7 +56,7 @@
                      :value="item.key" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('activity.banner.shareChannel')"
+      <el-form-item label="分享渠道"
                     prop="shareChannel">
         <el-select v-model="formData.shareChannel"
                    class="filter-item"
@@ -170,6 +170,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>

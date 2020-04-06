@@ -43,7 +43,7 @@
       <el-table-column label="拥有角色"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ getRoles(scope.row) }}</span>
+          <span>{{ scope.row.roleName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态"
@@ -98,7 +98,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0"
+    <pagination v-show="total>listQuery.pageSize"
                 :total="total"
                 :page.sync="listQuery.page"
                 :limit.sync="listQuery.pageSize"

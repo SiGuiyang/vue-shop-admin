@@ -26,9 +26,9 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="属性名称"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
-          <span>{{ scope.row.propertyName }}</span>
+          <el-tag>{{ scope.row.propertyName }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="所属属性组"
@@ -130,7 +130,7 @@ export default {
     restForm () {
       this.formData.id = undefined
       this.formData.propertyName = undefined
-      this.formData.groupId = undefined
+      this.formData.propertyGroupId = undefined
       this.formData.createUser = undefined
       this.formData.updateUser = undefined
     },

@@ -2,12 +2,12 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.title"
-                :placeholder="$t('activity.banner.title')"
+                placeholder="标题"
                 style="width: 200px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.bannerType"
-                 :placeholder="$t('activity.banner.bannerType')"
+                 placeholder="类型"
                  clearable
                  style="width: 120px"
                  class="filter-item">
@@ -37,23 +37,22 @@
               fit
               highlight-current-row
               style="width: 100%;">
-      <el-table-column :label="$t('activity.banner.title')"
+      <el-table-column label="标题"
                        width="150"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.bannerUrl')"
+      <el-table-column label="banner图片"
                        width="200"
                        align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.bannerUrl"
-                     alt=""
-                     width="160px"></span>
+          <img :src="scope.row.bannerUrl"
+               width="160px">
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.bannerType')"
+      <el-table-column label="类型"
                        class-name="status-col"
                        width="120"
                        align="center">
@@ -61,37 +60,36 @@
           <span>{{ getBannerType(scope.row.bannerType) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareTitle')"
+      <el-table-column label="分享标题"
                        width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.shareTitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareSubtitle')"
+      <el-table-column label="分享副标题"
                        width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.shareSubtitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareIcon')"
+      <el-table-column label="分享小图标"
                        width="200"
                        align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.shareIcon"
-                     alt=""
-                     width="140px"></span>
+          <img :src="scope.row.shareIcon"
+               width="140px">
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.shareChannel')"
+      <el-table-column label="分享渠道"
                        width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ getShareChannel(scope.row.shareChannel) }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.status')"
+      <el-table-column label="状态"
                        class-name="status-col"
                        width="120"
                        align="center">
@@ -102,21 +100,21 @@
                   type="success">启用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.createUser')"
+      <el-table-column label="创建人"
                        width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('activity.banner.createTime')"
+      <el-table-column label="创建时间"
                        width="160"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')"
+      <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        fixed="right"
                        width="160"
@@ -125,7 +123,7 @@
           <el-button v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'"
                      type="primary"
                      size="mini"
-                     @click="handleUpdate(scope.row)">{{ $t('table.edit') }}
+                     @click="handleUpdate(scope.row)">编辑
           </el-button>
           <el-button v-if="scope.row.bannerStatus"
                      v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'"
@@ -143,7 +141,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0"
+    <pagination v-show="total>listQuery.pageSize"
                 :total="total"
                 :page.sync="listQuery.page"
                 :limit.sync="listQuery.pageSize"

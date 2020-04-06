@@ -5,7 +5,7 @@ import service from '@/utils/request'
  */
 export function postList (data) {
   return service({
-    url: '/admin/goods/spu/page',
+    url: '/goods/spu/page',
     method: 'post',
     data
   })
@@ -16,7 +16,7 @@ export function postList (data) {
  */
 export function postCreate (data) {
   return service({
-    url: '/admin/goods/spu/create',
+    url: '/goods/spu/create',
     method: 'post',
     data
   })
@@ -27,7 +27,7 @@ export function postCreate (data) {
  */
 export function putModify (data) {
   return service({
-    url: '/admin/goods/spu/modify',
+    url: '/goods/spu/modify',
     method: 'put',
     data
   })
@@ -38,7 +38,7 @@ export function putModify (data) {
  */
 export function postListAll () {
   return service({
-    url: '/admin/goods/brand/group/listAll',
+    url: '/goods/brand/group/listAll',
     method: 'post'
   })
 }

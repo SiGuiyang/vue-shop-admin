@@ -15,8 +15,10 @@
       </el-form-item>
       <el-form-item label="序号"
                     prop="sequence">
-        <el-input v-model="formData.sequence"
-                  placeholder="请设置" />
+        <el-input-number v-model="formData.sequence"
+                         :min="1"
+                         :max="100"
+                         label="请设置" />
       </el-form-item>
     </el-form>
     <div slot="footer"
@@ -44,17 +46,7 @@ export default {
       dialogFormTitle: '编辑',
       rules: {
         brandGroupName: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
-        sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*|0$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('序号不正确'))
-              }
-            }, trigger: 'change'
-          }
-        ]
+        sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' }]
       }
     }
   },

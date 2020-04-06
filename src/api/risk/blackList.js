@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取table data
 export function fetchList (data) {
   return service({
-    url: '/admin/blackList/list',
+    url: '/risk/blackList/list',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function fetchList (data) {
 // 新增
 export function add (data) {
   return service({
-    url: 'admin/blackList',
+    url: '/risk/blackList',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function add (data) {
 // 修改
 export function modify (data) {
   return service({
-    url: 'admin/blackList',
+    url: '/risk/blackList',
     method: 'put',
     data
   })
@@ -30,7 +30,7 @@ export function modify (data) {
 // 删除
 export function del (id) {
   return service({
-    url: 'admin/blackList/' + id,
+    url: '/risk/blackList/' + id,
     method: 'delete'
   })
 }

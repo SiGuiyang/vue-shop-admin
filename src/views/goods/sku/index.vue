@@ -58,7 +58,7 @@
               style="width: 100%;">
       <el-table-column label="商品名称"
                        width="120"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.goodsName }}</span>
         </template>

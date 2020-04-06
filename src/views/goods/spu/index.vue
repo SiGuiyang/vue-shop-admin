@@ -27,7 +27,7 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="spu名称"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.spuName }}</el-tag>
         </template>
@@ -41,8 +41,7 @@
       <el-table-column label="spu图标"
                        align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.spuImage"
-                     alt=""></span>
+          <img :src="scope.row.spuImage" />
         </template>
       </el-table-column>
       <el-table-column label="创建时间"
@@ -82,7 +81,7 @@ import waves from '@/directive/waves' // Waves directive
 import IForm from './form'
 
 export default {
-  name: 'Classification',
+  name: 'Spu',
   components: { IForm },
   directives: { waves },
   data () {
@@ -151,6 +150,7 @@ export default {
     handleQuery (row) { // 查看分类中的商品
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
+      _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
     handleDelete (row) {

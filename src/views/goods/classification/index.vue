@@ -17,33 +17,27 @@
                  @click="handleCreate">新增</el-button>
     </div>
 
-    <el-table :key="tableKey"
-              v-loading="listLoading"
+    <el-table v-loading="listLoading"
               :data="list"
+              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
+              :default-expand-all="expand"
+              row-key="id"
               stripe
               fit
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="分类名称"
                        width="160"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.className }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="上级分类"
-                       width="240"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.parentClassName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="Banner名称"
                        width="240"
                        align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.title"
-                     alt=""></span>
+          <img :src="scope.row.title" />
         </template>
       </el-table-column>
       <el-table-column label="创建时间"
@@ -84,7 +78,7 @@
 </template>
 
 <script>
-import { postList, getClassificationTree } from '@/api/goods/classification'
+import { postList, postClassificationTree } from '@/api/goods/classification'
 import { bannerListAll } from '@/api/activity/banner'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -99,6 +93,7 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
+      expand: false,
       listLoading: false,
       listQuery: {
         page: 1,
@@ -141,7 +136,7 @@ export default {
       })
     },
     getTreeList () { // 分类树形列表
-      getClassificationTree().then((response) => {
+      postClassificationTree().then((response) => {
         this.treeList = response.data
       })
     },

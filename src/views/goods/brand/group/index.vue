@@ -26,7 +26,7 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="品牌组名称"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <el-tag>{{ scope.row.brandGroupName }}</el-tag>
         </template>

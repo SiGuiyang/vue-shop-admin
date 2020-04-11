@@ -25,17 +25,6 @@
         <el-input v-model="formData.configValue"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="模块"
-                    prop="module">
-        <el-select v-model="formData.module"
-                   class="filter-item"
-                   placeholder="请选择">
-          <el-option v-for="(item,index) in options"
-                     :key="index"
-                     :label="item.value"
-                     :value="item.key" />
-        </el-select>
-      </el-form-item>
       <el-form-item label="说明">
         <el-input v-model="formData.description"
                   :autosize="{ minRows: 4, maxRows: 8}"
@@ -45,9 +34,9 @@
     </el-form>
     <div slot="footer"
          class="dialog-footer">
-      <el-button @click="dialogFormVisible = false">{{ $t('table.cancel') }}</el-button>
+      <el-button @click="dialogFormVisible = false">取消</el-button>
       <el-button type="primary"
-                 @click="dialogStatus==='create'?createData():updateData()">{{ $t('table.confirm') }}
+                 @click="dialogStatus==='create'?createData():updateData()">确认
       </el-button>
     </div>
   </el-dialog>
@@ -126,6 +115,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>

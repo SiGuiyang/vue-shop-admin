@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取table data
 export function fetchList (data) {
   return service({
-    url: '/admin/activity/assemble/list',
+    url: '/activity/assemble/list',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function fetchList (data) {
 // 新增
 export function create (data) {
   return service({
-    url: 'admin/activity/assemble/create',
+    url: '/activity/assemble/create',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function create (data) {
 // 修改
 export function modify (data) {
   return service({
-    url: 'admin/activity/assemble/modify',
+    url: '/activity/assemble/modify',
     method: 'put',
     data
   })
@@ -30,7 +30,7 @@ export function modify (data) {
 // 活动规则详情
 export function getRuleInfo (data) {
   return service({
-    url: '/admin/activity/assemble/rule/' + data,
+    url: '/activity/assemble/rule/' + data,
     method: 'get'
   })
 }
@@ -38,7 +38,7 @@ export function getRuleInfo (data) {
 // 活动规则修改
 export function putModifyRule (data) {
   return service({
-    url: '/admin/activity/assemble/rule/modify',
+    url: '/activity/assemble/rule/modify',
     method: 'put',
     data
   })
@@ -47,7 +47,7 @@ export function putModifyRule (data) {
 // 成团记录
 export function members (data) {
   return service({
-    url: '/admin/activity/assemble/members',
+    url: '/activity/assemble/members',
     method: 'post',
     data
   })
@@ -56,7 +56,7 @@ export function members (data) {
 // 拼团商品
 export function getAssembleGoods (data) {
   return service({
-    url: '/admin/activity/assemble/goods/' + data.activityId,
+    url: '/activity/assemble/goods/' + data.activityId,
     method: 'post'
   })
 }
@@ -64,7 +64,6 @@ export function getAssembleGoods (data) {
 // 修改拼团商品
 export function modifyAssembleGoods (data) {
   return service({
-    url: '/admin/activity/assemble/goods/modify',
     method: 'put',
     data
   })

@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取table data
 export function postList (data) {
   return service({
-    url: '/admin/menu/list',
+    url: '/activity/coupon/page',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function postList (data) {
 // 新增
 export function postAddTemplate (data) {
   return service({
-    url: 'admin/menu',
+    url: '/activity/coupon/create',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function postAddTemplate (data) {
 // 修改
 export function putModifyTemplate (data) {
   return service({
-    url: 'admin/menu',
+    url: '/activity/coupon/modify',
     method: 'put',
     data
   })

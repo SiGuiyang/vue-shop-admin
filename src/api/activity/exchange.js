@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取table data
 export function fetchList (data) {
   return service({
-    url: '/admin/activity/exchange/list',
+    url: '/activity/exchange/list',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function fetchList (data) {
 // 新增
 export function createExchange (data) {
   return service({
-    url: 'admin/activity/exchange/create',
+    url: '/activity/exchange/create',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function createExchange (data) {
 // 修改
 export function modifyExchange (data) {
   return service({
-    url: 'admin/activity/exchange/modify',
+    url: '/activity/exchange/modify',
     method: 'put',
     data
   })
@@ -30,7 +30,7 @@ export function modifyExchange (data) {
 // 获取满赠换购活动
 export function getExchangeActivity (data) {
   return service({
-    url: 'admin/activity/exchange/' + data.activityId,
+    url: '/activity/exchange/' + data.activityId,
     method: 'get'
   })
 }
@@ -38,7 +38,7 @@ export function getExchangeActivity (data) {
 // 获取规则table data
 export function getRuleList (data) {
   return service({
-    url: '/admin/activity/exchange/rule/' + data.activityId,
+    url: '/activity/exchange/rule/' + data.activityId,
     method: 'get'
   })
 }

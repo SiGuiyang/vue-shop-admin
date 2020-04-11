@@ -57,7 +57,7 @@
                        width="120"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ getBannerType(scope.row.bannerType) }}</span>
+          <span>{{ scope.row.bannerTypeName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分享标题"
@@ -86,7 +86,7 @@
                        width="140"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ getShareChannel(scope.row.shareChannel) }}</span>
+          <span>{{ scope.row.shareChannelName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态"
@@ -225,25 +225,6 @@ export default {
       }).catch(() => {
         this.listLoading = false
       })
-    },
-    getBannerType (bannerType) {
-      const arr = this.bannerTypeOptions.filter(k => k.key === bannerType)
-      if (arr.length === 0) {
-        return '--'
-      } else {
-        return arr[0].value
-      }
-    },
-    getShareChannel (channel) {
-      let content = ''
-      channel.forEach(k => {
-        this.shareChannelOptions.map(op => {
-          if (op.key === k) {
-            content = content + op.value + ' | '
-          }
-        })
-      })
-      return content
     },
     handleFilter () {
       this.listQuery.page = 1

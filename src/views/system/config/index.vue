@@ -6,16 +6,6 @@
                 placeholder="配置项名称"
                 class="filter-item"
                 @keyup.enter.native="handleFilter" />
-      <el-select v-model="listQuery.module"
-                 placeholder="模块"
-                 clearable
-                 style="width: 120px"
-                 class="filter-item">
-        <el-option v-for="(item,index) in moduleTypeOptions"
-                   :key="index"
-                   :label="item.value"
-                   :value="item.key" />
-      </el-select>
       <el-button v-waves
                  class="filter-item"
                  type="primary"
@@ -28,6 +18,13 @@
                  icon="el-icon-edit"
                  @click="handleCreate">新增
       </el-button>
+      <el-button v-permission="'PAGER_SYSTEM_CONFIG_CREATE'"
+                 class="filter-item"
+                 style="margin-left: 10px;"
+                 type="success"
+                 icon="el-icon-refresh"
+                 @click="handleRefresh">更新缓存
+      </el-button>
     </div>
 
     <el-table :key="tableKey"
@@ -36,16 +33,9 @@
               stripe
               fit
               highlight-current-row>
-      <el-table-column label="模块"
-                       width="120"
-                       align="left">
-        <template slot-scope="scope">
-          <span>{{ getModuleName(scope.row.module) }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="配置项名称"
                        width="220"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.configName }}</span>
         </template>
@@ -57,19 +47,12 @@
           <span>{{ scope.row.configType }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="配置项值"
-                       width="160"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.configValue }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="状态"
                        class-name="status-col"
                        width="100"
                        align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.deleteStatus | statusFilter">{{ scope.row.deleteStatus ? '禁用': '启用' }}</el-tag>
+          <el-tag :type="scope.row.configStatus | statusFilter">{{ scope.row.configStatus ? '禁用': '启用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="说明"
@@ -89,7 +72,7 @@
       <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        fixed="right"
-                       width="160"
+                       width="220"
                        align="center">
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
@@ -97,17 +80,22 @@
                      size="mini"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
-          <el-button v-if="scope.row.deleteStatus"
+          <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
+                     type="warning"
+                     size="mini"
+                     @click="handleDetail(scope.row)">明细
+          </el-button>
+          <el-button v-if="scope.row.configStatus"
                      v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                      type="success"
                      size="mini"
-                     @click="handleDelete(scope.row, false)">启用
+                     @click="handleStatus(scope.row, false)">启用
           </el-button>
           <el-button v-else
                      v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                      type="danger"
                      size="mini"
-                     @click="handleDelete(scope.row, true)">禁用
+                     @click="handleStatus(scope.row, true)">禁用
           </el-button>
         </template>
       </el-table-column>
@@ -121,20 +109,22 @@
     <i-form ref="dataForm"
             :form-data="formData"
             :options="moduleTypeOptions" />
+    <i-detail ref="dataDetail" />
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import { fetchList, modifyConfig } from '@/api/config'
+import { fetchList, modifyConfig, getRefreshConfig } from '@/api/config'
 import waves from '@/directive/waves'
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import IForm from './form'
+import IDetail from './detail'
 
 export default {
   name: 'ConfigManage',
-  components: { Pagination, IForm },
+  components: { Pagination, IForm, IDetail },
   directives: { waves, permission },
   filters: {
     statusFilter (status) {
@@ -154,13 +144,11 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 10,
-        configName: undefined,
-        module: undefined
+        configName: undefined
       },
       formData: {
         configName: undefined,
         configValue: undefined,
-        module: [],
         description: undefined
       }
     }
@@ -191,23 +179,28 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    getModuleName (module) {
-      return this.moduleTypeOptions.filter(k => k.key === module)[0].value
-    },
     handleCreate () {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
       _this.configNameDisabled = false
       _this.configTypeDisabled = false
-      _this.handleInit()
       this.formData = {
         configName: undefined,
         configValue: undefined,
         configType: undefined,
-        module: undefined,
         description: undefined
       }
+    },
+    handleRefresh () {
+      getRefreshConfig().then(() => {
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
     },
     handleUpdate (row) {
       this.formData = Object.assign({}, row) // copy obj
@@ -217,9 +210,9 @@ export default {
       _this.configNameDisabled = true
       _this.configTypeDisabled = true
     },
-    handleDelete (row, data) {
+    handleStatus (row, data) {
       this.formData = Object.assign({}, row) // copy obj
-      this.formData.deleteStatus = data
+      this.formData.configStatus = data
       modifyConfig(this.formData).then(() => {
         this.$notify({
           title: '成功',
@@ -229,6 +222,11 @@ export default {
         })
         this.getList()
       })
+    },
+    handleDetail (row) {
+      const _this = this.$refs['dataDetail']
+      _this.dialogDetailVisible = true
+      _this.configDetailType = row.configType
     }
   }
 }

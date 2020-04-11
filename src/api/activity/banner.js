@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取Banner table
 export function fetchList (data) {
   return service({
-    url: '/admin/activity/banner/list',
+    url: '/activity/banner/list',
     method: 'post',
     data
   })
@@ -12,7 +12,7 @@ export function fetchList (data) {
 // 新增Banner
 export function create (data) {
   return service({
-    url: '/admin/activity/banner/create',
+    url: '/activity/banner/create',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function create (data) {
 // 修改 Banner
 export function modify (data) {
   return service({
-    url: '/admin/activity/banner/modify',
+    url: '/activity/banner/modify',
     method: 'put',
     data
   })
@@ -32,7 +32,7 @@ export function modify (data) {
  */
 export function bannerListAll (data) {
   return service({
-    url: '/admin/activity/banner/listAll',
+    url: '/activity/banner/listAll',
     method: 'post',
     data
   })

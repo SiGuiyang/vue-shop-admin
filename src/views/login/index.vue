@@ -11,7 +11,7 @@
              :rules="loginRules"
              class="login-form"
              auto-complete="on"
-             label-position="left">
+             label-position="top">
 
       <div class="title-container">
         <h3 class="title">Pager 电商平台</h3>
@@ -44,10 +44,10 @@
         </span>
       </el-form-item>
       <el-button :loading="loading"
-                 type="success"
+                 type="primary"
                  style="width: 100%;"
                  @click.native.prevent="handlePasswordLogin">
-        密码登陆
+        登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陆
       </el-button>
       <!--<el-button :loading="authLoading" type="success" style="width: 46%;" @click.native.prevent="handleAuthLogin">授权码登陆</el-button>-->
     </el-form>

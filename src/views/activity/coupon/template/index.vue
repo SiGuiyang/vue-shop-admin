@@ -2,40 +2,39 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input v-model="listQuery.templateName"
-                :placeholder="$t('activity.coupon.templateName')"
+                placeholder="模板名称"
                 style="width: 200px;"
                 class="filter-item"
                 @keyup.enter.native="handleFilter" />
       <el-select v-model="listQuery.templateType"
-                 :placeholder="$t('activity.coupon.templateType')"
+                 placeholder="优惠类型"
                  clearable
                  style="width: 120px"
                  class="filter-item">
-        <el-option v-for="(item,index) in templateTypeOptions"
+        <el-option v-for="(item,index) in offerTypeOptions"
                    :key="index"
                    :label="item.value"
-                   :value="item.key" />
+                   :value="item.type" />
       </el-select>
       <el-button v-waves
                  class="filter-item"
                  type="primary"
                  icon="el-icon-search"
-                 @click="handleFilter">{{
-                   $t('table.search') }}
+                 @click="handleFilter">搜索
       </el-button>
       <el-button v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_CREATE'"
                  class="filter-item"
                  style="margin-left: 10px;"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">新增
+                 @click="handleCreate">创建
       </el-button>
       <el-button v-permission="'PAGER_ACTIVITY_COUPON_PUBLISH'"
                  :disabled="reissueDisabled"
                  class="filter-item"
                  style="margin-left: 10px;"
                  type="primary"
-                 icon="el-icon-edit"
+                 icon="el-icon-plus"
                  @click="handleSend">补发优惠券
       </el-button>
     </div>
@@ -52,8 +51,7 @@
                        type="selection"
                        width="65" />
       <el-table-column label="模板名称"
-                       align="center"
-                       width="200">
+                       align="left">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.templateName }}</span>
         </template>
@@ -109,7 +107,7 @@
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')"
+      <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        width="160"
                        fixed="right"
@@ -136,7 +134,7 @@
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0"
+    <pagination v-show="total>listQuery.pageSize"
                 :total="total"
                 :page.sync="listQuery.page"
                 :limit.sync="listQuery.pageSize"
@@ -144,12 +142,13 @@
 
     <i-form ref="dataForm"
             :form-data="formData"
-            :template-type-options="templateTypeOptions" />
+            :template-type-options="offerTypeOptions" />
     <i-send ref="sendForm" />
   </div>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { postList, putModifyTemplate } from '@/api/activity/couponTemplate'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -178,17 +177,18 @@ export default {
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 10,
+        pageSize: 8,
         templateName: undefined,
         templateType: undefined
       },
-      templateTypeOptions: [
-        { key: 1, value: '优惠券' },
-        { key: 2, value: '折扣券' }
-      ],
       formData: {},
       reissueDisabled: true
     }
+  },
+  computed: {
+    ...mapGetters([
+      'offerTypeOptions'
+    ])
   },
   created () {
     this.getCouponTemplateList()
@@ -207,7 +207,7 @@ export default {
       })
     },
     getTemplateType (type) {
-      const arr = this.templateTypeOptions.filter(v => v.key === type)
+      const arr = this.offerTypeOptions.filter(v => v.type === type)
       if (arr.length === 0) {
         return '--'
       } else {
@@ -252,7 +252,6 @@ export default {
       }
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
-      console.log(this.formData)
     },
     handleDisable (id, serverStatus) {
       const params = {

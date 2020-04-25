@@ -98,7 +98,7 @@ export default {
       dialogFormTitle: '编辑',
       formData: {
         id: undefined,
-        classId: undefined,
+        classificationId: undefined,
         sequence: undefined,
         spuName: undefined,
         spuImage: undefined,
@@ -134,7 +134,7 @@ export default {
     },
     restForm () {
       this.formData.id = undefined
-      this.formData.classId = undefined
+      this.formData.classificationId = undefined
       this.formData.spuName = undefined
       this.formData.spuImage = undefined
       this.formData.sequence = undefined

@@ -6,7 +6,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px">
       <el-form-item label="品牌名称"
                     prop="brandName">
@@ -68,17 +68,7 @@ export default {
       rules: {
         brandName: [{ required: true, message: '品牌不能为空', trigger: 'blur' }],
         brandCode: [{ required: true, message: '编号不能为空', trigger: 'blur' }],
-        sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*|0$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('序号不正确'))
-              }
-            }, trigger: 'change'
-          }
-        ],
+        sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' }],
         brandGroupId: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
         icon: [{ required: true, message: '图片不能为空', trigger: 'blur' }]
       },

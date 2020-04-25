@@ -4,7 +4,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px"
              width="50%">
       <el-form-item label="手机号"
@@ -44,17 +44,7 @@ export default {
         create: '新增'
       },
       rules: {
-        phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^13[1-9]{9}$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('手机号码不正确'))
-              }
-            }, trigger: 'change'
-          }
-        ]
+        phone: [{ required: true, message: '手机号不能为空', trigger: 'blur' }]
       }
     }
   },

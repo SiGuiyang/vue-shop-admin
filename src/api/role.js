@@ -28,7 +28,7 @@ export function modifyRole (data) {
 }
 
 // 获取角色
-export function fetchRoleClassification (data) {
+export function postRoleList (data) {
   return service({
     url: '/admin/role/classification',
     method: 'post',

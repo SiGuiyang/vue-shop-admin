@@ -36,7 +36,7 @@ export function putModify (data) {
 /**
  * 获取所有的品牌组
  */
-export function getList (data) {
+export function getBrandGroupList (data) {
   return service({
     url: '/goods/brand/group/list',
     method: 'get',

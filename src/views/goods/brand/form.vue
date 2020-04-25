@@ -6,24 +6,12 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px">
       <el-form-item label="品牌名称"
                     prop="brandName">
         <el-input v-model="formData.brandName"
                   placeholder="请设置" />
-      </el-form-item>
-      <el-form-item label="编号"
-                    prop="brandCode">
-        <el-input v-model="formData.brandCode"
-                  placeholder="请设置" />
-      </el-form-item>
-      <el-form-item label="序号"
-                    prop="sequence">
-        <el-input-number v-model="formData.sequence"
-                         :min="1"
-                         :max="100"
-                         label="请设置" />
       </el-form-item>
       <el-form-item label="所属品牌组"
                     prop="brandGroupId">
@@ -33,6 +21,19 @@
                      :label="group.brandGroupName"
                      :value="group.id" />
         </el-select>
+      </el-form-item>
+      <el-form-item label="编号"
+                    prop="brandCode">
+        <el-input v-model="formData.brandCode"
+                  placeholder="系统自动生成"
+                  :disabled="brandCodeDisabled" />
+      </el-form-item>
+      <el-form-item label="序号"
+                    prop="sequence">
+        <el-input-number v-model="formData.sequence"
+                         :min="1"
+                         :max="100"
+                         label="请设置" />
       </el-form-item>
       <el-form-item label="图标"
                     prop="icon">
@@ -51,7 +52,7 @@
 </template>
 <script>
 import { postCreate, putModify } from '@/api/goods/brand'
-import { getList } from '@/api/goods/group'
+import { getBrandGroupList } from '@/api/goods/group'
 import Upload from '@/components/Upload/singleImage3'
 
 export default {
@@ -67,6 +68,7 @@ export default {
       dialogStatus: undefined,
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
+      brandCodeDisabled: true,
       rules: {
         brandName: [{ required: true, message: '品牌不能为空', trigger: 'blur' }],
         sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' }],
@@ -79,7 +81,7 @@ export default {
   methods: {
     handleOpen () {
       this.$refs['dataForm'].clearValidate()
-      getList({}).then((response) => {
+      getBrandGroupList({}).then((response) => {
         this.groupList = response.data
       })
     },

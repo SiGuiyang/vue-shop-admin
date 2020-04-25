@@ -5,7 +5,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px">
       <el-form-item label="活动名称"
                     prop="activityName">
@@ -18,22 +18,29 @@
           <Upload v-model="formData.activityImg" />
         </div>
       </el-form-item>
-      <el-form-item label="活动时间"
-                    prop="timeRange">
-        <el-date-picker v-model="formData.timeRange"
-                        :default-time="['00:00:00', '23:59:59']"
-                        type="datetimerange"
+      <el-form-item label="开始时间"
+                    prop="beginTime">
+        <el-date-picker v-model="formData.beginTime"
+                        default-time="00:00:00"
+                        type="datetime"
                         value-format="yyyy-MM-dd HH:mm:ss"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
+                        placeholder="请输入"
                         class="filter-item" />
+      </el-form-item>
+      <el-form-item label="结束时间"
+                    prop="endTime">
+        <el-date-picker v-model="formData.endTime"
+                        default-time="23:59:59"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="请输入"
+                        class="filter-itme" />
       </el-form-item>
     </el-form>
     <div slot="footer"
          class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'"
+      <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_CREATE'"
                  type="primary"
                  @click="dialogStatus==='create'?createData():updateData()">确认
       </el-button>
@@ -53,10 +60,7 @@ export default {
   props: {
     formData: {
       type: Object,
-      default: () => ({
-        beginTime: '2019-04-29',
-        endTime: '2020-04-29'
-      })
+      default: () => ({})
     }
   },
   data () {
@@ -70,7 +74,8 @@ export default {
       rules: {
         activityName: [{ required: true, message: '活动标题不能为空', trigger: 'blur' }],
         activityImg: [{ required: true, message: '活动图片不能为空', trigger: 'blur' }],
-        timeRange: [{ required: true, message: '活动时间不能为空', trigger: 'blur' }]
+        beginTime: [{ required: true, message: '开始时间不能为空', trigger: 'blur' }],
+        endTime: [{ required: true, message: '结束时间不能为空', trigger: 'blur' }]
       }
     }
   },

@@ -3,7 +3,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="goodsData"
-             label-position="left"
+             label-position="top"
              label-width="130px">
       <el-form-item label="分类名称"
                     prop="gcsId">

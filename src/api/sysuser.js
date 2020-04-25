@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取系统用户
 export function fetchList (data) {
   return service({
-    url: '/admin/system/page',
+    url: '/admin/system/user/page',
     method: 'post',
     data
   })

@@ -3,7 +3,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="activityRule"
-             label-position="left"
+             label-position="top"
              label-width="120px">
       <el-form-item label="活动名称"
                     prop="activityName"
@@ -59,27 +59,8 @@ export default {
         description: undefined
       },
       rules: {
-        purchaseLimit: [{ required: true, message: '限购数量不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('限购数量只能是整数'))
-              }
-            }, trigger: 'change'
-          }
-        ],
-        assembleCount: [{ required: true, message: '成团数量不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('成团数量只能是整数'))
-              }
-            }, trigger: 'change'
-          }]
+        purchaseLimit: [{ required: true, message: '限购数量不能为空', trigger: 'blur' }],
+        assembleCount: [{ required: true, message: '成团数量不能为空', trigger: 'blur' }]
       },
       tempRoute: {}
     }

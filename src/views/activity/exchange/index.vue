@@ -15,7 +15,7 @@
                  class="filter-item"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">添加
+                 @click="handleCreate">创建
       </el-button>
     </div>
 
@@ -28,7 +28,7 @@
               style="width: 100%;">
       <el-table-column label="活动名称"
                        width="200"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.activityName }}</span>
         </template>
@@ -37,10 +37,10 @@
                        width="340"
                        align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.activityImg"
-                     alt=""
-                     width="300"
-                     height="200"></span>
+          <img :src="scope.row.activityImg"
+               alt=""
+               width="300"
+               height="200">
         </template>
       </el-table-column>
       <el-table-column label="活动时间"
@@ -62,15 +62,15 @@
         </template>
       </el-table-column>
 
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        width="200"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
 
-      <el-table-column label="更新人"
+      <el-table-column label="操作人"
                        width="200"
                        align="center">
         <template slot-scope="scope">
@@ -85,13 +85,15 @@
                        align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'"
+          <el-button v-waves
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'"
                      type="primary"
                      size="small"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
           <!-- 启用-->
           <el-button v-if="scope.row.serverStatus"
+                     v-waves
                      v-permission="'PAGER_ACTIVITY_EXCHANGE_MODIFY'"
                      type="success"
                      size="small"
@@ -99,37 +101,35 @@
           </el-button>
           <!-- 禁用-->
           <el-button v-else
+                     v-waves
                      v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE'"
                      type="danger"
                      size="small"
                      @click="handleDisable(scope.row.id,true)">禁用
           </el-button>
-          <router-link v-permission="'ROLE_SUPER_ADMIN'"
-                       :to="'/activity/exchange/rule/'+scope.row.id">
-            <!-- 满赠规则-->
-            <el-button v-waves
-                       type="success"
-                       size="small">规则</el-button>
-          </router-link>
-          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_GOODS'"
-                       :to="'/activity/exchange/goods/'+scope.row.id">
-            <!-- 满赠商品-->
-            <el-button v-waves
-                       type="warning"
-                       size="small">满赠商品</el-button>
-          </router-link>
-          <router-link v-permission="'PAGER_ACTIVITY_EXCHANGE_RECORD'"
-                       :to="'/activity/exchange/record/'+scope.row.id">
-            <!-- 购买记录-->
-            <el-button v-waves
-                       type="primary"
-                       size="small">购买记录</el-button>
-          </router-link>
+          <!-- 满赠规则-->
+          <el-button v-waves
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE'"
+                     type="success"
+                     size="small"
+                     @click="handleJump('/activity/exchange/rule/'+scope.row.id)">规则</el-button>
+          <!-- 满赠商品-->
+          <el-button v-waves
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_GOODS'"
+                     type="warning"
+                     size="small"
+                     @click="handleJump('/activity/exchange/goods/'+scope.row.id)">满赠商品</el-button>
+          <!-- 购买记录-->
+          <el-button v-waves
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RECORD'"
+                     type="primary"
+                     size="small"
+                     @click="handleJump('/activity/exchange/record/'+scope.row.id)">购买记录</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <pagination v-show="total>0"
+    <pagination v-show="total>listQuery.pageSize"
                 :total="total"
                 :page.sync="listQuery.page"
                 :limit.sync="listQuery.pageSize"
@@ -203,12 +203,12 @@ export default {
     },
     handleUpdate (row) {
       this.formData = Object.assign({}, row)
-      this.formData.timeRange = []
-      this.formData.timeRange.push(row.beginTime)
-      this.formData.timeRange.push(row.endTime)
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
+    },
+    handleJump (router) { // 路由跳转
+      this.$router.push({ path: router })
     },
     handleDisable (id, serverStatus) {
       const params = {

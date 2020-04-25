@@ -7,7 +7,7 @@
       <el-form ref="dataForm"
                :rules="rules"
                :model="formData"
-               label-position="left"
+               label-position="top"
                label-width="100px"
                width="50%">
         <el-form-item label="角色名称"

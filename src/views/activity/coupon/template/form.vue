@@ -5,14 +5,14 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="120px">
-      <el-form-item :label="$t('activity.coupon.templateName')"
+      <el-form-item label="模板名称"
                     prop="templateName">
         <el-input v-model="formData.templateName"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.templateType')"
+      <el-form-item label="模板类型"
                     prop="templateType">
         <el-select v-model="formData.templateType"
                    class="filter-item"
@@ -21,27 +21,27 @@
           <el-option v-for="(item,index) in templateTypeOptions"
                      :key="index"
                      :label="item.value"
-                     :value="item.key" />
+                     :value="item.type" />
         </el-select>
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.orderAmount')"
+      <el-form-item label="订单满减金额"
                     prop="orderAmount">
         <el-input v-model.number="formData.orderAmount"
                   placeholder="请设置" />
       </el-form-item>
       <el-form-item v-if="!discountVisible"
-                    :label="$t('activity.coupon.couponAmount')"
+                    label="优惠金额"
                     prop="couponAmount">
         <el-input v-model.number="formData.couponAmount"
                   placeholder="请设置" />
       </el-form-item>
       <el-form-item v-if="discountVisible"
-                    :label="$t('activity.coupon.discountStrength')"
+                    label="折扣力度"
                     prop="discountStrength">
         <el-input v-model.number="formData.discountStrength"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item :label="$t('activity.coupon.description')"
+      <el-form-item label="说明"
                     prop="description">
         <el-input v-model="formData.description"
                   :autosize="{ minRows: 4, maxRows: 8}"
@@ -52,8 +52,7 @@
     <div slot="footer"
          class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'"
-                 type="primary"
+      <el-button type="primary"
                  @click="dialogStatus==='create'?createData():updateData()">确认
       </el-button>
     </div>
@@ -89,40 +88,9 @@ export default {
       rules: {
         templateName: [{ required: true, message: '优惠券模板不能为空', trigger: 'blur' }],
         templateType: [{ required: true, message: '模版类型不能为空', trigger: 'blur' }],
-        description: [{ required: true, message: '优惠券说明不能为空', trigger: 'blur' }],
-        orderAmount: [{ type: 'number', required: true, message: '订单金额只能是整数', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('订单金额只能是整数'))
-              }
-            }, trigger: 'change'
-          }
-        ],
-        couponAmount: [{ type: 'number', required: true, message: '满减金额只能是整数', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('满减金额只能是整数'))
-              }
-            }, trigger: 'change'
-          }
-        ],
-        discountStrength: [{ type: 'number', required: true, message: '折扣力度不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('折扣力度只能是整数'))
-              }
-            }, trigger: 'change'
-          }
-        ]
+        orderAmount: [{ type: 'number', required: true, message: '订单金额只能是整数', trigger: 'blur' }],
+        couponAmount: [{ type: 'number', required: true, message: '满减金额只能是整数', trigger: 'blur' }],
+        discountStrength: [{ type: 'number', required: true, message: '折扣力度不能为空', trigger: 'blur' }]
       }
     }
   },
@@ -131,6 +99,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
+          this.formData.updateUser = this.$store.state.user.username
           postAddTemplate(this.formData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
@@ -148,6 +117,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
+          tempData.updateUser = this.$store.state.user.username
           putModifyTemplate(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({

@@ -45,7 +45,7 @@ export default {
       return this.value
     },
     actionUrl () {
-      return process.env.BASE_API + '/admin/upload?access_token=' + getToken(Constants.access_token)
+      return '/api/admin/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {

@@ -5,7 +5,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px"
              width="50%">
       <el-form-item label="配置项名称"
@@ -18,11 +18,6 @@
                     prop="configType">
         <el-input v-model="formData.configType"
                   :disabled="configTypeDisabled"
-                  placeholder="请设置" />
-      </el-form-item>
-      <el-form-item label="配置项值"
-                    prop="configValue">
-        <el-input v-model="formData.configValue"
                   placeholder="请设置" />
       </el-form-item>
       <el-form-item label="说明">
@@ -85,6 +80,7 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
+          this.formData.updateUser = this.$store.state.user.username
           const tempData = Object.assign({}, this.formData)
           addConfig(tempData).then(() => {
             this.dialogFormVisible = false
@@ -100,6 +96,7 @@ export default {
     updateData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.formData.updateUser = this.$store.state.user.username
           const tempData = Object.assign({}, this.formData)
           modifyConfig(tempData).then(() => {
             this.dialogFormVisible = false

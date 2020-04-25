@@ -5,7 +5,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px">
       <el-form-item label="活动名称"
                     prop="activityName">

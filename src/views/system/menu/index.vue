@@ -32,7 +32,9 @@
                        width="100"
                        align="center">
         <template slot-scope="scope">
-          <svg-icon :icon-class="scope.row.icon" />
+          <template v-if="scope.row.icon">
+            <svg-icon :icon-class="scope.row.icon" />
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="请求地址"
@@ -40,7 +42,9 @@
                        width="200"
                        align="center">
         <template slot-scope="scope">
-          <el-tag> {{ scope.row.path }}</el-tag>
+          <template v-if="scope.row.path">
+            <el-tag> {{ scope.row.path }}</el-tag>
+          </template>
         </template>
       </el-table-column>
       <el-table-column label="组建路径"
@@ -86,7 +90,6 @@
         </template>
       </el-table-column>
     </el-table>
-    <!--</tree-table>-->
     <i-form ref="dataForm"
             :form-data="formData"
             :menus="menuData" />
@@ -108,6 +111,12 @@ export default {
       list: [],
       total: 0,
       listLoading: false,
+      listQuery: {
+        page: 1,
+        pageSize: 10,
+        name: undefined,
+        menuType: undefined
+      },
       expand: false,
       formData: {
         id: undefined,
@@ -128,10 +137,11 @@ export default {
   methods: {
     getList () {
       this.listLoading = true
-      fetchList({}).then(response => {
+      fetchList(this.listQuery).then(response => {
         this.list = response.data
         this.menuData = response.data
         this.listLoading = false
+        this.total = response.total
       }).catch(() => {
         this.listLoading = false
       })

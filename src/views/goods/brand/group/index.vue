@@ -15,7 +15,7 @@
                  class="filter-item"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">新增</el-button>
+                 @click="handleCreate">创建</el-button>
     </div>
 
     <el-table :key="tableKey"
@@ -34,7 +34,7 @@
       <el-table-column label="序号"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.sequence }}</span>
+          <el-tag>{{ scope.row.sequence }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="创建时间"

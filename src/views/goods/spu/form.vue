@@ -6,24 +6,24 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="120px">
       <el-form-item label="spu名称"
                     prop="spuName">
-        <el-input v-model="formData.className"
+        <el-input v-model="formData.spuName"
                   placeholder="请设置" />
       </el-form-item>
       <el-form-item label="二级分类名称"
-                    prop="classId">
-        <el-cascader v-model="formData.classId"
-                     :options="goodsClassification"
-                     :props="goodsClassificationProps"
-                     :show-all-levels="false"
-                     placeholder="请设置" />
+                    prop="classificationId">
+        <treeselect v-model="formData.classificationId"
+                    :options="goodsClassification"
+                    :normalizer="spuNormalizer"
+                    value-field-name="id"
+                    placeholder="请选择" />
       </el-form-item>
       <el-form-item label="序号"
                     prop="sequence">
-        <el-input-number v-model="sequence"
+        <el-input-number v-model="formData.sequence"
                          :min="min"
                          :max="max"
                          label="序号" />
@@ -47,9 +47,11 @@
 import { postCreate, putModify } from '@/api/goods/spu'
 import { postClassificationTree } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
+import Treeselect from '@riophae/vue-treeselect'
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
-  components: { Upload },
+  components: { Upload, Treeselect },
   props: {
     formData: {
       type: Object,
@@ -65,13 +67,16 @@ export default {
       max: 100,
       sequence: 0,
       goodsClassification: [],
-      goodsClassificationProps: {
-        value: 'id',
-        label: 'className'
-      },
       rules: {
         spuName: [{ required: true, message: 'spu名称不能为空', trigger: 'blur' }],
-        classId: [{ required: true, message: '二级分类名称不能为空', trigger: 'blur' }]
+        classificationId: [{ required: true, message: '二级分类名称不能为空', trigger: 'blur' }]
+      },
+      spuNormalizer (node) {
+        return {
+          id: node.id,
+          label: node.className,
+          chilren: node.chilren
+        }
       }
     }
   },
@@ -108,7 +113,6 @@ export default {
     handleClassificationTree () {
       postClassificationTree().then((response) => {
         this.goodsClassification = response.data
-        console.log(this.goodsClassification)
       })
     }
   }

@@ -21,7 +21,7 @@
                  class="filter-item"
                  type="warning"
                  icon="el-icon-download"
-                 @click="handleDownload">{{ $t('table.downloadTemplate') }}
+                 @click="handleDownload">下载模板
       </el-button>
       <el-button @click="reissueFormVisible = false">取消</el-button>
       <el-button v-permission="'ROLE_SUPER_ADMIN'"

@@ -5,7 +5,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="activityRule"
-             label-position="left"
+             label-position="top"
              label-width="120px">
       <el-form-item label="活动名称"
                     prop="activityName"
@@ -60,17 +60,7 @@ export default {
       dialogFormVisible: false,
       rules: {
         ruleName: [{ required: true, message: '规则名称不能为空', trigger: 'blur' }],
-        orderAmount: [{ required: true, message: '最低限额不能为空', trigger: 'blur' },
-          {
-            validator: (rule, value, callback) => {
-              if (/^[1-9]\d*$/.test(value)) {
-                callback()
-              } else {
-                callback(new Error('最低限额只能是整数'))
-              }
-            }, trigger: 'change'
-          }
-        ]
+        orderAmount: [{ required: true, message: '最低限额不能为空', trigger: 'blur' }]
       }
     }
   },

@@ -6,9 +6,11 @@ import Constants from '@/utils/constants'
 import store from '@/store'
 // create an axios instance
 const service = axios.create({
-  baseURL: '/api', // api 的 base_url
+  baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   timeout: 10000 // request timeout
 })
+// http 500 响应码
+const errorCode = [404, 502, 503, 504]
 // request interceptor
 service.interceptors.request.use(
   config => {
@@ -56,7 +58,7 @@ service.interceptors.response.use(
   error => {
     const res = error.response
     console.log(res)
-    if (res.status === 401 || res.status === 504 || res.status === 503 || res.status === 502) {
+    if (errorCode.indexOf(res.status) !== -1) {
       MessageBox({
         title: '提示',
         message: '服务正在升级中。。。请稍后重试！！！',

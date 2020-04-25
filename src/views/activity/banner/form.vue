@@ -1,12 +1,12 @@
 <template>
   <el-dialog :title="textMap[dialogStatus]"
              :visible.sync="dialogFormVisible"
-             width="60%"
+             width="50%"
              @open="handleOpen">
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="140px">
       <el-form-item label="标题"
                     prop="title">
@@ -73,8 +73,7 @@
     <div slot="footer"
          class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'"
-                 type="primary"
+      <el-button type="primary"
                  @click="dialogStatus==='create'?createData():updateData()">确认
       </el-button>
     </div>

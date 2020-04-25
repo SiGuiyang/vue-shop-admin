@@ -44,20 +44,12 @@
           <span class="link-type">{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="banner图片"
-                       width="200"
-                       align="center">
-        <template slot-scope="scope">
-          <img :src="scope.row.bannerUrl"
-               width="160px">
-        </template>
-      </el-table-column>
       <el-table-column label="类型"
                        class-name="status-col"
                        width="120"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.bannerTypeName }}</span>
+          <span>{{ getBannerTypeName(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分享标题"
@@ -74,19 +66,11 @@
           <span>{{ scope.row.shareSubtitle }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="分享小图标"
-                       width="200"
-                       align="center">
-        <template slot-scope="scope">
-          <img :src="scope.row.shareIcon"
-               width="140px">
-        </template>
-      </el-table-column>
       <el-table-column label="分享渠道"
                        width="140"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.shareChannelName }}</span>
+          <span>{{ getShareChannelName(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="状态"
@@ -107,7 +91,7 @@
           <span>{{ scope.row.createUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        width="160"
                        align="center">
         <template slot-scope="scope">
@@ -154,6 +138,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import { fetchList, modify } from '@/api/activity/banner'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -185,16 +170,6 @@ export default {
         title: undefined,
         bannerType: undefined
       },
-      bannerTypeOptions: [
-        { key: 'home', value: '首页' },
-        { key: 'integralShop', value: '积分商城' },
-        { key: 'classification', value: '分类' }
-      ],
-      shareChannelOptions: [
-        { key: 'qq', value: 'QQ' },
-        { key: 'wechat', value: '微信' },
-        { key: 'wechatFriends', value: '朋友圈' }
-      ],
       formData: {
         id: undefined,
         title: undefined,
@@ -209,6 +184,12 @@ export default {
         createUser: undefined
       }
     }
+  },
+  computed: {
+    ...mapGetters([
+      'bannerTypeOptions',
+      'shareChannelOptions'
+    ])
   },
   created () {
     this.getBannerList()
@@ -235,6 +216,33 @@ export default {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
+    },
+    getBannerTypeName (row) {
+      const arr = this.bannerTypeOptions.filter(v => v.key === row.bannerType)
+      if (arr.length === 0) {
+        return '--'
+      } else {
+        return arr[0].value
+      }
+    },
+    getShareChannelName (row) {
+      if (row.shareChannel && row.shareChannel.length > 0) {
+        let result = ''
+        for (var i = 0; i < row.shareChannel.length; i++) {
+          const channel = row.shareChannel[i]
+          const temp = this.shareChannelOptions.filter(item => item.key === channel)
+          if (temp && temp.length > 0) {
+            result += temp[0].value
+            if (i !== row.shareChannel.length - 1) {
+              result += '|'
+            }
+          }
+        }
+        return result
+      } else {
+        return '--'
+      }
+
     },
     restForm () {
       this.formData.id = undefined

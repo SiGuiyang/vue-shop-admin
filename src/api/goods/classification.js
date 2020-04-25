@@ -9,7 +9,7 @@ export function postList (data) {
   })
 }
 
-// 修改商品分类
+// 创建商品分类
 export function postCreate (data) {
   return service({
     url: '/goods/classification/create',

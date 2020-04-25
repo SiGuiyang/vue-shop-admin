@@ -12,7 +12,7 @@ export function fetchList (data) {
 // 新增
 export function add (data) {
   return service({
-    url: 'admin/menu',
+    url: 'admin/menu/create',
     method: 'post',
     data
   })
@@ -21,7 +21,7 @@ export function add (data) {
 // 修改
 export function modify (data) {
   return service({
-    url: 'admin/menu',
+    url: 'admin/menu/modify',
     method: 'put',
     data
   })

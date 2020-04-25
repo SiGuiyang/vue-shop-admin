@@ -15,7 +15,7 @@
                  class="filter-item"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">新增</el-button>
+                 @click="handleCreate">创建</el-button>
     </div>
 
     <el-table :key="tableKey"
@@ -52,8 +52,8 @@
       <el-table-column label="品牌图标"
                        align="center">
         <template slot-scope="scope">
-          <span><img :src="scope.row.icon"
-                     alt=""></span>
+          <img :src="scope.row.icon"
+               alt="">
         </template>
       </el-table-column>
       <el-table-column label="创建时间"

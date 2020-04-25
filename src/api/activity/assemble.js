@@ -3,7 +3,7 @@ import service from '@/utils/request'
 // 获取table data
 export function fetchList (data) {
   return service({
-    url: '/activity/assemble/list',
+    url: '/activity/assemble/page',
     method: 'post',
     data
   })

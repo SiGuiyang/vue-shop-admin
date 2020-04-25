@@ -19,7 +19,10 @@ const getters = {
   orderTypeOptions: state => state.serviceConst.orderTypeOptions,
   goodsTypeOptions: state => state.serviceConst.goodsTypeOptions,
   couponTypeOptions: state => state.serviceConst.couponTypeOptions,
+  offerTypeOptions: state => state.serviceConst.offerTypeOptions,
   moduleTypeOptions: state => state.serviceConst.moduleTypeOptions,
+  bannerTypeOptions: state => state.serviceConst.bannerTypeOptions,
+  shareChannelOptions: state => state.serviceConst.shareChannelOptions,
   expires_in: state => state.token.expires_in
 }
 export default getters

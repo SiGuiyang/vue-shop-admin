@@ -19,9 +19,6 @@
 
     <el-table v-loading="listLoading"
               :data="list"
-              :tree-props="{children: 'children', hasChildren: 'hasChildren'}"
-              :default-expand-all="expand"
-              row-key="id"
               stripe
               fit
               highlight-current-row
@@ -33,25 +30,32 @@
           <span>{{ scope.row.className }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="Banner名称"
-                       width="240"
+      <el-table-column label="上级分类名称"
+                       width="160"
                        align="center">
         <template slot-scope="scope">
-          <img :src="scope.row.title" />
+          <span>{{ scope.row.parentClassName }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="Banner名称"
+                       width="300"
+                       align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.bannerName }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间"
                        width="200"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="修改人"
                        width="200"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -62,6 +66,9 @@
           <el-button type="primary"
                      size="mini"
                      @click="handleQuery(scope.row)">编辑</el-button>
+          <el-button type="danger"
+                     size="mini"
+                     @click="handleDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -71,15 +78,12 @@
                 :limit.sync="listQuery.pageSize"
                 @pagination="getList" />
     <i-form ref="dataForm"
-            :form-data="formData"
-            :classification="treeList"
-            :banner-list="banners" />
+            :form-data="formData" />
   </div>
 </template>
 
 <script>
-import { postList, postClassificationTree } from '@/api/goods/classification'
-import { bannerListAll } from '@/api/activity/banner'
+import { postList, putModify } from '@/api/goods/classification'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import IForm from './form'
@@ -100,7 +104,6 @@ export default {
         pageSize: 10,
         className: undefined
       },
-      treeList: [],
       banners: [],
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
@@ -118,8 +121,6 @@ export default {
   },
   created () {
     this.getList()
-    this.getTreeList()
-    this.getBannerList()
   },
   methods: {
     getList () { // 商品分类列表
@@ -135,19 +136,6 @@ export default {
         this.listLoading = false
       })
     },
-    getTreeList () { // 分类树形列表
-      postClassificationTree().then((response) => {
-        this.treeList = response.data
-      })
-    },
-    getBannerList () { // banner 列表
-      const params = {
-        bannerType: 'classification'
-      }
-      bannerListAll(params).then((response) => {
-        this.banners = response.data
-      })
-    },
     handleFilter () { // 搜索
       this.listQuery.page = 1
 
@@ -157,15 +145,29 @@ export default {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
-      this.restForm()
-    },
-    restForm () {
-      this.formData.id = undefined
+      this.formData = {}
     },
     handleQuery (row) { // 查看分类中的商品
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
       _this.dialogFormVisible = true
+      _this.dialogStatus = 'update'
+    },
+    handleDel (row) { // 删除分类
+      const params = {
+        id: row.id,
+        deleteStatus: true,
+        updateUser: this.$store.state.user.username
+      }
+      putModify(params).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '删除成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList() // 刷新页面
+      })
     }
   }
 }

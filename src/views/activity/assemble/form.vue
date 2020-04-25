@@ -5,7 +5,7 @@
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
-             label-position="left"
+             label-position="top"
              label-width="100px">
       <el-form-item label="活动名称"
                     prop="activityName">
@@ -18,16 +18,23 @@
           <Upload v-model="formData.activityImg" />
         </div>
       </el-form-item>
-      <el-form-item label="活动时间"
-                    prop="timeRange">
-        <el-date-picker v-model="formData.timeRange"
-                        :default-time="['00:00:00', '23:59:59']"
-                        type="datetimerange"
+      <el-form-item label="开始时间"
+                    prop="beginTime">
+        <el-date-picker v-model="formData.beginTime"
+                        default-time="00:00:00"
+                        type="datetime"
                         value-format="yyyy-MM-dd HH:mm:ss"
-                        range-separator="至"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
+                        placeholder="请输入"
                         class="filter-item" />
+      </el-form-item>
+      <el-form-item label="结束时间"
+                    prop="endTime">
+        <el-date-picker v-model="formData.endTime"
+                        default-time="23:59:59"
+                        type="datetime"
+                        value-format="yyyy-MM-dd HH:mm:ss"
+                        placeholder="请输入"
+                        class="filter-itme" />
       </el-form-item>
     </el-form>
     <div slot="footer"

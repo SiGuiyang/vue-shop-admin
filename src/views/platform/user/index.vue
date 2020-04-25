@@ -45,7 +45,6 @@ export default {
     },
     handleFilter () { // 搜索
       this.listQuery.page = 1
-      console.log(this.listQuery)
       this.getList()
     },
     restForm () {

@@ -5,7 +5,7 @@
     <el-form ref="dataDetailForm"
              :rules="rules"
              :model="detailFormData"
-             label-position="left"
+             label-position="top"
              label-width="100px"
              width="50%">
       <el-form-item label="配置项名称"

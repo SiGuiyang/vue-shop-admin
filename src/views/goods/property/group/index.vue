@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { postList, putModify } from '@/api/goods/propertyGroup'
+import { postpropertyGroupPage, putpropertyGroupModify } from '@/api/goods/propertyGroup'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 import IForm from './form'
@@ -104,7 +104,7 @@ export default {
   methods: {
     getList () { // 商品品牌列表
       this.listLoading = true
-      postList(this.listQuery).then(response => {
+      postpropertyGroupPage(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         setTimeout(() => {
@@ -143,7 +143,7 @@ export default {
         updateUser: this.$store.state.user.username,
         deleteStatus: true
       }
-      putModify(params).then(() => {
+      putpropertyGroupModify(params).then(() => {
         this.$notify({
           title: '成功',
           message: '删除成功',

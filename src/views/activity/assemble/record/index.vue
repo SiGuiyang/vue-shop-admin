@@ -21,7 +21,7 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="用户名称"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.username }}</span>
         </template>
@@ -119,7 +119,6 @@ export default {
       members(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
-        console.log(this.list)
 
         setTimeout(() => {
           this.listLoading = false

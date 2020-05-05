@@ -3,7 +3,7 @@ import service from '@/utils/request'
 /**
  * 商品品牌列表
  */
-export function postList (data) {
+export function postBrandList (data) {
   return service({
     url: '/goods/brand/page',
     method: 'post',
@@ -14,7 +14,7 @@ export function postList (data) {
 /**
  * 新增品牌
  */
-export function postCreate (data) {
+export function postBrandCreate (data) {
   return service({
     url: '/goods/brand/create',
     method: 'post',
@@ -25,7 +25,7 @@ export function postCreate (data) {
 /**
  * 修改品牌
  */
-export function putModify (data) {
+export function putBrandModify (data) {
   return service({
     url: '/goods/brand/modify',
     method: 'put',

@@ -25,7 +25,7 @@ export function postCreate (data) {
 /**
  * 修改商品品牌组
  */
-export function putModify (data) {
+export function putBrandGroupModify (data) {
   return service({
     url: '/goods/brand/group/modify',
     method: 'put',

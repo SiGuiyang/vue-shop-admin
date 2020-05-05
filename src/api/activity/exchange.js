@@ -46,7 +46,7 @@ export function getRuleList (data) {
 // 新增规则
 export function addRule (data) {
   return service({
-    url: 'admin/activity/exchange/rule/create',
+    url: '/activity/exchange/rule/create',
     method: 'post',
     data
   })
@@ -55,33 +55,33 @@ export function addRule (data) {
 // 修改规则
 export function modifyRule (data) {
   return service({
-    url: 'admin/activity/exchange/rule/modify',
+    url: '/activity/exchange/rule/modify',
     method: 'put',
     data
   })
 }
 
 // 设置换购商品的规则
-export function modifyGoodsRule (data) {
+export function putModifyGoodsRule (data) {
   return service({
-    url: '/admin/activity/exchange/goods/rule',
+    url: '/activity/exchange/goods/rule',
     method: 'put',
     data
   })
 }
 
 // 查看商品的规则详情
-export function queryGoodsRuleInfo (data) {
+export function getGoodsRuleInfo (data) {
   return service({
-    url: '/admin/activity/exchange/goods/rule/' + data.activityId + '/' + data.goodsId,
+    url: '/activity/exchange/goods/rule/' + data.activityId + '/' + data.goodsId,
     method: 'get'
   })
 }
 
 // 满赠换购记录
-export function fetchExchangeRecordList (data) {
+export function postExchangeRecordList (data) {
   return service({
-    url: 'admin/activity/exchange/purchase/history',
+    url: '/activity/exchange/record',
     method: 'post',
     data
   })

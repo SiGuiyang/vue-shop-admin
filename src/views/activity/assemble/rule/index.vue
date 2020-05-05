@@ -25,8 +25,11 @@
       <el-form-item label="说明"
                     prop="description">
         <el-input v-model="activityRule.description"
+                  :rows="5"
+                  type="textarea"
+                  :maxlength="maxlength"
                   placeholder="请设置"
-                  type="textarea" />
+                  show-word-limit />
       </el-form-item>
     </el-form>
     <div slot="footer"
@@ -50,6 +53,8 @@ export default {
   directives: { waves, permission },
   data () {
     return {
+      maxlength: 100,
+      showWordLimit: true,
       activityRule: {
         id: undefined,
         activityId: undefined,

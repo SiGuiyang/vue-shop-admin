@@ -3,7 +3,7 @@ import service from '@/utils/request'
 /**
  * 属性组列表
  */
-export function postList (data) {
+export function postPropertyGroupPage (data) {
   return service({
     url: '/goods/property/group/page',
     method: 'post',
@@ -14,7 +14,7 @@ export function postList (data) {
 /**
  * 属性组列表
  */
-export function getList (data) {
+export function getPropertyGroupList (data) {
   return service({
     url: '/goods/property/group/list',
     method: 'get',
@@ -25,7 +25,7 @@ export function getList (data) {
 /**
  * 新增属性组
  */
-export function postCreate (data) {
+export function postPropertyGroupCreate (data) {
   return service({
     url: '/goods/property/group/create',
     method: 'post',
@@ -36,7 +36,7 @@ export function postCreate (data) {
 /**
  * 修改属性组
  */
-export function putModify (data) {
+export function putPropertyGroupModify (data) {
   return service({
     url: '/goods/property/group/modify',
     method: 'put',

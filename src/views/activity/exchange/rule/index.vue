@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
       <el-button v-waves
-                 v-permission="'ROLE_SUPER_ADMIN'"
+                 v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_CREATE'"
                  class="filter-item"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">添加
+                 @click="handleCreate">创建
       </el-button>
     </div>
     <el-table :key="tableKey"
@@ -17,7 +17,7 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="活动名称"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.activityName }}</span>
         </template>
@@ -28,7 +28,6 @@
           <span>{{ scope.row.ruleName }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="最低限额"
                        align="center">
         <template slot-scope="scope">
@@ -36,14 +35,18 @@
             <svg-icon icon-class="money" />{{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="操作人"
+                       align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateUser }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态"
                        align="center">
         <template slot-scope="scope">
@@ -61,21 +64,21 @@
                        align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'"
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="primary"
                      size="small"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
 
           <el-button v-if="scope.row.serverStatus"
-                     v-permission="'ROLE_SUPER_ADMIN'"
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="success"
                      size="small"
                      @click="handleDisable(scope.row.id,false)">启用
           </el-button>
 
           <el-button v-else
-                     v-permission="'ROLE_SUPER_ADMIN'"
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="danger"
                      size="small"
                      @click="handleDisable(scope.row.id,true)">禁用
@@ -158,9 +161,11 @@ export default {
         serverStatus: serverStatus
       }
       modifyRule(params).then(() => {
-        this.$message({
+        this.$notify({
+          title: '成功',
+          message: '更新成功',
           type: 'success',
-          message: '操作成功'
+          duration: 2000
         })
         this.handleRuleList()
       })

@@ -154,8 +154,9 @@ export default {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.formData.createUser = this.$store.state.user.username
-          this.formData.loginCode = this.formData.username
-          add(this.formData).then(() => {
+          this.formData.updateUser = this.$store.state.user.username
+          const formDataData = Object.assign({}, this.formData)
+          add(formDataData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: '成功',

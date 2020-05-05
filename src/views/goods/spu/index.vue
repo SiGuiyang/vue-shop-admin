@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { postList } from '@/api/goods/spu'
+import { postSpuPage } from '@/api/goods/spu'
 import waves from '@/directive/waves' // Waves directive
 import IForm from './form'
 
@@ -117,7 +117,7 @@ export default {
   methods: {
     getList () { // 商品分类列表
       this.listLoading = true
-      postList(this.listQuery).then(response => {
+      postSpuPage(this.listQuery).then(response => {
         this.list = response.data
 
         setTimeout(() => {

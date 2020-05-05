@@ -83,7 +83,7 @@
 </template>
 
 <script>
-import { postList, putModify } from '@/api/goods/classification'
+import { postClassificationList, putClassificationModify } from '@/api/goods/classification'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import IForm from './form'
@@ -125,7 +125,7 @@ export default {
   methods: {
     getList () { // 商品分类列表
       this.listLoading = true
-      postList(this.listQuery).then(response => {
+      postClassificationList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -159,7 +159,7 @@ export default {
         deleteStatus: true,
         updateUser: this.$store.state.user.username
       }
-      putModify(params).then(() => {
+      putClassificationModify(params).then(() => {
         this.$notify({
           title: '成功',
           message: '删除成功',

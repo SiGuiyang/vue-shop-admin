@@ -1,7 +1,7 @@
 import service from '@/utils/request'
 
 // 分类列表
-export function postList (data) {
+export function postClassificationList (data) {
   return service({
     url: '/goods/classification/page',
     method: 'post',
@@ -10,7 +10,7 @@ export function postList (data) {
 }
 
 // 创建商品分类
-export function postCreate (data) {
+export function postClassificationCreate (data) {
   return service({
     url: '/goods/classification/create',
     method: 'post',
@@ -19,7 +19,7 @@ export function postCreate (data) {
 }
 
 // 修改商品分类
-export function putModify (data) {
+export function putClassificationModify (data) {
   return service({
     url: '/goods/classification/modify',
     method: 'put',

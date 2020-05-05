@@ -23,7 +23,7 @@
   </el-dialog>
 </template>
 <script>
-import { postCreate, putModify } from '@/api/goods/propertyGroup'
+import { postpropertyGroupCreate, putpropertyGroupModify } from '@/api/goods/propertyGroup'
 
 export default {
   props: {
@@ -51,7 +51,7 @@ export default {
       tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
       tempData.event = this.dialogStatus === 'create' ? 'add' : 'modify'
-      postCreate(tempData).then(() => {
+      postpropertyGroupCreate(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',
@@ -65,7 +65,7 @@ export default {
     updateData () {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
-      putModify(tempData).then(() => {
+      putpropertyGroupModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           title: '成功',

@@ -72,7 +72,8 @@
                        align="center">
         <template slot-scope="scope">
           <span class="icon-money">
-            <svg-icon icon-class="money" />{{ scope.row.goodsAmount }}</span>
+            <svg-icon icon-class="money" />{{ scope.row.goodsAmount }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="折扣价格"
@@ -80,7 +81,8 @@
                        align="center">
         <template slot-scope="scope">
           <span class="icon-money">
-            <svg-icon icon-class="money" />{{ scope.row.goodsDiscountAmount }}</span>
+            <svg-icon icon-class="money" />{{ scope.row.goodsDiscountAmount }}
+          </span>
         </template>
       </el-table-column>
       <el-table-column label="商品状态"
@@ -171,8 +173,12 @@
                           name="1">
           <div>活动名称：<span>{{ activeRuleForm.activityName }}</span></div>
           <div>规则名称：<span>{{ activeRuleForm.ruleName }}</span></div>
-          <div>最低限额：<span class="icon-money">
-            <svg-icon icon-class="money" />{{ activeRuleForm.orderAmount }}</span></div>
+          <div>最低限额：
+            <span class="icon-money">
+              <svg-icon icon-class="money"></svg-icon>
+              {{ activeRuleForm.orderAmount }}
+            </span>
+          </div>
           <div>创建时间：<span>{{ activeRuleForm.createTime }}</span></div>
           <div>状态：<span>{{ activeRuleForm.deleteStatus? '禁用': '启用' }}</span></div>
         </el-collapse-item>
@@ -187,7 +193,7 @@
 
 <script>
 import { postGoodsList } from '@/api/goods/goods'
-import { getRuleList, modifyGoodsRule, queryGoodsRuleInfo } from '@/api/activity/exchange'
+import { getRuleList, modifyGoodsRule, getGoodsRuleInfo } from '@/api/activity/exchange'
 import { postList } from '@/api/goods/classification'
 import { getAssembleGoods, modifyAssembleGoods } from '@/api/activity/assemble'
 import waves from '@/directive/waves' // Waves directive
@@ -308,7 +314,7 @@ export default {
       })
     },
     handleRule (goodsId) {
-      queryGoodsRuleInfo({ activityId: this.listQuery.activityId, goodsId: goodsId }).then(response => {
+      getGoodsRuleInfo({ activityId: this.listQuery.activityId, goodsId: goodsId }).then(response => {
         this.activeRuleForm = response.data
         this.dialogRuleInfoVisible = true
       })

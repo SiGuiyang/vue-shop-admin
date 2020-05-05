@@ -7,7 +7,7 @@
                  style="margin-left: 10px;"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">新增
+                 @click="handleCreate">创建
       </el-button>
     </div>
     <el-table v-loading="listLoading"

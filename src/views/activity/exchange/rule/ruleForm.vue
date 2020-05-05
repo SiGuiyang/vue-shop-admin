@@ -22,14 +22,15 @@
       <el-form-item label="最低限额"
                     prop="orderAmount">
         <el-input v-model="activityRule.orderAmount"
-                  placeholder="请设置" />
+                  placeholder="请设置">
+          <template slot="append">元</template>
+        </el-input>
       </el-form-item>
     </el-form>
     <div slot="footer"
          class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'"
-                 type="primary"
+      <el-button type="primary"
                  @click="dialogStatus === 'create'? createData(): updateData()">确认
       </el-button>
     </div>
@@ -71,9 +72,11 @@ export default {
           this.activityRule.createUser = this.$store.state.user.username
           this.activityRule.updateUser = this.$store.state.user.username
           addRule(this.activityRule).then(() => {
-            this.$message({
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
               type: 'success',
-              message: '操作成功'
+              duration: 2000
             })
             this.dialogFormVisible = false
             this.$parent.handleRuleList()
@@ -86,9 +89,11 @@ export default {
         if (valid) {
           this.activityRule.updateUser = this.$store.state.user.username
           modifyRule(this.activityRule).then(() => {
-            this.$message({
+            this.$notify({
+              title: '成功',
+              message: '更新成功',
               type: 'success',
-              message: '操作成功'
+              duration: 2000
             })
             this.dialogFormVisible = false
             this.$parent.handleRuleList()

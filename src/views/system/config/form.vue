@@ -101,8 +101,10 @@ export default {
           modifyConfig(tempData).then(() => {
             this.dialogFormVisible = false
             this.$notify({
+              title: '成功',
+              message: '更新成功',
               type: 'success',
-              message: '更新成功'
+              duration: 2000
             })
             this.$parent.getList()
           })

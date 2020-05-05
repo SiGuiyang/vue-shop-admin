@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import { postList, putModify } from '@/api/goods/brand'
+import { postBrandList, putBrandModify } from '@/api/goods/brand'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 import IForm from './form'
@@ -134,7 +134,7 @@ export default {
   methods: {
     getList () { // 商品品牌列表
       this.listLoading = true
-      postList(this.listQuery).then(response => {
+      postBrandList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         setTimeout(() => {
@@ -177,7 +177,7 @@ export default {
         deleteStatus: true,
         updateUser: this.$store.state.user.username
       }
-      putModify(params).then(() => {
+      putBrandModify(params).then(() => {
         this.$notify({
           title: '成功',
           message: '删除成功',

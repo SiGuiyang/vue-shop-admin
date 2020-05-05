@@ -3,24 +3,24 @@ import service from '@/utils/request'
 // 获取商品状态
 export function postGoodsStatus () {
   return service({
-    url: '/admin/goods/status',
+    url: '/goods/product/status',
     method: 'post'
   })
 }
 
 // 获取商品列表
-export function postGoodsList (data) {
+export function postGoodsPage (data) {
   return service({
-    url: '/admin/goods/list',
+    url: '/goods/product/page',
     method: 'post',
     data
   })
 }
 
 // 新增商品
-export function postAddGoods (data) {
+export function postCreateGoods (data) {
   return service({
-    url: '/admin/goods/modify',
+    url: '/goods/product/create',
     method: 'post',
     data
   })
@@ -29,17 +29,16 @@ export function postAddGoods (data) {
 // 修改商品
 export function putModifyGoods (data) {
   return service({
-    url: '/admin/goods/modify',
+    url: '/goods/product/modify',
     method: 'put',
     data
   })
 }
 
 // 查看商品详情
-export function postGoodsInfo (data) {
+export function getGoodsInfo (data) {
   return service({
-    url: '/admin/goods/' + data.goodsId,
-    method: 'post',
-    data
+    url: '/goods/product/' + data.goodsId,
+    method: 'get'
   })
 }

@@ -44,7 +44,7 @@
   </el-dialog>
 </template>
 <script>
-import { postCreate, putModify } from '@/api/goods/spu'
+import { postSpuCreate, putSpuModify } from '@/api/goods/spu'
 import { postClassificationTree } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
 import Treeselect from '@riophae/vue-treeselect'
@@ -89,7 +89,7 @@ export default {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
-      postCreate(tempData).then(() => {
+      postSpuCreate(tempData).then(() => {
         this.dialogFormVisible = false
         this.$message({
           type: 'success',
@@ -101,7 +101,7 @@ export default {
     updateData () {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
-      putModify(tempData).then(() => {
+      putSpuModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$message({
           type: 'success',

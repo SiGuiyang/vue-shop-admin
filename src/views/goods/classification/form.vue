@@ -41,7 +41,7 @@
   </el-dialog>
 </template>
 <script>
-import { postCreate, putModify, postClassificationTree } from '@/api/goods/classification'
+import { postClassificationCreate, putClassificationModify, postClassificationTree } from '@/api/goods/classification'
 import { postBannerList } from '@/api/activity/banner'
 import Treeselect from '@riophae/vue-treeselect'
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
@@ -95,7 +95,7 @@ export default {
       const tempData = Object.assign({}, this.formData)
       tempData.updateUser = this.$store.state.user.username
       tempData.createUser = this.$store.state.user.username
-      postCreate(tempData).then(() => {
+      postClassificationCreate(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           type: 'success',
@@ -109,7 +109,7 @@ export default {
     updateData () {
       const tempData = Object.assign({}, this.formData)
       tempData.createUser = this.$store.state.user.username
-      putModify(tempData).then(() => {
+      putClassificationModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$notify({
           type: 'success',

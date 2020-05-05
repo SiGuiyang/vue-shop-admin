@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { fetchExchangeRecordList, getRuleList } from '@/api/activity/exchange'
+import { postExchangeRecordList, getRuleList } from '@/api/activity/exchange'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -127,7 +127,7 @@ export default {
     getExchangeRecordList () { // 活动列表
       this.listLoading = true
       this.listQuery.activityId = this.$route.params.id
-      fetchExchangeRecordList(this.listQuery).then(response => {
+      postExchangeRecordList(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 

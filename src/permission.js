@@ -49,18 +49,22 @@ router.beforeEach((to, from, next) => {
         if (hasPermission(store.getters.permissions, to)) {
           next()
         } else {
-          next({ path: '/401', replace: true, query: { noGoBack: true }})
+          const router = {
+            path: '/401', replace: true, query: { noGoBack: true }
+          }
+          next(router)
         }
         // 可删 ↑
       }
     }
   } else { // 未登陆
     const authLogin = Cookie.get(Constants.auth_login)
-    if (authLogin === '1') {
+    if (authLogin) {
       if (Url.getParam('code') != null) {
         const code = Url.getParam('code')
-        store.dispatch('GetAccessToken', code).then(() => {
-          next('/dashboard')
+        store.dispatch('LoginAuthorizationCode', code).then(() => {
+          // next('/dashboard')
+          window.location.href = window.location.protocol + '//' + window.location.host
         })
       } else {
         // 跳转授权地址

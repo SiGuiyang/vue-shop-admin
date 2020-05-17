@@ -15,6 +15,20 @@
 
       <div class="title-container">
         <h3 class="title">Pager 电商平台</h3>
+        <div class="title-change">
+          <el-dropdown @command="handleCommand">
+            <span class="el-dropdown-link">
+              其它登陆方式
+            </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item v-for="(item,index) in loginTypeOptions"
+                                :key="index"
+                                :command="item.type">
+                {{ item.name }}
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
       </div>
 
       <el-form-item prop="phone">
@@ -22,43 +36,59 @@
           <svg-icon icon-class="user" />
         </span>
         <el-input v-model="loginForm.phone"
-                  :placeholder="placeholder.phone"
+                  placeholder="手机号码"
                   name="phone"
                   type="text"
                   auto-complete="on" />
       </el-form-item>
 
       <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input v-model="loginForm.password"
-                  :type="passwordType"
-                  :placeholder="placeholder.password"
-                  name="password"
-                  auto-complete="on"
-                  @keyup.enter.native="handleLogin" />
-        <span class="show-pwd"
-              @click="showPwd">
-          <svg-icon icon-class="eye" />
-        </span>
+        <template v-if="loginType === 'sms'">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input v-model="loginForm.smsCode"
+                    placeholder="短信验证码"
+                    auto-complete="on"
+                    @keyup.enter.native="handleLogin" />
+          <el-button type="default"
+                     :disabled="smsCodeBtnDisabled"
+                     class="sms-btn"
+                     @click="handleSendSms">{{ smsCodeText }}</el-button>
+        </template>
+        <template v-else>
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input v-model="loginForm.password"
+                    :type="passwordType"
+                    placeholder="密码"
+                    name="password"
+                    auto-complete="on"
+                    @keyup.enter.native="handleLogin" />
+          <span class="show-pwd"
+                @click="showPwd">
+            <svg-icon icon-class="eye" />
+          </span>
+        </template>
       </el-form-item>
       <el-button :loading="loading"
+                 :disabled="loginBtnDisabled"
                  type="primary"
                  style="width: 100%;"
-                 @click.native.prevent="handlePasswordLogin">
+                 @click.native.prevent="handleLogin">
         登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;陆
       </el-button>
-      <!--<el-button :loading="authLoading" type="success" style="width: 46%;" @click.native.prevent="handleAuthLogin">授权码登陆</el-button>-->
     </el-form>
   </div>
 </template>
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-import Cookie from 'js-cookie'
 import Constants from '@/utils/constants'
 import Config from '@/utils/config'
+import { postSendSMS } from '@/api/platform/sms'
+import Cookie from 'js-cookie'
 
 export default {
   name: 'Login',
@@ -84,15 +114,25 @@ export default {
       },
       loginForm: {
         phone: '13813145021',
-        password: '111111'
+        password: '111111',
+        smsCode: ''
       },
       loginRules: {
         phone: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
+      loginTypeOptions: [
+        { type: 'password', name: '密码登陆' },
+        { type: 'authorization_code', name: '授权码登陆' },
+        { type: 'sms', name: '短信登陆' }
+      ],
       passwordType: 'password',
+      loginType: 'password',
+      smsCodeText: '获取验证码',
+      smsCodeBtnDisabled: false,
+      loginBtnDisabled: false,
+      count: 60,
       loading: false,
-      authLoading: false,
       redirect: undefined
     }
   },
@@ -113,40 +153,82 @@ export default {
         this.passwordType = 'password'
       }
     },
-    handlePasswordLogin () { // 密码登陆
+    handleLogin () { // 密码登陆
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
-            this.$message({
-              type: 'success',
-              message: '登陆成功'
+          if (this.loginType === 'password') {
+            this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+              this.loading = false
+              this.$message({
+                type: 'success',
+                message: '登陆成功'
+              })
+              this.$router.push({ path: this.redirect || '/' })
+            }).catch(() => {
+              this.loading = false
             })
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch(() => {
-            this.loading = false
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+          } else if (this.loginType === 'authorization_code') {
+            debugger
+            Cookie.set(Constants.auth_login, true)
+            window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
+          } else if (this.loginType === 'sms') {
+            this.$store.dispatch('LoginSMS', this.loginForm).then(() => {
+              this.loading = false
+              this.$message({
+                type: 'success',
+                message: '登陆成功'
+              })
+              this.$router.push({ path: this.redirect || '/' })
+            }).catch(() => {
+              this.loading = false
+            })
+          }
         }
       })
     },
-    handleAuthLogin () {
-      this.$confirm('您选择的是授权码登陆，将跳转授权页面, 是否授权?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        Cookie.set(Constants.auth_login, '1')
-        // 跳转授权地址
-        window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
-      }).catch(() => {
-        Cookie.remove(Constants.auth_login)
+    handleCommand (command) {
+      this.loginType = command
+      // 密码模式，授权码模式，登陆按钮可用
+      if (command === 'password' || command === 'authorization_code') {
+        this.loginBtnDisabled = false
+      } else {
+        // 短信模式，默认进来短信不可用
+        this.loginBtnDisabled = true
+      }
+      this.$message('已切换' + this.loginTypeOptions.filter(item => item.type === command)[0].name)
+    },
+    handleSendSms () {
+      var countDown = setInterval(() => {
+        if (this.count < 1) {
+          this.isGeting = false
+          this.disable = false
+          // 获取验证码按钮不可用
+          this.smsCodeBtnDisabled = false
+          // 登陆按钮不可用
+          this.loginBtnDisabled = true
+          this.smsCodeText = '获取验证码'
+          this.count = 60
+          clearInterval(countDown)
+        } else {
+          // 获取验证码按钮不可用
+          this.smsCodeBtnDisabled = true
+          // 登陆按钮不可用
+          this.loginBtnDisabled = false
+          this.isGeting = true
+          this.disable = true
+          this.smsCodeText = this.count-- + 's后重发'
+        }
+      }, 1000)
+      const param = {
+        phone: this.loginForm.phone,
+        event: 'LOGIN_SMS'
+      }
+      postSendSMS(param).then(response => {
+        this.loginBtnDisabled = false
         this.$message({
-          type: 'info',
-          message: '已取消授权'
+          type: 'success',
+          message: response.data
         })
       })
     }
@@ -200,6 +282,11 @@ $cursor: #fff;
     color: #454545;
   }
 
+  .sms-btn {
+    right: 0;
+    position: absolute;
+    margin: 6px;
+  }
   .star {
     width: 100%;
     height: 100%;
@@ -228,7 +315,14 @@ $light_gray: #eee;
     padding: 35px 35px 15px 35px;
     margin: 120px auto;
   }
-
+  .title-change {
+    color: #fff;
+    position: absolute;
+    top: 3px;
+    font-size: 18px;
+    right: 0;
+    cursor: pointer;
+  }
   .tips {
     font-size: 14px;
     color: #fff;

@@ -274,9 +274,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-.icon-money {
-  color: #f4516c;
-}
-</style>

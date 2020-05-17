@@ -27,13 +27,17 @@
       <el-form-item label="订单满减金额"
                     prop="orderAmount">
         <el-input v-model.number="formData.orderAmount"
-                  placeholder="请设置" />
+                  placeholder="请设置">
+          <template slot="append">元</template>
+        </el-input>
       </el-form-item>
       <el-form-item v-if="!discountVisible"
                     label="优惠金额"
                     prop="couponAmount">
         <el-input v-model.number="formData.couponAmount"
-                  placeholder="请设置" />
+                  placeholder="请设置">
+          <template slot="append">元</template>
+        </el-input>
       </el-form-item>
       <el-form-item v-if="discountVisible"
                     label="折扣力度"

@@ -11,8 +11,8 @@ export function getRemoteAccessToken (data) {
       password: Config.client_secret
     },
     url: '/oauth/token',
-    method: 'post',
-    data
+    method: 'get',
+    params: data
   })
 }
 

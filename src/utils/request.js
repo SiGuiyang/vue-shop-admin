@@ -10,7 +10,7 @@ const service = axios.create({
   timeout: 10000 // request timeout
 })
 // http 500 响应码
-const errorCode = [404, 502, 503, 504]
+const errorCode = [400, 401, 403, 404, 405, 500, 502, 503, 504]
 // request interceptor
 service.interceptors.request.use(
   config => {
@@ -44,11 +44,14 @@ service.interceptors.response.use(
     } else if (res.code === 5000) {
       router.push('/401')
       return Promise.reject(res.msg)
-    } else if (res.code === 404) {
+    } else if (res.code === 10000 || res.code === 10001) {
       Message({
         message: res.msg,
         type: 'error',
         duration: 5 * 1000
+      })
+      store.dispatch('LogOut').then(() => {
+        router.push({ path: '/' })
       })
       return Promise.reject(res.msg)
     } else {

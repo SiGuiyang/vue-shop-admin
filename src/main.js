@@ -10,6 +10,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 
 import '@/styles/index.scss' // global css
 
+import formCreate from '@form-create/element-ui'
 import App from './App'
 import router from './router'
 import store from './store'
@@ -20,17 +21,13 @@ import './permission' // permission control
 
 import * as filters from './filters' // global filters
 
-import FormMaking from '@/components/DynamicForm'
-import contentmenu from 'v-contextmenu'
-import 'v-contextmenu/dist/index.css'
-
-Vue.use(contentmenu)
-Vue.use(FormMaking)
 Vue.use(Particles)
 
 Vue.use(Element, {
   size: Cookies.get('size') || 'medium' // set element-ui default size
 })
+
+Vue.use(formCreate)
 
 // register global utility filters.
 Object.keys(filters).forEach(key => {

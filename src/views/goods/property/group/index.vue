@@ -74,7 +74,7 @@ import Pagination from '@/components/Pagination'
 import IForm from './form'
 
 export default {
-  name: 'GoodsBrandGroup',
+  name: 'GoodsPropertyGroup',
   components: { IForm, Pagination },
   directives: { waves },
   data () {
@@ -119,17 +119,11 @@ export default {
       console.log(this.listQuery)
       this.getList()
     },
-    restForm () {
-      this.formData.id = undefined
-      this.formData.propertyGroupName = undefined
-      this.formData.createUser = undefined
-      this.formData.updateUser = undefined
-    },
     handleCreate () { // 创建
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
       _this.dialogFormVisible = true
-      this.restForm()
+      this.formData = {}
     },
     handleModify (row) { // 编辑弹框
       this.formData = Object.assign({}, row) // copy obj

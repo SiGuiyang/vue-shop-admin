@@ -27,7 +27,7 @@ export function postSkuCreate (data) {
  */
 export function putSkuModify (data) {
   return service({
-    url: '/goods/spu/modify',
+    url: '/goods/sku/modify',
     method: 'put',
     data
   })

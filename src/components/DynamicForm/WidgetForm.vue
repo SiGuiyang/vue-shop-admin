@@ -1,11 +1,8 @@
 <template>
   <div class="widget-form-container">
     <div v-if="data.widgets.length === 0"
-         class="form-container">从左侧拖拽来添加字段</div>
-    <el-form :size="data.config.size"
-             :label-position="data.config.labelPosition"
-             :label-width="data.config.labelWidth + 'px'"
-             label-suffix=":">
+         class="form-container">从右侧拖拽来添加表单字段</div>
+    <el-form label-position="top">
       <draggable v-model="data.widgets"
                  v-bind="{group:'people', ghostClass: 'ghost',animation: 200, handle: '.drag-widget'}"
                  @add="handleWidgetAdd">
@@ -69,16 +66,6 @@
           </template>
         </transition-group>
       </draggable>
-      <el-drawer :visible.sync="drawer"
-                 :direction="direction"
-                 :before-close="handleClose"
-                 title="字段属性">
-        <el-scrollbar :style="{height: scrollHeight}"
-                      wrap-class="scrollbar-wrap"
-                      class="widget-form-scrollbar">
-          <widget-config :data="selectWidget" />
-        </el-scrollbar>
-      </el-drawer>
     </el-form>
   </div>
 </template>
@@ -86,14 +73,12 @@
 <script>
 import Draggable from 'vuedraggable'
 import WidgetFormItem from './WidgetFormItem'
-import WidgetConfig from './WidgetConfig'
 
 export default {
   name: 'WidgetForm',
   components: {
     Draggable,
-    WidgetFormItem,
-    WidgetConfig
+    WidgetFormItem
   },
   props: {
     data: {
@@ -150,7 +135,7 @@ export default {
         ...this.data.widgets[newIndex],
         key,
         // 绑定键值
-        model: this.data.widgets[newIndex].type + '_' + key,
+        field: this.data.widgets[newIndex].type + '_' + key,
         rules: []
       })
 
@@ -196,8 +181,8 @@ export default {
         },
         key,
         // 绑定键值
-        model: row.columns[colIndex].list[newIndex].type + '_' + key,
-        rules: []
+        field: row.columns[colIndex].list[newIndex].type + '_' + key,
+        validate: []
       })
 
       if (row.columns[colIndex].list[newIndex].type === 'radio' || row.columns[colIndex].list[newIndex].type === 'checkbox' || row.columns[colIndex].list[newIndex].type === 'select') {

@@ -45,7 +45,7 @@ export default {
       return this.value
     },
     actionUrl () {
-      return '/api/admin/upload?access_token=' + getToken(Constants.access_token)
+      return '/api/oss/qiniu/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {
@@ -56,7 +56,8 @@ export default {
       this.$emit('input', val)
     },
     handleImageSuccess (response) {
-      this.emitInput(response.data.url)
+      const url = 'http://qb6d68ri5.bkt.clouddn.com/' + response.data.url
+      this.emitInput(url)
     }
   }
 }

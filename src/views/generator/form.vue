@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { generatorCode } from '@/api/generator'
+import { generatorCode } from '@/api/generate/generator'
 
 export default {
   name: 'Form',

@@ -59,7 +59,7 @@ export default {
       return this.value
     },
     actionUrl () {
-      return '/api/admin/upload?access_token=' + getToken(Constants.access_token)
+      return '/api/oss/qiniu/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {

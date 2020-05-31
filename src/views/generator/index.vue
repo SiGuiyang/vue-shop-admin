@@ -71,7 +71,7 @@
 </template>
 
 <script>
-import { fetchList, getTableColumn } from '@/api/generator'
+import { fetchList, getTableColumn } from '@/api/generate/generator'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination

@@ -68,9 +68,7 @@ service.interceptors.response.use(
         confirmButtonText: '确定',
         type: 'warning'
       }).then(() => {
-        store.dispatch('LogOut').then(() => {
-          router.push({ path: '/' })
-        })
+
       })
     }
     return Promise.reject(error)

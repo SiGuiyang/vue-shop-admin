@@ -84,11 +84,11 @@
                   type="success">启用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建人"
+      <el-table-column label="更新人"
                        width="140"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间"

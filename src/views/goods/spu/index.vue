@@ -76,7 +76,7 @@
 </template>
 
 <script>
-import { postSpuPage } from '@/api/goods/spu'
+import { postSpuPage, putSpuModify } from '@/api/goods/spu'
 import waves from '@/directive/waves' // Waves directive
 import IForm from './form'
 
@@ -154,9 +154,20 @@ export default {
       _this.dialogFormVisible = true
     },
     handleDelete (row) {
-      this.formData = Object.assign({}, row) // copy obj
-      const _this = this.$refs['dataForm']
-      _this.dialogFormVisible = true
+      const params = {
+        id: row.id,
+        updateUser: this.$store.state.user.username,
+        deleteStatus: true
+      }
+      putSpuModify(params).then(() => {
+        this.$notify({
+          title: '成功',
+          message: '删除成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList()
+      })
     }
   }
 }

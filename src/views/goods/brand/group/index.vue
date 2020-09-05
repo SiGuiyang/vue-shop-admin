@@ -63,7 +63,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
+    <pagination v-show="total>listQuery.pageSize"
                 :total="total"
                 :page.sync="listQuery.page"
                 :limit.sync="listQuery.pageSize"
@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import { postList, putModify } from '@/api/goods/group'
+import { postBrandGroupPage, putBrandGroupModify } from '@/api/goods/group'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 import IForm from './form'
@@ -112,7 +112,7 @@ export default {
   methods: {
     getList () { // 商品品牌列表
       this.listLoading = true
-      postList(this.listQuery).then(response => {
+      postBrandGroupPage(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
         setTimeout(() => {
@@ -152,7 +152,7 @@ export default {
         updateUser: this.$store.state.user.username,
         deleteStatus: true
       }
-      putModify(params).then(() => {
+      putBrandGroupModify(params).then(() => {
         this.$notify({
           title: '成功',
           message: '删除成功',

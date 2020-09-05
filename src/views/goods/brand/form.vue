@@ -13,6 +13,12 @@
         <el-input v-model="formData.brandName"
                   placeholder="请设置" />
       </el-form-item>
+      <el-form-item label="编号"
+                    prop="brandCode">
+        <el-input v-model="formData.brandCode"
+                  placeholder="系统自动生成"
+                  :disabled="brandCodeDisabled" />
+      </el-form-item>
       <el-form-item label="所属品牌组"
                     prop="brandGroupId">
         <el-select v-model="formData.brandGroupId">
@@ -21,12 +27,6 @@
                      :label="group.brandGroupName"
                      :value="group.id" />
         </el-select>
-      </el-form-item>
-      <el-form-item label="编号"
-                    prop="brandCode">
-        <el-input v-model="formData.brandCode"
-                  placeholder="系统自动生成"
-                  :disabled="brandCodeDisabled" />
       </el-form-item>
       <el-form-item label="序号"
                     prop="sequence">

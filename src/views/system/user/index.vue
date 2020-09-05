@@ -21,13 +21,25 @@
                  @click="handleCreate">
         新增
       </el-button>
+      <el-button v-permission="'PAGER_SYSTEM_USER_CREATE'"
+                 class="filter-item"
+                 style="margin-left: 10px;"
+                 type="primary"
+                 icon="el-icon-download"
+                 @click="handleExport">
+        导出
+      </el-button>
     </div>
     <el-table v-loading="listLoading"
               :data="list"
               stripe
               fit
               highlight-current-row
-              @row-click="tableSelectRows">
+              @row-click="tableSelectRows"
+              @selection-change="handleSelectionChange">
+      <el-table-column type="selection"
+                       width="55">
+      </el-table-column>
       <el-table-column label="手机号码"
                        align="left">
         <template slot-scope="scope">
@@ -110,6 +122,7 @@
 
 <script>
 import { fetchList, del } from '@/api/sysuser'
+import { commonDownload } from '@/utils/download'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -139,6 +152,7 @@ export default {
         phone: undefined
       },
       tableSelectData: {},
+      multipleSelection: [],
       statusOptions: ['published', 'draft', 'deleted'],
       formData: {
         avatar: undefined,
@@ -158,6 +172,11 @@ export default {
   methods: {
     tableSelectRows (row, event, column) {
       this.tableSelectData = row
+    },
+    handleSelectionChange (val) {
+      this.multipleSelection = val
+      console.log(this.multipleSelection)
+
     },
     getUserList () {
       this.listLoading = true
@@ -233,6 +252,14 @@ export default {
         sysName: undefined,
         username: undefined
       }
+    },
+    handleExport () {
+      const param = {
+        fileName: '用户信息.xlsx',
+        ids: this.multipleSelection.map(item => item.id),
+        type: 'excel'
+      }
+      commonDownload('/admin/system/user/download', param)
     }
   }
 }

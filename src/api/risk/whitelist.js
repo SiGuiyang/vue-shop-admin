@@ -1,36 +1,36 @@
 import service from '@/utils/request'
 
 // 获取table data
-export function postBlacklistPage (data) {
+export function postWhitelistPage (data) {
   return service({
-    url: '/risk/blacklist/page',
+    url: '/risk/whitelist/page',
     method: 'post',
     data
   })
 }
 
 // 新增
-export function postBlacklist (data) {
+export function postWhitelist (data) {
   return service({
-    url: '/risk/blacklist',
+    url: '/risk/whitelist',
     method: 'post',
     data
   })
 }
 
 // 修改
-export function putBlacklist (data) {
+export function putWhitelist (data) {
   return service({
-    url: '/risk/blacklist',
+    url: '/risk/whitelist',
     method: 'put',
     data
   })
 }
 
 // 删除
-export function deleteBlacklist (data) {
+export function deleteWhitelist (data) {
   return service({
-    url: `/risk/blacklist/${data.id}`,
+    url: `/risk/whitelist/${data.id}`,
     method: 'delete'
   })
 }

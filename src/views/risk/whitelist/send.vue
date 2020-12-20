@@ -1,6 +1,6 @@
 <template>
   <el-dialog :visible.sync="sendFormVisible"
-             title="批量拉黑"
+             title="批量添加白名单"
              width="50%">
     <el-upload :on-success="handleUploadSuccess"
                :file-list="uploadFile"
@@ -16,14 +16,16 @@
 
     <div slot="footer"
          class="dialog-footer">
-      <el-button @click="sendFormVisible = false">取消</el-button>
       <el-button v-waves
                  :loading="downloadLoading"
                  class="filter-item"
-                 type="primary"
+                 type="warning"
                  icon="el-icon-download"
                  @click="handleDownload">下载模板
       </el-button>
+      <el-button @click="sendFormVisible = false">取消</el-button>
+      <el-button type="primary"
+                 @click="handleReissueCoupon">确认</el-button>
     </div>
   </el-dialog>
 </template>
@@ -44,6 +46,10 @@ export default {
       downloadContent: {
         downloadFile: 'http://pk6b0a7n8.bkt.clouddn.com/coupon_send_template.xlsx',
         downloadFilename: 'coupon_send_template'
+      },
+      publishCoupon: {
+        file: undefined,
+        templateId: undefined
       },
       reissueRules: {
         file: [
@@ -67,7 +73,7 @@ export default {
   },
   computed: {
     actionURL () {
-      return process.env.BASE_API + '/risk/blacklist/upload?access_token=' + getToken(Constants.access_token)
+      return process.env.BASE_API + '/risk/whitelist/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {

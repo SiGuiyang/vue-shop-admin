@@ -75,7 +75,7 @@ export default {
   },
   computed: {
     actionURL () {
-      return process.env.BASE_API + '/admin/upload?access_token=' + getToken(Constants.access_token)
+      return process.env.VUE_APP_BASE_API + '/activity/coupon/publish?access_token=' + getToken(Constants.access_token) + '&templateId=' + this.publishCoupon.templateId
     }
   },
   methods: {
@@ -83,22 +83,21 @@ export default {
       this.publishCoupon.file = respnse.data.url
     },
     handleDownload () {
-      window.location.href = process.env.BASE_API + '/admin/download?downloadFile=' + this.downloadContent.downloadFile + '&downloadFilename=' + this.downloadContent.downloadFilename
+      const link = document.createElement('a')
+      link.style.display = 'none'
+      link.href = this.downloadContent.downloadFile
+      document.body.appendChild(link)
+      link.click()
     },
     handleReissueCoupon () {
       postPublishCoupon(this.publishCoupon).then(() => {
         this.reissueFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '发送优惠券成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
       })
     }
   }
 }
 </script>
-
-<style scoped>
-</style>

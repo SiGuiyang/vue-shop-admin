@@ -91,11 +91,9 @@ export default {
       tempData.updateUser = this.$store.state.user.username
       postCreate(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '创建成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.$parent.getList()
       })
@@ -105,11 +103,9 @@ export default {
       tempData.updateUser = this.$store.state.user.username
       putModify(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.$parent.getList()
       })

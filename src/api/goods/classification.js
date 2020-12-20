@@ -3,9 +3,8 @@ import service from '@/utils/request'
 // 分类列表
 export function postClassificationList (data) {
   return service({
-    url: '/goods/classification/page',
-    method: 'post',
-    data
+    url: `/goods/classification/${data.spuId}`,
+    method: 'post'
   })
 }
 
@@ -27,11 +26,10 @@ export function putClassificationModify (data) {
   })
 }
 
-// 商品分类树形结构
-export function postClassificationTree (data) {
+// 修改商品分类
+export function deleteClassification (data) {
   return service({
-    url: '/goods/classification/tree',
-    method: 'post',
-    data
+    url: `/goods/classification/delete/${data.id}`,
+    method: 'delete'
   })
 }

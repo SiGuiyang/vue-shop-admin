@@ -53,11 +53,9 @@ export default {
       tempData.event = this.dialogStatus === 'create' ? 'add' : 'modify'
       postpropertyGroupCreate(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '创建成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.$parent.getList()
       })
@@ -67,11 +65,9 @@ export default {
       tempData.updateUser = this.$store.state.user.username
       putpropertyGroupModify(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.$parent.getList()
       })

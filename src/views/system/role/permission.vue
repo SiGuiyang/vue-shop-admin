@@ -76,11 +76,9 @@ export default {
       params.roleId = this.selectedRoleId
       console.log(data)
       grantAuthorization(params).then(() => {
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '菜单授权成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
       })
     },

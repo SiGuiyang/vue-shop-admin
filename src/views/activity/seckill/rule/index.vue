@@ -2,11 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
       <el-button v-waves
-                 v-permission="'ROLE_SUPER_ADMIN'"
+                 v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_CREATE'"
                  class="filter-item"
                  type="primary"
                  icon="el-icon-edit"
-                 @click="handleCreate">添加
+                 @click="handleCreate">创建
       </el-button>
     </div>
     <el-table :key="tableKey"
@@ -17,7 +17,7 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="活动名称"
-                       align="center">
+                       align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.activityName }}</span>
         </template>
@@ -28,7 +28,6 @@
           <span>{{ scope.row.ruleName }}</span>
         </template>
       </el-table-column>
-
       <el-table-column label="最低限额"
                        align="center">
         <template slot-scope="scope">
@@ -36,18 +35,22 @@
             <svg-icon icon-class="money" />{{ scope.row.orderAmount }}</span>
         </template>
       </el-table-column>
-
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.updateTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="操作人"
+                       align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateUser }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="状态"
                        align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.deleteStatus"
+          <el-tag v-if="scope.row.state"
                   type="danger">禁用</el-tag>
           <el-tag v-else
                   type="success">启用</el-tag>
@@ -56,29 +59,35 @@
 
       <el-table-column label="操作"
                        fixed="right"
-                       width="160"
+                       width="220"
                        class-name="small-padding fixed-width"
                        align="center">
         <template slot-scope="scope">
           <!-- 编辑-->
-          <el-button v-permission="'ROLE_SUPER_ADMIN'"
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="primary"
                      size="small"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
 
-          <el-button v-if="scope.row.deleteStatus"
-                     v-permission="'ROLE_SUPER_ADMIN'"
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
+                     type="danger"
+                     size="small"
+                     @click="handleDelete(scope.row)">删除
+          </el-button>
+
+          <el-button v-if="scope.row.state"
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="success"
                      size="small"
-                     @click="handleDisable(scope.row.id,false)">启用
+                     @click="handleDisable(scope.row,false)">启用
           </el-button>
 
           <el-button v-else
-                     v-permission="'ROLE_SUPER_ADMIN'"
+                     v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="danger"
                      size="small"
-                     @click="handleDisable(scope.row.id,true)">禁用
+                     @click="handleDisable(scope.row,true)">禁用
           </el-button>
         </template>
       </el-table-column>
@@ -89,7 +98,8 @@
 </template>
 
 <script>
-import { getRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
+import { getRuleList, modifyRule, deleteRule } from '@/api/activity/exchange'
+import { getActivity } from '@/api/activity/activity'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import RuleForm from './ruleForm'
@@ -132,7 +142,7 @@ export default {
       })
     },
     initActivity (activityId) {
-      getExchangeActivity({ activityId: activityId }).then(response => {
+      getActivity({ activityId: activityId }).then(response => {
         this.activity = response.data
       })
     },
@@ -151,18 +161,28 @@ export default {
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDisable (id, deleteStatus) {
+    handleDelete (row) {
+      deleteRule({ id: row.id, activityId: row.activityId }).then(() => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.handleRuleList()
+      })
+    },
+    handleDisable (row, state) {
       const params = {
-        id: id,
+        id: row.id,
+        activityId: row.activityId,
         updateUser: this.$store.state.user.username,
-        deleteStatus: deleteStatus
+        state: state
       }
       modifyRule(params).then(() => {
         this.$message({
-          type: 'success',
-          message: '操作成功'
+          message: '更新成功',
+          type: 'success'
         })
-        this.getRuleList()
+        this.handleRuleList()
       })
     }
   }

@@ -39,8 +39,7 @@
       </el-button>
     </div>
 
-    <el-table :key="tableKey"
-              v-loading="listLoading"
+    <el-table v-loading="listLoading"
               :data="list"
               stripe
               fit
@@ -67,7 +66,7 @@
                        align="center"
                        width="120">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.serverStatus | statusFilter">{{ scope.row.serverStatus ? '禁用' : '启用' }}</el-tag>
+          <el-tag :type="scope.row.state | statusFilter">{{ scope.row.state ? '禁用' : '启用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="订单满减金额"
@@ -93,18 +92,18 @@
           <span>{{ scope.row.discountStrength != null ? scope.row.discountStrength + ' 折' : '——' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建人"
+      <el-table-column label="操作人"
                        align="center"
                        width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        align="center"
                        width="200">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -115,19 +114,19 @@
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_MODIFY'"
                      type="primary"
-                     size="mini"
+                     size="small"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
           <el-button v-if="scope.row.serverStatus"
                      v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_MODIFY'"
                      type="success"
-                     size="mini"
+                     size="small"
                      @click="handleDisable(scope.row.id,false)">启用
           </el-button>
           <el-button v-else
                      v-permission="'PAGER_ACTIVITY_COUPON_TEMPLATE_MODIFY'"
                      type="danger"
-                     size="mini"
+                     size="small"
                      @click="handleDisable(scope.row.id,true)">禁用
           </el-button>
         </template>
@@ -171,13 +170,12 @@ export default {
   },
   data () {
     return {
-      tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
       listQuery: {
         page: 1,
-        pageSize: 8,
+        pageSize: 10,
         templateName: undefined,
         templateType: undefined
       },

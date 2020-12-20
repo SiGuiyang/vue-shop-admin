@@ -1,21 +1,13 @@
 <template>
-  <div class="app-container">
-    <div class="filter-container">
-      <el-input v-model="listQuery.className"
-                placeholder="分类名称"
-                style="width: 200px;"
-                class="filter-item" />
-      <el-button v-waves
-                 class="filter-item"
-                 type="primary"
-                 icon="el-icon-search"
-                 @click="handleFilter">搜索</el-button>
-      <el-button v-waves
-                 class="filter-item"
-                 type="primary"
-                 icon="el-icon-edit"
-                 @click="handleCreate">新增</el-button>
-    </div>
+  <el-dialog :title="gcTitle"
+             :visible.sync="dialogFormVisible"
+             width="60%"
+             @opened="handleOpen">
+    <el-button v-waves
+               class="filter-item"
+               type="primary"
+               icon="el-icon-edit"
+               @click="handleCreate">新增</el-button>
 
     <el-table v-loading="listLoading"
               :data="list"
@@ -24,35 +16,24 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="分类名称"
-                       width="160"
                        align="left">
         <template slot-scope="scope">
-          <span>{{ scope.row.className }}</span>
+          <el-tag>{{ scope.row.className }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="上级分类名称"
-                       width="160"
+      <el-table-column label="序号"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.parentClassName }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="Banner名称"
-                       width="300"
-                       align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.bannerName }}</span>
+          <el-tag>{{ scope.row.sequence }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="更新时间"
-                       width="200"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人"
-                       width="200"
+      <el-table-column label="操作人"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateUser }}</span>
@@ -61,74 +42,66 @@
       <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        fixed="right"
+                       width="220"
                        align="center">
         <template slot-scope="scope">
           <el-button type="primary"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-edit"
                      @click="handleQuery(scope.row)">编辑</el-button>
           <el-button type="danger"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-delete"
                      @click="handleDel(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
-    <pagination v-show="total>0"
-                :total="total"
-                :page.sync="listQuery.page"
-                :limit.sync="listQuery.pageSize"
-                @pagination="getList" />
-    <i-form ref="dataForm"
-            :form-data="formData" />
-  </div>
+    <gc-form ref="dataForm"
+             :form-data="formData"
+             :spu="spu" />
+  </el-dialog>
 </template>
 
 <script>
-import { postClassificationList, putClassificationModify } from '@/api/goods/classification'
+import { postClassificationList, deleteClassification } from '@/api/goods/classification'
 import waves from '@/directive/waves' // Waves directive
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-import IForm from './form'
+import GcForm from './gcForm'
 
 export default {
   name: 'Classification',
-  components: { Pagination, IForm },
+  components: { GcForm },
   directives: { waves },
+  props: {
+    spu: {
+      type: Object,
+      default: () => ({})
+    }
+  },
   data () {
     return {
-      tableKey: 0,
+      gcTitle: null,
       list: null,
-      total: 0,
-      expand: false,
       listLoading: false,
       listQuery: {
-        page: 1,
-        pageSize: 10,
         className: undefined
       },
-      banners: [],
       dialogFormVisible: false,
-      dialogFormTitle: '编辑',
       formData: {
         id: undefined,
         className: undefined,
-        icon: undefined,
-        createUser: undefined
-      },
-      rules: {
-        className: [{ required: true, message: '分类名称不能为空', trigger: 'blur' }],
-        icon: [{ required: true, message: '图片不能为空', trigger: 'blur' }]
+        sequence: undefined
       }
     }
   },
-  created () {
-    this.getList()
-  },
   methods: {
+    handleOpen () {
+      this.gcTitle = '商品分类 - ' + this.spu.spuName
+      this.getList()
+    },
     getList () { // 商品分类列表
       this.listLoading = true
-      postClassificationList(this.listQuery).then(response => {
+      postClassificationList({ spuId: this.spu.id }).then(response => {
         this.list = response.data
-        this.total = response.total
-
         setTimeout(() => {
           this.listLoading = false
         }, 1.5 * 1000)
@@ -154,17 +127,10 @@ export default {
       _this.dialogStatus = 'update'
     },
     handleDel (row) { // 删除分类
-      const params = {
-        id: row.id,
-        deleteStatus: true,
-        updateUser: this.$store.state.user.username
-      }
-      putClassificationModify(params).then(() => {
-        this.$notify({
-          title: '成功',
+      deleteClassification({ id: row.id }).then(() => {
+        this.$message({
           message: '删除成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.getList() // 刷新页面
       })

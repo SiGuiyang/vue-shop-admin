@@ -5,6 +5,7 @@
                 placeholder="spu名称"
                 style="width: 200px;"
                 class="filter-item"
+                clearable
                 @keyup.enter.native="handleFilter" />
       <el-button v-waves
                  class="filter-item"
@@ -41,16 +42,19 @@
       <el-table-column label="spu图标"
                        align="center">
         <template slot-scope="scope">
-          <img :src="scope.row.spuImage" />
+          <img v-if="scope.row.spuImage"
+               :src="scope.row.spuImage"
+               width="80"
+               height="80" />
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="修改人"
+      <el-table-column label="操作人"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateUser }}</span>
@@ -59,35 +63,53 @@
       <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        fixed="right"
+                       width="300"
                        align="center">
         <template slot-scope="scope">
+          <el-button type="warning"
+                     icon="el-icon-s-operation"
+                     size="small"
+                     @click="handleClassification(scope.row)">商品分类</el-button>
           <el-button type="primary"
-                     size="mini"
+                     icon="el-icon-edit"
+                     size="small"
                      @click="handleQuery(scope.row)">编辑</el-button>
           <el-button type="danger"
-                     size="mini"
+                     icon="el-icon-delete"
+                     size="small"
                      @click="handleDelete(scope.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <pagination v-show="total>0"
+                :total="total"
+                :page.sync="listQuery.page"
+                :limit.sync="listQuery.pageSize"
+                @pagination="getSpuList" />
+
     <i-form ref="dataForm"
             :form-data="formData" />
+    <classification ref="classificationForm"
+                    :spu="spu" />
   </div>
 </template>
 
 <script>
-import { postSpuPage, putSpuModify } from '@/api/goods/spu'
+import { postSpuPage, deleteSpu } from '@/api/goods/spu'
 import waves from '@/directive/waves' // Waves directive
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 import IForm from './form'
+import Classification from './gcIndex'
 
 export default {
   name: 'Spu',
-  components: { IForm },
+  components: { Pagination, IForm, Classification },
   directives: { waves },
   data () {
     return {
       tableKey: 0,
       list: null,
+      total: 0,
       listLoading: false,
       listQuery: {
         spuName: undefined,
@@ -96,9 +118,9 @@ export default {
       },
       dialogFormVisible: false,
       dialogFormTitle: '编辑',
+      spu: {},
       formData: {
         id: undefined,
-        classificationId: undefined,
         sequence: undefined,
         spuName: undefined,
         spuImage: undefined,
@@ -112,13 +134,14 @@ export default {
     }
   },
   created () {
-    this.getList()
+    this.getSpuList()
   },
   methods: {
-    getList () { // 商品分类列表
+    getSpuList () { // 商品分类列表
       this.listLoading = true
       postSpuPage(this.listQuery).then(response => {
         this.list = response.data
+        this.total = response.total
 
         setTimeout(() => {
           this.listLoading = false
@@ -130,7 +153,7 @@ export default {
     handleFilter () { // 搜索
       this.listQuery.page = 1
 
-      this.getList()
+      this.getSpuList()
     },
     restForm () {
       this.formData.id = undefined
@@ -147,6 +170,14 @@ export default {
       _this.dialogFormVisible = true
       this.restForm()
     },
+    handleClassification (row) {
+      const _this = this.$refs['classificationForm']
+      _this.dialogFormVisible = true
+      this.spu = {
+        id: row.id,
+        spuName: row.spuName
+      }
+    },
     handleQuery (row) { // 查看分类中的商品
       this.formData = Object.assign({}, row) // copy obj
       const _this = this.$refs['dataForm']
@@ -155,18 +186,14 @@ export default {
     },
     handleDelete (row) {
       const params = {
-        id: row.id,
-        updateUser: this.$store.state.user.username,
-        deleteStatus: true
+        id: row.id
       }
-      putSpuModify(params).then(() => {
-        this.$notify({
-          title: '成功',
+      deleteSpu(params).then(() => {
+        this.$message({
           message: '删除成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
-        this.getList()
+        this.getSpuList()
       })
     }
   }

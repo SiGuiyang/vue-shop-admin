@@ -158,11 +158,9 @@ export default {
           const formDataData = Object.assign({}, this.formData)
           add(formDataData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '创建成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getList()
           })
@@ -176,11 +174,9 @@ export default {
           const formDataData = Object.assign({}, this.formData)
           modify(formDataData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getList()
           })

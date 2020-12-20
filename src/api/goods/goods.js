@@ -1,9 +1,9 @@
 import service from '@/utils/request'
 
 // 获取商品状态
-export function postGoodsStatus () {
+export function postGoodsState (data) {
   return service({
-    url: '/goods/product/status',
+    url: `/goods/product/state/${data.skuId}`,
     method: 'post'
   })
 }
@@ -35,10 +35,41 @@ export function putModifyGoods (data) {
   })
 }
 
-// 查看商品详情
-export function getGoodsInfo (data) {
+// 商品详情
+export function getGoods (data) {
   return service({
-    url: '/goods/product/' + data.goodsId,
+    url: `/goods/product/${data.id}`,
     method: 'get'
+  })
+}
+
+// 删除商品
+export function deleteGoods (data) {
+  return service({
+    url: `/goods/product/${data.id}`,
+    method: 'delete'
+  })
+}
+
+/**
+ * 商品审核信息
+ * @param {*} data 
+ */
+export function getApproveDetail (data) {
+  return service({
+    url: `/goods/sku/approve/${data.skuId}/detail/${data.goodsId}`,
+    method: 'get'
+  })
+}
+
+/**
+ * 提交审核
+ * @param {*} data 
+ */
+export function postApprove (data) {
+  return service({
+    url: `/goods/sku/approve/create`,
+    method: 'post',
+    data
   })
 }

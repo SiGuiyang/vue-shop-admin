@@ -1,24 +1,25 @@
 <template>
   <el-dialog :title="dialogFormTitle"
              :visible.sync="dialogFormVisible"
-             width="50%"
+             append-to-body
+             width="60%"
              @opened="handleOpen">
     <el-form ref="dataForm"
              :rules="rules"
              :model="formData"
              label-position="top"
              label-width="100px">
-      <el-form-item label="品牌组名称"
-                    prop="brandGroupName">
-        <el-input v-model="formData.brandGroupName"
+      <el-form-item label="分类名称"
+                    prop="className">
+        <el-input v-model="formData.className"
                   placeholder="请设置" />
       </el-form-item>
       <el-form-item label="序号"
                     prop="sequence">
         <el-input-number v-model="formData.sequence"
-                         :min="1"
+                         :min="0"
                          :max="100"
-                         label="请设置" />
+                         placeholder="请设置" />
       </el-form-item>
     </el-form>
     <div slot="footer"
@@ -30,22 +31,26 @@
   </el-dialog>
 </template>
 <script>
-import { postBrandGroupCreate, putBrandGroupModify } from '@/api/goods/group'
-
+import { postClassificationCreate, putClassificationModify } from '@/api/goods/classification'
 export default {
+  name: 'GcForm',
   props: {
     formData: {
+      type: Object,
+      default: () => ({})
+    },
+    spu: {
       type: Object,
       default: () => ({})
     }
   },
   data () {
     return {
-      dialogStatus: 'create',
       dialogFormVisible: false,
+      dialogStatus: 'create',
       dialogFormTitle: '编辑',
       rules: {
-        brandGroupName: [{ required: true, message: '品牌组名称不能为空', trigger: 'blur' }],
+        className: [{ required: true, message: '分类名称不能为空', trigger: 'blur' }],
         sequence: [{ required: true, message: '序号不能为空', trigger: 'blur' }]
       }
     }
@@ -56,32 +61,29 @@ export default {
     },
     createData () {
       const tempData = Object.assign({}, this.formData)
-      tempData.createUser = this.$store.state.user.username
       tempData.updateUser = this.$store.state.user.username
-      tempData.event = this.dialogStatus === 'create' ? 'add' : 'modify'
-      postBrandGroupCreate(tempData).then(() => {
+      tempData.createUser = this.$store.state.user.username
+      tempData.spuId = this.spu.id
+      postClassificationCreate(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '创建成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
-        this.$parent.getList()
+        this.$parent.$parent.getList()
       })
     },
     updateData () {
       const tempData = Object.assign({}, this.formData)
-      tempData.updateUser = this.$store.state.user.username
-      putBrandGroupModify(tempData).then(() => {
+      tempData.createUser = this.$store.state.user.username
+      tempData.spuId = this.spu.id
+      putClassificationModify(tempData).then(() => {
         this.dialogFormVisible = false
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
-        this.$parent.getList()
+        this.$parent.$parent.getList()
       })
     }
   }

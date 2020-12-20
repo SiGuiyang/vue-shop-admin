@@ -138,11 +138,9 @@ export default {
         deleteStatus: true
       }
       putPropertyGroupModify(params).then(() => {
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '删除成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.getList()
       })

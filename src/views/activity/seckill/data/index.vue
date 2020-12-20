@@ -165,7 +165,7 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 10,
-        activityType: 1,
+        activityType: 3,
         activityName: undefined,
         state: undefined,
         beginTime: undefined,
@@ -217,13 +217,13 @@ export default {
           this.handleDisable(row.id, state)
           break
         case 'GOODS':
-          this.handleJump('/activity/exchange/goods/' + row.id)
+          this.handleJump('/activity/seckill/goods/' + row.id)
           break
         case 'RULE':
-          this.handleJump('/activity/exchange/rule/' + row.id)
+          this.handleJump('/activity/seckill/rule/' + row.id)
           break
         case 'RECORD':
-          this.handleJump('/activity/exchange/record/' + row.id)
+          this.handleJump('/activity/seckill/record/' + row.id)
           break
       }
     },

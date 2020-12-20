@@ -12,7 +12,7 @@ export function fetchRoleList (data) {
 // 新增
 export function addRole (data) {
   return service({
-    url: '/admin/role',
+    url: '/admin/role/create',
     method: 'post',
     data
   })
@@ -21,9 +21,17 @@ export function addRole (data) {
 // 修改系统角色
 export function modifyRole (data) {
   return service({
-    url: '/admin/role',
+    url: '/admin/role/modify',
     method: 'put',
     data
+  })
+}
+
+// 删除角色
+export function deleteRole (data) {
+  return service({
+    url: `/admin/role/delete/${data.id}`,
+    method: 'delete'
   })
 }
 

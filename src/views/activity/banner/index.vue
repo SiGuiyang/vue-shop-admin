@@ -9,7 +9,6 @@
       <el-select v-model="listQuery.bannerType"
                  placeholder="类型"
                  clearable
-                 style="width: 120px"
                  class="filter-item">
         <el-option v-for="(item,index) in bannerTypeOptions"
                    :key="index"
@@ -38,7 +37,6 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="标题"
-                       width="150"
                        align="left">
         <template slot-scope="scope">
           <span class="link-type">{{ scope.row.title }}</span>
@@ -46,28 +44,24 @@
       </el-table-column>
       <el-table-column label="类型"
                        class-name="status-col"
-                       width="120"
                        align="center">
         <template slot-scope="scope">
           <span>{{ getBannerTypeName(scope.row) }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分享标题"
-                       width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.shareTitle }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分享副标题"
-                       width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.shareSubtitle }}</span>
         </template>
       </el-table-column>
       <el-table-column label="分享渠道"
-                       width="140"
                        align="center">
         <template slot-scope="scope">
           <span>{{ getShareChannelName(scope.row) }}</span>
@@ -75,7 +69,6 @@
       </el-table-column>
       <el-table-column label="状态"
                        class-name="status-col"
-                       width="120"
                        align="center">
         <template slot-scope="scope">
           <el-tag v-if="scope.row.bannerStatus"
@@ -84,15 +77,13 @@
                   type="success">启用</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="更新人"
-                       width="140"
+      <el-table-column label="操作人"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
       <el-table-column label="更新时间"
-                       width="160"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -106,19 +97,19 @@
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'"
                      type="primary"
-                     size="mini"
+                     size="small"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
           <el-button v-if="scope.row.bannerStatus"
                      v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'"
                      type="success"
-                     size="mini"
+                     size="small"
                      @click="handleDisable(scope.row.id, false)">启用
           </el-button>
           <el-button v-else
                      v-permission="'PAGER_ACTIVITY_BANNER_MODIFY'"
                      type="danger"
-                     size="mini"
+                     size="small"
                      @click="handleDisable(scope.row.id, true)">禁用
           </el-button>
         </template>

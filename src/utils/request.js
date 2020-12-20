@@ -16,12 +16,11 @@ service.interceptors.request.use(
   config => {
     // Do something before request is sent
     // 添加请求凭证token
-    let requestParams = config.params
-    if (requestParams === undefined || requestParams === null || requestParams === '') {
-      requestParams = {}
+    // 添加请求凭证token
+    const token = getToken(Constants.access_token)
+    if (token) {
+      config.headers['Authorization'] = 'Bearer ' + getToken(Constants.access_token)
     }
-    requestParams.access_token = getToken(Constants.access_token) // 后台每个请求都追加sysCode参数
-    config.params = requestParams
     return config
   },
   error => {

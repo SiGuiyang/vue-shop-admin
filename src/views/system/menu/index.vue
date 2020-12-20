@@ -21,15 +21,13 @@
               style="width: 100%;">
       <el-table-column label="菜单名称"
                        prop="icon"
-                       width="200"
-                       align="left">
+                       align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.name }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="图标"
                        prop="icon"
-                       width="100"
                        align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.icon">
@@ -39,7 +37,6 @@
       </el-table-column>
       <el-table-column label="请求地址"
                        prop="path"
-                       width="200"
                        align="center">
         <template slot-scope="scope">
           <template v-if="scope.row.path">
@@ -49,7 +46,6 @@
       </el-table-column>
       <el-table-column label="组建路径"
                        prop="component"
-                       width="280"
                        align="center">
         <template slot-scope="scope">
           <span> {{ scope.row.component }}</span>
@@ -57,7 +53,6 @@
       </el-table-column>
       <el-table-column label="排序"
                        prop="sequence"
-                       width="100"
                        align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.sequence }}</el-tag>
@@ -65,10 +60,21 @@
       </el-table-column>
       <el-table-column label="隐藏"
                        prop="hidden"
-                       width="100"
                        align="center">
         <template slot-scope="scope">
           <el-tag> {{ scope.row.hidden ? '是' : '否' }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="更新时间"
+                       align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作人"
+                       align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -78,13 +84,15 @@
                        fixed="right">
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'"
-                     size="mini"
+                     size="small"
                      type="primary"
+                     icon="el-icon-edit"
                      @click="handleModify(scope.row)">编辑
           </el-button>
           <el-button v-permission="'PAGER_SYSTEM_MENU_MODIFY'"
-                     size="mini"
+                     size="small"
                      type="danger"
+                     icon="el-icon-delete"
                      @click="handleDelete(scope.row)">删除
           </el-button>
         </template>
@@ -175,7 +183,7 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          del(row.id).then(() => {
+          del({ id: row.id }).then(() => {
             this.$message({
               type: 'success',
               message: '删除成功'
@@ -189,7 +197,7 @@ export default {
           })
         })
       } else {
-        del(row.id).then(() => {
+        del({ id: row.id }).then(() => {
           this.$message({
             type: 'success',
             message: '删除成功'

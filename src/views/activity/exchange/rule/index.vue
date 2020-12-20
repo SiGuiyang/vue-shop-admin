@@ -50,7 +50,7 @@
       <el-table-column label="状态"
                        align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.serverStatus"
+          <el-tag v-if="scope.row.state"
                   type="danger">禁用</el-tag>
           <el-tag v-else
                   type="success">启用</el-tag>
@@ -59,7 +59,7 @@
 
       <el-table-column label="操作"
                        fixed="right"
-                       width="160"
+                       width="220"
                        class-name="small-padding fixed-width"
                        align="center">
         <template slot-scope="scope">
@@ -70,18 +70,24 @@
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
 
-          <el-button v-if="scope.row.serverStatus"
+          <el-button v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
+                     type="danger"
+                     size="small"
+                     @click="handleDelete(scope.row)">删除
+          </el-button>
+
+          <el-button v-if="scope.row.state"
                      v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="success"
                      size="small"
-                     @click="handleDisable(scope.row.id,false)">启用
+                     @click="handleDisable(scope.row,false)">启用
           </el-button>
 
           <el-button v-else
                      v-permission="'PAGER_ACTIVITY_EXCHANGE_RULE_MODIFY'"
                      type="danger"
                      size="small"
-                     @click="handleDisable(scope.row.id,true)">禁用
+                     @click="handleDisable(scope.row,true)">禁用
           </el-button>
         </template>
       </el-table-column>
@@ -92,7 +98,8 @@
 </template>
 
 <script>
-import { getRuleList, getExchangeActivity, modifyRule } from '@/api/activity/exchange'
+import { getRuleList, modifyRule, deleteRule } from '@/api/activity/exchange'
+import { getActivity } from '@/api/activity/activity'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import RuleForm from './ruleForm'
@@ -135,7 +142,7 @@ export default {
       })
     },
     initActivity (activityId) {
-      getExchangeActivity({ activityId: activityId }).then(response => {
+      getActivity({ activityId: activityId }).then(response => {
         this.activity = response.data
       })
     },
@@ -154,18 +161,26 @@ export default {
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
     },
-    handleDisable (id, serverStatus) {
+    handleDelete (row) {
+      deleteRule({ id: row.id, activityId: row.activityId }).then(() => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.handleRuleList()
+      })
+    },
+    handleDisable (row, state) {
       const params = {
-        id: id,
+        id: row.id,
+        activityId: row.activityId,
         updateUser: this.$store.state.user.username,
-        serverStatus: serverStatus
+        state: state
       }
       modifyRule(params).then(() => {
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.handleRuleList()
       })

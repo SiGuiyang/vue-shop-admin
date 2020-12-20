@@ -12,6 +12,18 @@ export function postSpuPage (data) {
 }
 
 /**
+ * spu列表，无分页
+ * @param {*} data 
+ */
+export function postSpuList (data) {
+  return service({
+    url: '/goods/spu/list',
+    method: 'post',
+    data
+  })
+}
+
+/**
  * 新增spu
  */
 export function postSpuCreate (data) {
@@ -34,11 +46,20 @@ export function putSpuModify (data) {
 }
 
 /**
- * 获取所有的品牌组
+ * 修改spu
  */
-export function postListAll () {
+export function deleteSpu (data) {
   return service({
-    url: '/goods/brand/group/listAll',
-    method: 'post'
+    url: `/goods/spu/delete/${data.id}`,
+    method: 'delete'
+  })
+}
+
+//spu分类树形结构
+export function postSpuTree (data) {
+  return service({
+    url: '/goods/spu/tree',
+    method: 'post',
+    data
   })
 }

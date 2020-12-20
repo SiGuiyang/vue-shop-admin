@@ -28,9 +28,9 @@ export function modify (data) {
 }
 
 // 删除
-export function del (id) {
+export function del (data) {
   return service({
-    url: 'admin/menu/' + id,
+    url: `admin/menu/${data.id}`,
     method: 'delete'
   })
 }

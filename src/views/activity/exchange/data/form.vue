@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { createExchange, modifyExchange } from '@/api/activity/exchange'
+import { createActivity, modifyActivity } from '@/api/activity/activity'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Upload from '@/components/Upload/singleImage3'
@@ -84,9 +84,10 @@ export default {
     createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.formData.activityType = 1
           this.formData.createUser = this.$store.state.user.username
           this.formData.updateUser = this.$store.state.user.username
-          createExchange(this.formData).then(() => {
+          createActivity(this.formData).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'
@@ -102,7 +103,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
           tempData.updateUser = this.$store.state.user.username
-          modifyExchange(tempData).then(() => {
+          tempData.activityType = 1
+          modifyActivity(tempData).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'

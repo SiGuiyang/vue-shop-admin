@@ -24,3 +24,38 @@ export function putModifyUserCoupons (data) {
     method: 'put'
   })
 }
+
+// 获取table data
+export function fetchList (data) {
+  return service({
+    url: '/activity/master/page',
+    method: 'post',
+    data
+  })
+}
+
+// 新增
+export function createActivity (data) {
+  return service({
+    url: '/activity/master/create',
+    method: 'post',
+    data
+  })
+}
+
+// 修改
+export function modifyActivity (data) {
+  return service({
+    url: '/activity/master/modify',
+    method: 'put',
+    data
+  })
+}
+
+// 获取主活动
+export function getActivity (data) {
+  return service({
+    url: `/activity/master/${data.activityId}`,
+    method: 'get'
+  })
+}

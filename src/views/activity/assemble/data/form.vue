@@ -40,8 +40,7 @@
     <div slot="footer"
          class="dialog-footer">
       <el-button @click="dialogFormVisible = false">取消</el-button>
-      <el-button v-permission="'ROLE_SUPER_ADMIN'"
-                 type="primary"
+      <el-button type="primary"
                  @click="dialogStatus==='create'?createData():updateData()">确认
       </el-button>
     </div>
@@ -49,7 +48,7 @@
 </template>
 
 <script>
-import { create, modify } from '@/api/activity/assemble'
+import { createActivity, modifyActivity } from '@/api/activity/activity'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Upload from '@/components/Upload/singleImage3'
@@ -66,8 +65,8 @@ export default {
   data () {
     return {
       textMap: {
-        update: '编辑',
-        create: '新建'
+        update: '编辑满赠换购',
+        create: '新建满赠换购'
       },
       dialogStatus: undefined,
       dialogFormVisible: false,
@@ -84,9 +83,10 @@ export default {
     createData () {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
+          this.formData.activityType = 2
           this.formData.createUser = this.$store.state.user.username
           this.formData.updateUser = this.$store.state.user.username
-          create(this.formData).then(() => {
+          createActivity(this.formData).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'
@@ -102,7 +102,8 @@ export default {
         if (valid) {
           const tempData = Object.assign({}, this.formData)
           tempData.updateUser = this.$store.state.user.username
-          modify(tempData).then(() => {
+          tempData.activityType = 2
+          modifyActivity(tempData).then(() => {
             this.$message({
               type: 'success',
               message: '操作成功'
@@ -116,6 +117,3 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-</style>

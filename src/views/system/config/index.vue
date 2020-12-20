@@ -19,6 +19,7 @@
                  @click="handleCreate">新增
       </el-button>
       <el-button v-permission="'PAGER_SYSTEM_CONFIG_CREATE'"
+                 :loading="refreshLoading"
                  class="filter-item"
                  style="margin-left: 10px;"
                  type="success"
@@ -34,14 +35,12 @@
               fit
               highlight-current-row>
       <el-table-column label="配置项名称"
-                       width="220"
                        align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.configName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="配置项类型"
-                       width="160"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.configType }}</span>
@@ -49,52 +48,59 @@
       </el-table-column>
       <el-table-column label="状态"
                        class-name="status-col"
-                       width="100"
                        align="center">
         <template slot-scope="scope">
           <el-tag :type="scope.row.configStatus | statusFilter">{{ scope.row.configStatus ? '禁用': '启用' }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="说明"
-                       width="200"
                        align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.description }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
-                       width="180"
+      <el-table-column label="更新时间"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.updateTime }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作人"
+                       align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        fixed="right"
-                       width="220"
+                       width="260"
                        align="center">
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                      type="primary"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-edit"
                      @click="handleUpdate(scope.row)">编辑
           </el-button>
           <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                      type="warning"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-view"
                      @click="handleDetail(scope.row)">明细
           </el-button>
           <el-button v-if="scope.row.configStatus"
                      v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                      type="success"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-circle-check"
                      @click="handleStatus(scope.row, false)">启用
           </el-button>
           <el-button v-else
                      v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                      type="danger"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-circle-close"
                      @click="handleStatus(scope.row, true)">禁用
           </el-button>
         </template>
@@ -141,6 +147,7 @@ export default {
       list: null,
       total: 0,
       listLoading: true,
+      refreshLoading: false,
       listQuery: {
         page: 1,
         pageSize: 10,
@@ -193,12 +200,12 @@ export default {
       }
     },
     handleRefresh () {
+      this.refreshLoading = true
       getRefreshConfig().then(() => {
-        this.$notify({
-          title: '成功',
+        this.refreshLoading = false
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
       })
     },
@@ -214,11 +221,9 @@ export default {
       this.formData = Object.assign({}, row) // copy obj
       this.formData.configStatus = data
       modifyConfig(this.formData).then(() => {
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.getList()
       })

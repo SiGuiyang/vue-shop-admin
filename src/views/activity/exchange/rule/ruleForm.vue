@@ -72,11 +72,9 @@ export default {
           this.activityRule.createUser = this.$store.state.user.username
           this.activityRule.updateUser = this.$store.state.user.username
           addRule(this.activityRule).then(() => {
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '创建成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.dialogFormVisible = false
             this.$parent.handleRuleList()
@@ -89,11 +87,9 @@ export default {
         if (valid) {
           this.activityRule.updateUser = this.$store.state.user.username
           modifyRule(this.activityRule).then(() => {
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.dialogFormVisible = false
             this.$parent.handleRuleList()

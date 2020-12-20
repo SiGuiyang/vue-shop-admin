@@ -35,32 +35,40 @@
           <el-tag>{{ scope.row.roleName }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建人"
+      <el-table-column label="更新时间"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="操作人"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}:{s}') }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作"
                        class-name="small-padding fixed-width"
                        fixed="right"
-                       width="220"
+                       width="260"
                        align="center">
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_SYSTEM_ROLE_MODIFY'"
                      type="primary"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-edit"
                      @click="handleUpdate(scope.row)">编辑
+          </el-button>
+          <el-button v-permission="'PAGER_SYSTEM_ROLE_MODIFY'"
+                     type="danger"
+                     size="small"
+                     icon="el-icon-delete"
+                     @click="handleDelete(scope.row.id)">删除
           </el-button>
           <el-button v-permission="'PAGER_SYSTEM_ROLE_PERMISSION'"
                      type="warning"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-view"
                      @click="handlePermission(scope.row)">授权
           </el-button>
         </template>
@@ -78,7 +86,7 @@
 </template>
 
 <script>
-import { fetchRoleList } from '@/api/role'
+import { fetchRoleList, deleteRole } from '@/api/role'
 import waves from '@/directive/waves'
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -151,6 +159,15 @@ export default {
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
+    },
+    handleDelete (id) {
+      deleteRole({ id: id }).then(() => {
+        this.$message({
+          message: '删除成功',
+          type: 'success'
+        })
+        this.getRoleList()
+      })
     },
     handlePermission (row) {
       this.$router.push({ path: '/system/permission/' + row.id })

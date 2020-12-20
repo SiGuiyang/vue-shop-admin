@@ -13,14 +13,6 @@
         <el-input v-model="formData.spuName"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="二级分类名称"
-                    prop="classificationId">
-        <treeselect v-model="formData.classificationId"
-                    :options="goodsClassification"
-                    :normalizer="spuNormalizer"
-                    value-field-name="id"
-                    placeholder="请选择" />
-      </el-form-item>
       <el-form-item label="序号"
                     prop="sequence">
         <el-input-number v-model="formData.sequence"
@@ -31,7 +23,7 @@
       <el-form-item label="图标"
                     prop="icon">
         <div style="margin-bottom: 20px;">
-          <Upload v-model="formData.icon" />
+          <Upload v-model="formData.spuImage" />
         </div>
       </el-form-item>
     </el-form>
@@ -47,11 +39,9 @@
 import { postSpuCreate, putSpuModify } from '@/api/goods/spu'
 import { postClassificationTree } from '@/api/goods/classification'
 import Upload from '@/components/Upload/singleImage3'
-import Treeselect from '@riophae/vue-treeselect'
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 
 export default {
-  components: { Upload, Treeselect },
+  components: { Upload },
   props: {
     formData: {
       type: Object,
@@ -92,10 +82,10 @@ export default {
       postSpuCreate(tempData).then(() => {
         this.dialogFormVisible = false
         this.$message({
-          type: 'success',
-          message: '操作成功'
+          message: '创建成功',
+          type: 'success'
         })
-        this.$parent.getList()
+        this.$parent.getSpuList()
       })
     },
     updateData () {
@@ -104,10 +94,10 @@ export default {
       putSpuModify(tempData).then(() => {
         this.dialogFormVisible = false
         this.$message({
-          type: 'success',
-          message: '操作成功'
+          message: '更新成功',
+          type: 'success'
         })
-        this.$parent.getList()
+        this.$parent.getSpuList()
       })
     },
     handleClassificationTree () {

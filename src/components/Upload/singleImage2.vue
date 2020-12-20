@@ -5,7 +5,7 @@
                :on-success="handleImageSuccess"
                class="image-uploader"
                drag
-               action="https://httpbin.org/post">
+               :action="actionUrl">
       <i class="el-icon-upload" />
       <div class="el-upload__text">Drag或<em>点击上传</em></div>
     </el-upload>
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { getToken } from '@/utils/auth'
+import Constants from '@/utils/constants'
 
 export default {
   name: 'SingleImageUpload2',
@@ -42,6 +44,9 @@ export default {
   computed: {
     imageUrl () {
       return this.value
+    },
+    actionUrl () {
+      return '/api/oss/upload?access_token=' + getToken(Constants.access_token)
     }
   },
   methods: {

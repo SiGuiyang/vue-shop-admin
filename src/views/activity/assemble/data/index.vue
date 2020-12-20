@@ -5,7 +5,16 @@
                 placeholder="活动名称"
                 style="width: 200px;"
                 class="filter-item" />
-      <el-date-picker v-model="listQuery.timeRange"
+      <el-select v-model="listQuery.state"
+                 placeholder="状态"
+                 clearable
+                 class="filter-item">
+        <el-option v-for="(item,index) in stateOptions"
+                   :key="index"
+                   :label="item.value"
+                   :value="item.key" />
+      </el-select>
+      <el-date-picker v-model="listQuery.range"
                       :default-time="['00:00:00', '23:59:59']"
                       type="datetimerange"
                       value-format="yyyy-MM-dd HH:mm:ss"
@@ -35,14 +44,12 @@
               highlight-current-row
               style="width: 100%;">
       <el-table-column label="活动名称"
-                       width="200"
                        align="left">
         <template slot-scope="scope">
           <span>{{ scope.row.activityName }}</span>
         </template>
       </el-table-column>
       <el-table-column label="活动时间"
-                       width="300"
                        align="center">
         <template slot-scope="scope">
           <span>{{ getActivityTime(scope.row) }}</span>
@@ -50,10 +57,9 @@
       </el-table-column>
 
       <el-table-column label="状态"
-                       width="100"
                        align="center">
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.serverStatus"
+          <el-tag v-if="scope.row.state"
                   type="danger">禁用</el-tag>
           <el-tag v-else
                   type="success">启用</el-tag>
@@ -61,18 +67,16 @@
       </el-table-column>
 
       <el-table-column label="更新时间"
-                       width="200"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
 
       <el-table-column label="操作人"
-                       width="200"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
 
@@ -89,7 +93,7 @@
                      @click="handleCommand('EDIT', scope.row)">编辑
           </el-button>
           <!-- 启用-->
-          <el-button v-if="scope.row.serverStatus"
+          <el-button v-if="scope.row.state"
                      v-permission="'PAGER_ACTIVITY_ASSEMBLY_MODIFY'"
                      type="success"
                      size="small"
@@ -136,7 +140,7 @@
 </template>
 
 <script>
-import { fetchList, modify } from '@/api/activity/assemble'
+import { fetchList, modifyActivity } from '@/api/activity/activity'
 import { parseTime } from '@/utils'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -156,9 +160,11 @@ export default {
       listQuery: {
         page: 1,
         pageSize: 10,
+        activityType: 2,
         activityName: undefined,
         timeRange: undefined
       },
+      stateOptions: [{ key: false, value: '启用' }, { key: true, value: '禁用' }],
       formData: {}
     }
   },
@@ -196,9 +202,6 @@ export default {
     },
     handleUpdate (row) {
       this.formData = Object.assign({}, row)
-      this.formData.timeRange = []
-      this.formData.timeRange.push(row.beginTime)
-      this.formData.timeRange.push(row.endTime)
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
       _this.dialogFormVisible = true
@@ -225,13 +228,13 @@ export default {
     handleJump (router) { // 路由跳转
       this.$router.push({ path: router })
     },
-    handleDisable (id, deleteStatus) {
+    handleDisable (id, state) {
       const params = {
         id: id,
-        serverStatus: deleteStatus,
+        state: state,
         updateUser: this.$store.state.user.username
       }
-      modify(params).then(() => {
+      modifyActivity(params).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

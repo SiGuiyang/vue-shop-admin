@@ -22,9 +22,10 @@
         新增
       </el-button>
       <el-button v-permission="'PAGER_SYSTEM_USER_CREATE'"
+                 :loading="downloadLoading"
                  class="filter-item"
                  style="margin-left: 10px;"
-                 type="primary"
+                 type="warning"
                  icon="el-icon-download"
                  @click="handleExport">
         导出
@@ -60,24 +61,23 @@
       </el-table-column>
       <el-table-column label="状态"
                        class-name="status-col"
-                       width="100"
                        align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.deleteStatus | statusFilter">
-            {{ scope.row.deleteStatus ? '禁用' : '启用' }}
+          <el-tag :type="scope.row.state | statusFilter">
+            {{ scope.row.state ? '禁用' : '启用' }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="创建人"
+      <el-table-column label="操作人"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createUser }}</span>
+          <span>{{ scope.row.updateUser }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="创建时间"
+      <el-table-column label="更新时间"
                        align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.createTime | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.updateTime }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作"
@@ -88,22 +88,25 @@
         <template slot-scope="scope">
           <el-button v-permission="'PAGER_SYSTEM_USER_MODIFY'"
                      type="primary"
-                     size="mini"
+                     size="small"
+                     icon="el-icon-edit"
                      @click="handleModify(scope.row)">
             编辑
           </el-button>
-          <el-button v-if="scope.row.deleteStatus"
+          <el-button v-if="scope.row.state"
                      v-permission="'PAGER_SYSTEM_USER_MODIFY'"
                      type="success"
-                     size="mini"
-                     @click="handleDelete(scope.row, false)">
+                     size="small"
+                     icon="el-icon-circle-check"
+                     @click="handleStatus(scope.row, false)">
             启用
           </el-button>
           <el-button v-else
                      v-permission="'PAGER_SYSTEM_USER_MODIFY'"
                      type="danger"
-                     size="mini"
-                     @click="handleDelete(scope.row, true)">
+                     size="small"
+                     icon="el-icon-circle-close"
+                     @click="handleStatus(scope.row, true)">
             禁用
           </el-button>
         </template>
@@ -121,7 +124,7 @@
 </template>
 
 <script>
-import { fetchList, del } from '@/api/sysuser'
+import { fetchList, putModify } from '@/api/sysuser'
 import { commonDownload } from '@/utils/download'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
@@ -144,6 +147,7 @@ export default {
   data () {
     return {
       list: null,
+      downloadLoading: false,
       total: 0,
       listLoading: true,
       listQuery: {
@@ -206,17 +210,10 @@ export default {
       this.listQuery.page = 1
       this.getUserList()
     },
-    handleModifyStatus (row, status) {
-      this.$message({
-        message: '操作成功',
-        type: 'success'
-      })
-      row.status = status
-    },
     handleCreate () { // 创建
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'create'
-      _this.passwordDisabled = false
+      _this.passwordVisiable = true
       _this.dialogFormVisible = true
       this.restForm()
     },
@@ -225,18 +222,14 @@ export default {
       this.formData.roleIds = row.roles.map(item => item.id)
       const _this = this.$refs['dataForm']
       _this.dialogStatus = 'update'
-      _this.passwordDisabled = true
+      _this.passwordVisiable = false
       _this.dialogFormVisible = true
     },
-    handleDelete (row, data) {
-      this.formData = Object.assign({}, row) // copy obj
-      this.formData.deleteStatus = data
-      del(this.formData).then(() => {
-        this.$notify({
-          title: '成功',
+    handleStatus (row, state) {
+      putModify({ id: row.id, state: state }).then(() => {
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.getUserList()
       })
@@ -259,7 +252,9 @@ export default {
         ids: this.multipleSelection.map(item => item.id),
         type: 'excel'
       }
+      this.downloadLoading = true
       commonDownload('/admin/system/user/download', param)
+      this.downloadLoading = false
     }
   }
 }

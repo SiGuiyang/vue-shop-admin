@@ -13,7 +13,7 @@
         <el-option :value="true"
                    label="移除" />
         <el-option :value="false"
-                   label="黑名单" />
+                   label="白名单" />
       </el-select>
       <el-date-picker v-model="listQuery.range"
                       type="datetimerange"
@@ -61,7 +61,7 @@
           <el-tag v-if="scope.row.state"
                   type="success">已移除</el-tag>
           <el-tag v-else
-                  type="danger">黑名单</el-tag>
+                  type="danger">白名单</el-tag>
         </template>
       </el-table-column>
       <el-table-column prop="updateTime"
@@ -110,7 +110,7 @@
 </template>
 
 <script>
-import { postBlacklistPage, deleteBlacklist, putBlacklist } from '@/api/risk/blackList'
+import { postWhitelistPage, deleteWhitelist, putWhitelist } from '@/api/risk/whitelist'
 import waves from '@/directive/waves' // Waves directive
 import permission from '@/directive/permission'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -148,7 +148,7 @@ export default {
   methods: {
     getList () {
       this.listLoading = true
-      postBlacklistPage(this.listQuery).then(response => {
+      postWhitelistPage(this.listQuery).then(response => {
         this.list = response.data
         this.total = response.total
 
@@ -183,7 +183,7 @@ export default {
       _this.dialogFormVisible = true
     },
     handleDelete (id) {
-      deleteBlacklist({ id: id }).then(() => {
+      deleteWhitelist({ id: id }).then(() => {
         this.$message({
           type: 'success',
           message: '删除成功'
@@ -192,7 +192,7 @@ export default {
       })
     },
     handleBlack (id, state) {
-      putBlacklist({ id: id, state: state }).then(() => {
+      putWhitelist({ id: id, state: state }).then(() => {
         this.$message({
           type: 'success',
           message: '操作成功'

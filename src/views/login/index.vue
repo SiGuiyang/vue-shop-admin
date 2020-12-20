@@ -15,20 +15,6 @@
 
       <div class="title-container">
         <h3 class="title">Pager 电商平台</h3>
-        <div class="title-change">
-          <el-dropdown @command="handleCommand">
-            <span class="el-dropdown-link">
-              其它登陆方式
-            </span>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item v-for="(item,index) in loginTypeOptions"
-                                :key="index"
-                                :command="item.type">
-                {{ item.name }}
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
-        </div>
       </div>
 
       <el-form-item prop="phone">
@@ -43,20 +29,7 @@
       </el-form-item>
 
       <el-form-item prop="password">
-        <template v-if="loginType === 'sms'">
-          <span class="svg-container">
-            <svg-icon icon-class="password" />
-          </span>
-          <el-input v-model="loginForm.smsCode"
-                    placeholder="短信验证码"
-                    auto-complete="on"
-                    @keyup.enter.native="handleLogin" />
-          <el-button type="default"
-                     :disabled="smsCodeBtnDisabled"
-                     class="sms-btn"
-                     @click="handleSendSms">{{ smsCodeText }}</el-button>
-        </template>
-        <template v-else>
+        <template>
           <span class="svg-container">
             <svg-icon icon-class="password" />
           </span>
@@ -85,10 +58,6 @@
 
 <script>
 import { isvalidUsername } from '@/utils/validate'
-import Constants from '@/utils/constants'
-import Config from '@/utils/config'
-import { postSendSMS } from '@/api/platform/sms'
-import Cookie from 'js-cookie'
 
 export default {
   name: 'Login',
@@ -114,24 +83,14 @@ export default {
       },
       loginForm: {
         phone: '13813145021',
-        password: '111111',
-        smsCode: ''
+        password: '111111'
       },
       loginRules: {
         phone: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
-      loginTypeOptions: [
-        { type: 'password', name: '密码登陆' },
-        { type: 'authorization_code', name: '授权码登陆' },
-        { type: 'sms', name: '短信登陆' }
-      ],
       passwordType: 'password',
-      loginType: 'password',
-      smsCodeText: '获取验证码',
-      smsCodeBtnDisabled: false,
       loginBtnDisabled: false,
-      count: 60,
       loading: false,
       redirect: undefined
     }
@@ -157,79 +116,17 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          if (this.loginType === 'password') {
-            this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-              this.loading = false
-              this.$message({
-                type: 'success',
-                message: '登陆成功'
-              })
-              this.$router.push({ path: this.redirect || '/' })
-            }).catch(() => {
-              this.loading = false
+          this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
+            this.loading = false
+            this.$message({
+              type: 'success',
+              message: '登陆成功'
             })
-          } else if (this.loginType === 'authorization_code') {
-            debugger
-            Cookie.set(Constants.auth_login, true)
-            window.location.href = Config.auth_url + '/oauth/authorize?response_type=code&client_id=' + Config.client_id + '&redirect_uri=' + Config.redirect_uri
-          } else if (this.loginType === 'sms') {
-            this.$store.dispatch('LoginSMS', this.loginForm).then(() => {
-              this.loading = false
-              this.$message({
-                type: 'success',
-                message: '登陆成功'
-              })
-              this.$router.push({ path: this.redirect || '/' })
-            }).catch(() => {
-              this.loading = false
-            })
-          }
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(() => {
+            this.loading = false
+          })
         }
-      })
-    },
-    handleCommand (command) {
-      this.loginType = command
-      // 密码模式，授权码模式，登陆按钮可用
-      if (command === 'password' || command === 'authorization_code') {
-        this.loginBtnDisabled = false
-      } else {
-        // 短信模式，默认进来短信不可用
-        this.loginBtnDisabled = true
-      }
-      this.$message('已切换' + this.loginTypeOptions.filter(item => item.type === command)[0].name)
-    },
-    handleSendSms () {
-      var countDown = setInterval(() => {
-        if (this.count < 1) {
-          this.isGeting = false
-          this.disable = false
-          // 获取验证码按钮不可用
-          this.smsCodeBtnDisabled = false
-          // 登陆按钮不可用
-          this.loginBtnDisabled = true
-          this.smsCodeText = '获取验证码'
-          this.count = 60
-          clearInterval(countDown)
-        } else {
-          // 获取验证码按钮不可用
-          this.smsCodeBtnDisabled = true
-          // 登陆按钮不可用
-          this.loginBtnDisabled = false
-          this.isGeting = true
-          this.disable = true
-          this.smsCodeText = this.count-- + 's后重发'
-        }
-      }, 1000)
-      const param = {
-        phone: this.loginForm.phone,
-        event: 'LOGIN_SMS'
-      }
-      postSendSMS(param).then(response => {
-        this.loginBtnDisabled = false
-        this.$message({
-          type: 'success',
-          message: response.data
-        })
       })
     }
   }
@@ -280,12 +177,6 @@ $cursor: #fff;
     background: rgba(0, 0, 0, 0.1);
     border-radius: 5px;
     color: #454545;
-  }
-
-  .sms-btn {
-    right: 0;
-    position: absolute;
-    margin: 6px;
   }
   .star {
     width: 100%;

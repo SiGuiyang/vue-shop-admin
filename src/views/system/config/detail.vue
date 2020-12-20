@@ -56,19 +56,22 @@
           <template slot-scope="scope">
             <el-button v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                        type="primary"
-                       size="mini"
+                       size="small"
+                       icon="el-icon-edit"
                        @click="handleDetailUpdate(scope.row)">编辑
             </el-button>
             <el-button v-if="scope.row.configStatus"
                        v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                        type="success"
-                       size="mini"
+                       size="small"
+                       icon="el-icon-circle-check"
                        @click="handleStatus(scope.row, false)">启用
             </el-button>
             <el-button v-else
                        v-permission="'PAGER_SYSTEM_CONFIG_MODIFY'"
                        type="danger"
-                       size="mini"
+                       size="small"
+                       icon="el-icon-circle-close"
                        @click="handleStatus(scope.row, true)">禁用
             </el-button>
           </template>
@@ -165,11 +168,9 @@ export default {
       this.detailFormData = Object.assign({}, row) // copy obj
       this.detailFormData.configStatus = data
       putConfigDetailModify(this.detailFormData).then(() => {
-        this.$notify({
-          title: '成功',
+        this.$message({
           message: '更新成功',
-          type: 'success',
-          duration: 2000
+          type: 'success'
         })
         this.handleDetailList({ configKey: this.configDetailType })
       })

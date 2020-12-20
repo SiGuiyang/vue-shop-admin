@@ -1,36 +1,9 @@
 import service from '@/utils/request'
 
-// 获取table data
-export function fetchList (data) {
-  return service({
-    url: '/activity/assemble/page',
-    method: 'post',
-    data
-  })
-}
-
-// 新增
-export function create (data) {
-  return service({
-    url: '/activity/assemble/create',
-    method: 'post',
-    data
-  })
-}
-
-// 修改
-export function modify (data) {
-  return service({
-    url: '/activity/assemble/modify',
-    method: 'put',
-    data
-  })
-}
-
 // 活动规则详情
 export function getRuleInfo (data) {
   return service({
-    url: '/activity/assemble/rule/' + data,
+    url: `/activity/assemble/rule/${data.ruleId}`,
     method: 'get'
   })
 }
@@ -56,7 +29,7 @@ export function members (data) {
 // 拼团商品
 export function getAssembleGoods (data) {
   return service({
-    url: '/activity/assemble/goods/' + data.activityId,
+    url: `/activity/assemble/goods/${data.activityId}`,
     method: 'post'
   })
 }

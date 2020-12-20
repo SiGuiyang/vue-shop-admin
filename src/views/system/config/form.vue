@@ -100,11 +100,9 @@ export default {
           const tempData = Object.assign({}, this.formData)
           modifyConfig(tempData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getList()
           })

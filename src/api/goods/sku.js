@@ -33,3 +33,12 @@ export function putSkuModify (data) {
   })
 }
 
+/**
+ * 修改sku
+ */
+export function deleteSku (data) {
+  return service({
+    url: `/goods/sku/delete/${data.id}`,
+    method: 'delete'
+  })
+}

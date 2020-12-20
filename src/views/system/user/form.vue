@@ -18,13 +18,14 @@
         <el-input v-model="formData.username"
                   placeholder="请设置" />
       </el-form-item>
-      <el-form-item label="密码"
-                    prop="password">
-        <el-input v-model="formData.password"
-                  :disabled="passwordDisabled"
-                  type="password"
-                  placeholder="请设置" />
-      </el-form-item>
+      <template v-if="passwordVisiable">
+        <el-form-item label="密码"
+                      prop="password">
+          <el-input v-model="formData.password"
+                    type="password"
+                    placeholder="请设置" />
+        </el-form-item>
+      </template>
       <el-form-item label="拥有角色"
                     prop="roleIds">
         <el-select v-model="formData.roleIds"
@@ -74,7 +75,7 @@ export default {
     return {
       dialogFormVisible: false,
       dialogPvVisible: false,
-      passwordDisabled: false,
+      passwordVisiable: false,
       dialogStatus: 'create',
       textMap: {
         update: '编辑',
@@ -103,11 +104,9 @@ export default {
           this.formData.loginCode = this.formData.username
           postCreate(this.formData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '创建成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getUserList()
           })
@@ -121,11 +120,9 @@ export default {
           formDataData.createUser = this.$store.state.user.username
           putModify(formDataData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getUserList()
           })

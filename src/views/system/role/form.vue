@@ -62,11 +62,9 @@ export default {
           this.formData.createUser = this.$store.state.user.username
           addRole(this.formData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '创建成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getRoleList()
           })
@@ -80,11 +78,9 @@ export default {
           const tempData = Object.assign({}, this.formData)
           modifyRole(tempData).then(() => {
             this.dialogFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.getRoleList()
           })

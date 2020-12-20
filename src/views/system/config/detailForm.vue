@@ -85,11 +85,9 @@ export default {
           const tempData = Object.assign({}, this.detailFormData)
           postConfigDetailCreate(tempData).then(() => {
             this.dialogDetailFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '创建成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.handleDetailList({ configKey: this.detailFormData.configKey }) // 回调列表
           })
@@ -103,11 +101,9 @@ export default {
           const tempData = Object.assign({}, this.detailFormData)
           putConfigDetailModify(tempData).then(() => {
             this.dialogDetailFormVisible = false
-            this.$notify({
-              title: '成功',
+            this.$message({
               message: '更新成功',
-              type: 'success',
-              duration: 2000
+              type: 'success'
             })
             this.$parent.handleDetailList({ configKey: this.detailFormData.configKey }) // 回调列表
           })

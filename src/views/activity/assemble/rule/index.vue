@@ -27,7 +27,7 @@
         <el-input v-model="activityRule.description"
                   :rows="5"
                   type="textarea"
-                  :maxlength="maxlength"
+                  :maxlength="200"
                   placeholder="请设置"
                   show-word-limit />
       </el-form-item>
@@ -53,7 +53,6 @@ export default {
   directives: { waves, permission },
   data () {
     return {
-      maxlength: 100,
       showWordLimit: true,
       activityRule: {
         id: undefined,
@@ -76,7 +75,7 @@ export default {
   methods: {
     initData () {
       this.tempRoute = this.$route
-      getRuleInfo(this.$route.params.id).then(response => {
+      getRuleInfo({ ruleId: this.$route.params.id }).then(response => {
         this.activityRule = response.data
       })
     },

@@ -26,12 +26,3 @@ export function putModify (data) {
     data
   })
 }
-
-// 修改系统用户
-export function del (data) {
-  return service({
-    url: '/admin/system/user/' + data.id,
-    method: 'post',
-    data
-  })
-}

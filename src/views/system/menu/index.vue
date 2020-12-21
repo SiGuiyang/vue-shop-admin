@@ -23,7 +23,7 @@
                        prop="icon"
                        align="center">
         <template slot-scope="scope">
-          <el-tag> {{ scope.row.name }}</el-tag>
+          <span> {{ scope.row.name }}</span>
         </template>
       </el-table-column>
       <el-table-column label="图标"

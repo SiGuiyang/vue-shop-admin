@@ -1,7 +1,6 @@
-import { loginByUsername, loginAuthorizationCode, loginSMS, getUserInfo } from '@/api/login'
+import { loginByUsername, getUserInfo } from '@/api/login'
 import { removeToken, setToken } from '@/utils/auth'
 import Constants from '@/utils/constants'
-import Config from '@/utils/config'
 
 const user = {
   state: {
@@ -43,38 +42,7 @@ const user = {
       const password = userInfo.password.trim()
       return new Promise((resolve, reject) => {
         loginByUsername(username, password).then(response => {
-          setToken(Constants.access_token, response.access_token)
-          resolve()
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    // 授权码登陆
-    LoginAuthorizationCode ({ commit, state }, code) {
-      return new Promise((resolve, reject) => {
-        console.log(code)
-        const params = {}
-        params.grant_type = Config.grant_type
-        params.code = code
-        params.client_id = Config.client_id
-        params.client_secret = Config.client_secret
-        params.redirect_uri = Config.redirect_uri
-        params.scope = 'app'
-        loginAuthorizationCode(params).then(response => {
-          setToken(Constants.access_token, response.access_token)
-          resolve()
-        })
-      })
-    },
-
-    // 短信登陆
-    LoginSMS ({ commit }, userInfo) {
-      const phone = userInfo.phone.trim()
-      const smsCode = userInfo.smsCode.trim()
-      return new Promise((resolve, reject) => {
-        loginSMS(phone, smsCode).then(response => {
-          setToken(Constants.access_token, response.access_token)
+          setToken(Constants.access_token, response.data.token)
           resolve()
         }).catch(error => {
           reject(error)

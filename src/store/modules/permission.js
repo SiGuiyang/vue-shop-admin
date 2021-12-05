@@ -36,7 +36,7 @@ function filterAsyncRouter (routes) {
       tmp.component = () => import('@/views/layout/Layout')
     } else {
       const component = tmp.component
-      tmp.component = () => import(`@/views/${component}`)
+      tmp.component = (resolve) => require([`@/views/${component}`], resolve)
     }
     // 迭代子组件
     if (tmp.children && tmp.children.length > 0) {
